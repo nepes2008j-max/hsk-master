@@ -20,7 +20,7 @@ export default function RefundPage() {
         <div className="mt-10 space-y-8 text-[14px] text-ink-secondary leading-relaxed">
           <section>
             <h2 className="text-lg font-semibold text-ink mb-3">Free Trial</h2>
-            <p>HSK Master offers a free trial period for new users. During the trial, you have full access to all features. You will not be charged until the trial period ends. You may cancel at any time during the trial without being charged.</p>
+            <p>HSK Master offers a 5-day free trial for new users. During the trial, you have full access to all features. You will not be charged until the trial period ends. You may cancel at any time during the trial without being charged.</p>
           </section>
 
           <section>

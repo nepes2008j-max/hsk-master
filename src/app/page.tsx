@@ -75,7 +75,7 @@ export default function LandingPage() {
               href="/dashboard"
               className="bg-jade hover:bg-jade-hover text-white text-[15px] font-semibold px-6 py-3 rounded-lg transition-colors"
             >
-              Start free trial
+              Start 5-day free trial
             </Link>
             <Link
               href="#pricing"
@@ -194,7 +194,7 @@ export default function LandingPage() {
             href="/dashboard"
             className="inline-block mt-6 bg-jade hover:bg-jade-hover text-white text-[15px] font-semibold px-8 py-3 rounded-lg transition-colors"
           >
-            Start your free trial
+            Start 5-day free trial
           </Link>
         </div>
       </section>

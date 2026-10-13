@@ -108,7 +108,7 @@ const t = {
       everyPlan: "Every plan includes:",
       readyToStart: "Ready to start?",
       readyDesc: "Most people pass HSK 1 in 2-4 months of daily practice. Start today.",
-      startTrial: "Start your free trial",
+      startTrial: "Start 5-day free trial",
     },
   },
   ru: {
@@ -214,7 +214,7 @@ const t = {
       everyPlan: "Каждый план включает:",
       readyToStart: "Готовы начать?",
       readyDesc: "Большинство сдают HSK 1 за 2-4 месяца ежедневной практики. Начните сегодня.",
-      startTrial: "Начать бесплатный период",
+      startTrial: "5 дней бесплатно",
     },
   },
   tk: {
@@ -320,7 +320,7 @@ const t = {
       everyPlan: "Her plan öz içine alýar:",
       readyToStart: "Başlamaga taýynmy?",
       readyDesc: "Köp adamlar HSK 1-i 2-4 aýda gündelik türgenlik bilen tabşyrýarlar. Şu gün başlaň.",
-      startTrial: "Mugt synag döwrüni başla",
+      startTrial: "5 gün mugt synag",
     },
   },
 } satisfies Record<string, Record<string, unknown>>;

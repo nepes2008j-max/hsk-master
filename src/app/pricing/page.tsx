@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { IconCheck, IconChevron } from "@/components/Icons";
+import { getCheckoutUrl } from "@/lib/stripe";
 
 const plans = [
   { id: "monthly", name: "Monthly", price: 30, period: "month", months: 1, desc: "Try it out, cancel anytime" },
@@ -24,7 +25,7 @@ const allFeatures = [
 ];
 
 const faqs = [
-  { q: "Is there a free trial?", a: "Yes. You get 7 days of full access when you sign up — no credit card required." },
+  { q: "Is there a free trial?", a: "Yes. You get 5 days of full access when you sign up — no credit card required." },
   { q: "What payment methods do you accept?", a: "We accept WeChat Pay, Alipay, and international credit/debit cards via Stripe." },
   { q: "Can I cancel anytime?", a: "Yes. Monthly plans cancel at the end of the billing period. No questions asked." },
   { q: "Does it work offline?", a: "Yes. Install as a PWA on your phone or laptop and all vocabulary, grammar, and flashcard content works without internet." },
@@ -48,7 +49,7 @@ export default function PricingPage() {
             href="/dashboard"
             className="bg-jade hover:bg-jade-hover text-white text-[14px] font-semibold px-4 py-2 rounded-lg transition-colors"
           >
-            Start free trial
+            Start 5-day free trial
           </Link>
         </div>
       </header>
@@ -103,16 +104,16 @@ export default function PricingPage() {
 
                 <p className="text-[13px] text-ink-tertiary mt-2 flex-1">{plan.desc}</p>
 
-                <Link
-                  href="/dashboard"
+                <a
+                  href={getCheckoutUrl(plan.id) || "/dashboard"}
                   className={`mt-6 block text-center text-[14px] font-semibold py-3 rounded-lg transition-colors ${
                     plan.featured
                       ? "bg-jade hover:bg-jade-hover text-white"
                       : "bg-bg-sunken hover:bg-border text-ink"
                   }`}
                 >
-                  Start free trial
-                </Link>
+                  Start 5-day free trial
+                </a>
               </div>
             );
           })}
