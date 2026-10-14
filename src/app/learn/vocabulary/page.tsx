@@ -1,30 +1,38 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import AppShell from "@/components/AppShell";
 import { vocabulary, type Word } from "@/data/vocabulary";
+import { vocabulary2 } from "@/data/vocabulary2";
 import { speak } from "@/lib/tts";
 import { useProgress } from "@/hooks/useProgress";
 import { IconSearch, IconVolume, IconCheck, IconX } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function VocabularyPage() {
   const { t } = useLang();
+  const tr = useTranslation();
   const [search, setSearch] = useState("");
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [showPinyin, setShowPinyin] = useState(true);
+  const [level, setLevel] = useState<1 | 2>(1);
   const { progress, markWordLearned } = useProgress();
 
+  const learnedSet = useMemo(() => new Set(progress?.wordsLearned), [progress?.wordsLearned]);
+
+  const wordList = level === 1 ? vocabulary : vocabulary2;
+
   const filtered = useMemo(() => {
-    if (!search) return vocabulary;
+    if (!search) return wordList;
     const q = search.toLowerCase();
-    return vocabulary.filter(
+    return wordList.filter(
       (w) =>
         w.hanzi.includes(search) ||
         w.pinyin.toLowerCase().includes(q) ||
         w.english.toLowerCase().includes(q)
     );
-  }, [search]);
+  }, [search, wordList]);
 
   return (
     <AppShell>
@@ -32,8 +40,24 @@ export default function VocabularyPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-ink tracking-tight">{t.vocabPage.title}</h1>
           <span className="text-[13px] text-ink-tertiary">
-            {progress?.wordsLearned.length ?? 0}/300 {t.vocabPage.learned}
+            {progress?.wordsLearned.length ?? 0}/{wordList.length} {t.vocabPage.learned}
           </span>
+        </div>
+
+        <div className="flex gap-1.5">
+          {([1, 2] as const).map((l) => (
+            <button
+              key={l}
+              onClick={() => setLevel(l)}
+              className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+                level === l
+                  ? "bg-jade text-white"
+                  : "bg-bg-sunken text-ink-secondary hover:text-ink"
+              }`}
+            >
+              {l === 1 ? t.hsk1 : t.hsk2}
+            </button>
+          ))}
         </div>
 
         <div className="flex gap-2">
@@ -61,7 +85,7 @@ export default function VocabularyPage() {
 
         <div className="space-y-0.5">
           {filtered.map((word) => {
-            const learned = progress?.wordsLearned.includes(word.hanzi);
+            const learned = learnedSet.has(word.hanzi);
             return (
               <button
                 key={word.id}
@@ -74,18 +98,17 @@ export default function VocabularyPage() {
                 {showPinyin && (
                   <span className="text-[13px] text-ink-tertiary min-w-[4rem]">{word.pinyin}</span>
                 )}
-                <span className="text-[14px] text-ink-secondary flex-1">{word.english}</span>
-                <span
+                <span className="text-[14px] text-ink-secondary flex-1">{tr(word.hanzi)?.meaning ?? word.english}</span>
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     speak(word.hanzi);
                   }}
                   className="p-1.5 rounded-lg text-ink-tertiary hover:text-jade hover:bg-jade-light transition-colors"
-                  role="button"
                   aria-label={`Play pronunciation of ${word.hanzi}`}
                 >
                   <IconVolume className="w-4.5 h-4.5" />
-                </span>
+                </button>
               </button>
             );
           })}
@@ -122,14 +145,14 @@ export default function VocabularyPage() {
               </div>
 
               <div>
-                <div className="text-lg text-ink">{selectedWord.english}</div>
+                <div className="text-lg text-ink">{tr(selectedWord.hanzi)?.meaning ?? selectedWord.english}</div>
                 <div className="text-[13px] text-ink-tertiary mt-0.5 capitalize">{selectedWord.category}</div>
               </div>
 
               <div className="rounded-xl bg-bg-sunken p-4 space-y-1.5">
                 <div className="text-[15px] text-ink">{selectedWord.example.hanzi}</div>
                 <div className="text-[13px] text-jade">{selectedWord.example.pinyin}</div>
-                <div className="text-[13px] text-ink-secondary">{selectedWord.example.english}</div>
+                <div className="text-[13px] text-ink-secondary">{tr(selectedWord.hanzi)?.example ?? selectedWord.example.english}</div>
                 <button
                   onClick={() => speak(selectedWord.example.hanzi, 0.7)}
                   className="flex items-center gap-1.5 text-[13px] text-blue mt-2 hover:underline"
@@ -154,7 +177,7 @@ export default function VocabularyPage() {
                   onClick={() => setSelectedWord(null)}
                   className="rounded-xl border border-border hover:border-border-strong px-5 py-3 text-[14px] text-ink-secondary transition-colors"
                 >
-                  Close
+                  {t.close}
                 </button>
               </div>
             </div>

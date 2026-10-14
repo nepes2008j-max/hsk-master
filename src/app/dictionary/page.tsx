@@ -6,9 +6,11 @@ import { dictionary, topics, type DictEntry } from "@/data/dictionary";
 import { speak } from "@/lib/tts";
 import { IconSearch, IconVolume, IconChevron } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function DictionaryPage() {
   const { t } = useLang();
+  const tr = useTranslation();
   const [search, setSearch] = useState("");
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
   const [hskOnly, setHskOnly] = useState(false);
@@ -147,7 +149,7 @@ export default function DictionaryPage() {
                 {showPinyin && (
                   <span className="text-[13px] text-ink-tertiary min-w-[4.5rem]">{word.pinyin}</span>
                 )}
-                <span className="text-[14px] text-ink-secondary flex-1">{word.english}</span>
+                <span className="text-[14px] text-ink-secondary flex-1">{tr(word.hanzi)?.meaning ?? word.english}</span>
                 {word.hsk && (
                   <span className="text-[10px] font-bold text-jade bg-jade-light rounded px-1.5 py-0.5 shrink-0">
                     HSK{word.hsk}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import ProgressBar from "@/components/ProgressBar";
 import { getProgress, type ProgressData } from "@/lib/storage";
-import { IconBook, IconPencil, IconBrush, IconCards, IconClipboard, IconFire, IconStar, IconGlobe } from "@/components/Icons";
+import { IconBook, IconPencil, IconBrush, IconCards, IconClipboard, IconFire, IconStar, IconGlobe, IconGamepad } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 
 export default function DashboardPage() {
@@ -23,6 +23,7 @@ export default function DashboardPage() {
     { href: "/dictionary", title: t.dictPage.title, desc: t.dashboard.dictDesc, Icon: IconGlobe, accent: "bg-blue-light text-blue" },
     { href: "/cards", title: t.cards, desc: t.dashboard.cardsDesc, Icon: IconCards, accent: "bg-jade-light text-jade" },
     { href: "/test", title: t.test, desc: t.dashboard.testDesc, Icon: IconClipboard, accent: "bg-red-light text-red" },
+    { href: "/games", title: t.games, desc: t.gamesPage.desc, Icon: IconGamepad, accent: "bg-gold-light text-gold" },
   ] as const;
 
   const isGamified = progress?.mode === "gamified";

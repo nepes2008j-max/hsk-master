@@ -1,24 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import AppShell from "@/components/AppShell";
 import { grammar, type GrammarPoint } from "@/data/grammar";
+import { grammar2 } from "@/data/grammar2";
 import { speak } from "@/lib/tts";
 import { useProgress } from "@/hooks/useProgress";
 import { IconVolume, IconCheck, IconChevron } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 
-const categories = [...new Set(grammar.map((g) => g.category))];
-
 export default function GrammarPage() {
   const { t } = useLang();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [level, setLevel] = useState<1 | 2>(1);
   const { progress, markGrammarCompleted } = useProgress();
 
+  const completedSet = useMemo(() => new Set(progress?.grammarCompleted), [progress?.grammarCompleted]);
+
+  const grammarList = level === 1 ? grammar : grammar2;
+  const categories = useMemo(() => [...new Set(grammarList.map((g) => g.category))], [grammarList]);
+
   const filtered = activeCategory
-    ? grammar.filter((g) => g.category === activeCategory)
-    : grammar;
+    ? grammarList.filter((g) => g.category === activeCategory)
+    : grammarList;
 
   return (
     <AppShell>
@@ -26,8 +31,24 @@ export default function GrammarPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-ink tracking-tight">{t.grammarPage.title}</h1>
           <span className="text-[13px] text-ink-tertiary">
-            {progress?.grammarCompleted.length ?? 0}/{grammar.length} completed
+            {progress?.grammarCompleted.length ?? 0}/{grammarList.length} {t.testPage.completed}
           </span>
+        </div>
+
+        <div className="flex gap-1.5">
+          {([1, 2] as const).map((l) => (
+            <button
+              key={l}
+              onClick={() => { setLevel(l); setActiveCategory(null); }}
+              className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+                level === l
+                  ? "bg-jade text-white"
+                  : "bg-bg-sunken text-ink-secondary hover:text-ink"
+              }`}
+            >
+              {l === 1 ? t.hsk1 : t.hsk2}
+            </button>
+          ))}
         </div>
 
         <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
@@ -58,7 +79,7 @@ export default function GrammarPage() {
 
         <div className="space-y-2">
           {filtered.map((point) => {
-            const completed = progress?.grammarCompleted.includes(point.id);
+            const completed = completedSet.has(point.id);
             const expanded = expandedId === point.id;
 
             return (

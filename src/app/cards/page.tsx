@@ -28,12 +28,10 @@ interface FlashCard {
   deck: string;
 }
 
-function buildHSKCards(): FlashCard[] {
-  return vocabulary.flatMap((w) => [
-    { id: `hsk-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "HSK 1" },
-    { id: `hsk-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "HSK 1" },
-  ]);
-}
+const HSK_CARDS: FlashCard[] = vocabulary.flatMap((w) => [
+  { id: `hsk-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "HSK 1" },
+  { id: `hsk-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "HSK 1" },
+]);
 
 export default function CardsPage() {
   const { t } = useLang();
@@ -67,7 +65,7 @@ export default function CardsPage() {
   }, [userDecks, userCards]);
 
   const loadCards = useCallback(async () => {
-    const hskCards = buildHSKCards();
+    const hskCards = HSK_CARDS;
     const custom = await getUserCards();
     setUserCards(custom);
 
@@ -161,7 +159,7 @@ export default function CardsPage() {
   return (
     <AppShell>
       <div className="space-y-5">
-        <h1 className="text-2xl font-bold text-ink tracking-tight">Flashcards</h1>
+        <h1 className="text-2xl font-bold text-ink tracking-tight">{t.cardsPage.title}</h1>
 
         <div className="flex gap-1 p-1 rounded-xl bg-bg-sunken">
           {tabs.map((t) => (
@@ -190,7 +188,7 @@ export default function CardsPage() {
                   !reviewDeck ? "bg-jade text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                 }`}
               >
-                All decks
+                {t.cardsPage.allDecks}
               </button>
               {[...allDecks.keys()].map((d) => (
                 <button
@@ -208,7 +206,7 @@ export default function CardsPage() {
             {currentCard ? (
               <>
                 <div className="text-[13px] text-ink-tertiary text-center">
-                  {currentIdx + 1} / {dueCards.length} cards due
+                  {currentIdx + 1} / {dueCards.length} {t.cardsPage.cardsDue}
                   {reviewDeck && <span className="ml-1">in {reviewDeck}</span>}
                 </div>
 
@@ -262,13 +260,13 @@ export default function CardsPage() {
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-jade-light mb-4">
                   <IconStar className="w-7 h-7 text-jade" />
                 </div>
-                <div className="text-[15px] font-semibold text-ink">All caught up!</div>
+                <div className="text-[15px] font-semibold text-ink">{t.cardsPage.allCaughtUp}</div>
                 <div className="text-[13px] text-ink-tertiary mt-1">{t.cardsPage.noCards}</div>
                 <button
                   onClick={loadCards}
                   className="mt-5 rounded-xl bg-jade hover:bg-jade-hover text-white px-5 py-2.5 text-[14px] font-medium transition-colors"
                 >
-                  Refresh
+                  {t.cardsPage.refresh}
                 </button>
               </div>
             )}
@@ -288,7 +286,7 @@ export default function CardsPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-[15px] font-semibold text-ink">HSK 1</div>
-                <div className="text-[13px] text-ink-tertiary">{vocabulary.length * 2} cards &middot; Built-in</div>
+                <div className="text-[13px] text-ink-tertiary">{vocabulary.length * 2} {t.cardsPage.cardsDue} &middot; {t.cardsPage.builtIn}</div>
               </div>
               <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
             </button>
@@ -316,12 +314,12 @@ export default function CardsPage() {
 
             {userDecks.length === 0 && (
               <div className="text-center py-10">
-                <div className="text-[13px] text-ink-tertiary">No custom decks yet.</div>
+                <div className="text-[13px] text-ink-tertiary">{t.cardsPage.noCustomDecks}</div>
                 <button
                   onClick={() => setTab("create")}
                   className="mt-3 rounded-xl bg-jade hover:bg-jade-hover text-white px-5 py-2.5 text-[14px] font-medium transition-colors"
                 >
-                  Create your first card
+                  {t.cardsPage.createFirst}
                 </button>
               </div>
             )}
@@ -336,7 +334,7 @@ export default function CardsPage() {
               className="flex items-center gap-1 text-[13px] text-jade hover:underline"
             >
               <IconChevron direction="left" className="w-3.5 h-3.5" />
-              All decks
+              {t.cardsPage.allDecks}
             </button>
 
             <div className="flex items-center justify-between">
@@ -379,7 +377,7 @@ export default function CardsPage() {
                 ))}
                 {deckCards.length === 0 && (
                   <div className="text-center py-8 text-[13px] text-ink-tertiary">
-                    This deck is empty.
+                    {t.cardsPage.deckEmpty}
                   </div>
                 )}
               </div>
@@ -393,7 +391,7 @@ export default function CardsPage() {
             {/* Deck selector */}
             <div className="space-y-2">
               <label className="text-[13px] font-semibold text-ink-secondary uppercase tracking-wide">
-                Deck
+                {t.cardsPage.deck}
               </label>
               <div className="flex gap-2 flex-wrap">
                 {userDecks.map((d) => (
@@ -427,7 +425,7 @@ export default function CardsPage() {
                     value={newDeckName}
                     onChange={(e) => setNewDeckName(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleCreateDeck()}
-                    placeholder="Deck name (e.g. Food, Travel, Work)"
+                    placeholder={t.cardsPage.deckPlaceholder}
                     className="flex-1 rounded-xl border border-border bg-bg-raised px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-jade focus:ring-1 focus:ring-jade/20 transition-colors"
                     autoFocus
                   />
@@ -443,7 +441,7 @@ export default function CardsPage() {
 
               {!showNewDeckInput && !newDeck && userDecks.length === 0 && (
                 <div className="text-[12px] text-ink-tertiary">
-                  Cards without a deck go into &ldquo;My Cards&rdquo;
+                  {t.cardsPage.cardsWithoutDeck} &ldquo;{t.cardsPage.myCards}&rdquo;
                 </div>
               )}
               {newDeck && !showNewDeckInput && (
@@ -456,7 +454,7 @@ export default function CardsPage() {
             {/* Card fields */}
             <div className="space-y-3">
               <label className="text-[13px] font-semibold text-ink-secondary uppercase tracking-wide">
-                Card
+                {t.cardsPage.card}
               </label>
               <input
                 value={newFront}

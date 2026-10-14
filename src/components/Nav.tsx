@@ -2,12 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconHome, IconBook, IconPencil, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe } from "./Icons";
-import { useLang } from "@/lib/i18n";
+import { IconHome, IconBook, IconPencil, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconGamepad } from "./Icons";
+import { useLang, type Lang } from "@/lib/i18n";
+
+const langCycle: Lang[] = ["en", "ru", "tk"];
+const langFlag: Record<Lang, string> = { en: "EN", ru: "RU", tk: "TK" };
 
 export default function Nav() {
   const pathname = usePathname();
-  const { t } = useLang();
+  const { t, lang, setLang } = useLang();
+
+  const nextLang = () => {
+    const i = langCycle.indexOf(lang);
+    setLang(langCycle[(i + 1) % langCycle.length]);
+  };
 
   const links = [
     { href: "/dashboard", label: t.home, Icon: IconHome },
@@ -17,6 +25,7 @@ export default function Nav() {
     { href: "/dictionary", label: t.dict, Icon: IconGlobe },
     { href: "/cards", label: t.cards, Icon: IconCards },
     { href: "/test", label: t.test, Icon: IconClipboard },
+    { href: "/games", label: t.games, Icon: IconGamepad },
   ] as const;
 
   return (
@@ -48,7 +57,14 @@ export default function Nav() {
           })}
         </div>
 
-        <div className="px-3 pb-3">
+        <div className="px-3 pb-3 space-y-0.5">
+          <button
+            onClick={nextLang}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium text-ink-secondary hover:text-ink hover:bg-bg-sunken transition-colors w-full"
+          >
+            <span className="w-[18px] h-[18px] flex items-center justify-center text-[11px] font-bold rounded border border-current">{langFlag[lang]}</span>
+            {t.langName}
+          </button>
           <Link
             href="/settings"
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${
@@ -72,7 +88,7 @@ export default function Nav() {
               <Link
                 key={href}
                 href={href}
-                className={`flex flex-col items-center gap-0.5 px-1 py-1 min-w-[48px] transition-colors ${
+                className={`flex flex-col items-center gap-0.5 px-1 py-1 min-w-[44px] transition-colors ${
                   active ? "text-jade" : "text-ink-tertiary"
                 }`}
               >
@@ -81,6 +97,13 @@ export default function Nav() {
               </Link>
             );
           })}
+          <button
+            onClick={nextLang}
+            className="flex flex-col items-center gap-0.5 px-1 py-1 min-w-[44px] text-ink-tertiary"
+          >
+            <span className="w-5 h-5 flex items-center justify-center text-[10px] font-bold rounded border border-current">{langFlag[lang]}</span>
+            <span className="text-[10px] font-medium">{langFlag[lang]}</span>
+          </button>
         </div>
       </nav>
     </>

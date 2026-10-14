@@ -126,7 +126,7 @@ export default function SettingsPage() {
 
         <div className="rounded-xl border border-border bg-bg-raised p-5 space-y-2">
           <div className="text-[13px] font-semibold text-ink-secondary uppercase tracking-wide">
-            About
+            {t.settingsPage.about}
           </div>
           <div className="text-[14px] text-ink-secondary leading-relaxed">
             HSK Master — Chinese Language Learning & Exam Prep

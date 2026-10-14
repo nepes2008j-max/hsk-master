@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import AppShell from "@/components/AppShell";
-import { vocabulary } from "@/data/vocabulary";
+import { vocabulary, type Word } from "@/data/vocabulary";
+import { vocabulary2 } from "@/data/vocabulary2";
 import { speak } from "@/lib/tts";
 import { saveTestResult, getTestResults, type TestResult } from "@/lib/storage";
-import { IconVolume, IconCheck, IconChevron } from "@/components/Icons";
+import { IconVolume, IconCheck, IconChevron, IconX } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 
 // ── Types ──
@@ -34,183 +35,265 @@ function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-function sameCategoryDistractors(w: typeof vocabulary[0], n: number) {
-  const sameCategory = vocabulary.filter((v) => v.id !== w.id && v.category === w.category);
+function sameCategoryDistractors(w: Word, n: number, wordPool: Word[]) {
+  const sameCategory = wordPool.filter((v) => v.id !== w.id && v.category === w.category);
   if (sameCategory.length >= n) return pick(sameCategory, n);
-  const rest = vocabulary.filter((v) => v.id !== w.id && v.category !== w.category);
+  const rest = wordPool.filter((v) => v.id !== w.id && v.category !== w.category);
   return [...pick(sameCategory, Math.min(n, sameCategory.length)), ...pick(rest, n - Math.min(n, sameCategory.length))].slice(0, n);
 }
 
-// ── Question generator (mirrors real HSK 1 exam structure) ──
+// ── Question generators matching real HSK exam structure ──
 
-function generateExam(): Question[] {
-  const pool = shuffle(vocabulary);
+function generateHSK1(wordPool: Word[]): { questions: Question[]; meta: typeof sectionMetaHSK1 } {
+  const pool = shuffle(wordPool);
   let qi = 0;
   const questions: Question[] = [];
 
-  // ═══════════════════════════════════════
-  // 一、听力 LISTENING (20 questions)
-  // ═══════════════════════════════════════
+  // 一、听力 LISTENING (20 questions, ~15 min)
 
-  // Part 1 (Q1-5): Listen to a word, judge if it matches the given word — TRUE (√) or FALSE (×)
+  // Part 1 (5Q): Hear a word — does it match the shown word? (真题: picture match)
   for (let i = 0; i < 5; i++) {
     const w = pool[qi++];
     const isMatch = Math.random() > 0.5;
-    const shown = isMatch ? w : pick(vocabulary.filter((v) => v.id !== w.id), 1)[0];
+    const shown = isMatch ? w : pick(wordPool.filter((v) => v.id !== w.id), 1)[0];
     questions.push({
-      id: questions.length + 1,
-      section: "listening",
-      part: 1,
-      partLabel: "第一部分",
+      id: questions.length + 1, section: "listening", part: 1, partLabel: "第一部分",
       instruction: "Listen to the word. Does it match what is shown?",
-      prompt: shown.hanzi,
-      audioText: w.hanzi,
-      options: ["√  Correct", "×  Incorrect"],
-      correctIndex: isMatch ? 0 : 1,
+      prompt: shown.hanzi, audioText: w.hanzi,
+      options: ["√  Correct", "×  Incorrect"], correctIndex: isMatch ? 0 : 1,
     });
   }
 
-  // Part 2 (Q6-10): Listen to a sentence, choose the word it describes
+  // Part 2 (5Q): Hear a sentence — choose which word is mentioned (真题: choose matching picture)
   for (let i = 0; i < 5; i++) {
     const w = pool[qi++];
-    const distractors = sameCategoryDistractors(w, 2);
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
     const opts = shuffle([w.hanzi, ...distractors.map((d) => d.hanzi)]);
     questions.push({
-      id: questions.length + 1,
-      section: "listening",
-      part: 2,
-      partLabel: "第二部分",
+      id: questions.length + 1, section: "listening", part: 2, partLabel: "第二部分",
       instruction: "Listen to the sentence. Which word is described?",
-      prompt: "",
-      audioText: w.example.hanzi,
+      prompt: "", audioText: w.example.hanzi,
       options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
       correctIndex: opts.indexOf(w.hanzi),
     });
   }
 
-  // Part 3 (Q11-15): Listen to a short dialogue, pick what it's about
+  // Part 3 (5Q): Hear a dialogue — what is the topic? (真题: short dialogue → picture)
   for (let i = 0; i < 5; i++) {
     const w = pool[qi++];
-    const distractors = sameCategoryDistractors(w, 2);
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
     const opts = shuffle([w.english, ...distractors.map((d) => d.english)]);
     questions.push({
-      id: questions.length + 1,
-      section: "listening",
-      part: 3,
-      partLabel: "第三部分",
+      id: questions.length + 1, section: "listening", part: 3, partLabel: "第三部分",
       instruction: "Listen to the dialogue. What is it about?",
-      prompt: "",
-      audioText: w.example.hanzi,
+      prompt: "", audioText: w.example.hanzi,
       options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
       correctIndex: opts.indexOf(w.english),
     });
   }
 
-  // Part 4 (Q16-20): Listen to a question, pick the correct answer
+  // Part 4 (5Q): Hear a sentence — choose the correct answer (真题: sentence → 3 text choices)
   for (let i = 0; i < 5; i++) {
     const w = pool[qi++];
-    const distractors = sameCategoryDistractors(w, 2);
-    const questionText = `${w.example.hanzi}`;
-    const opts = shuffle([
-      w.english,
-      ...distractors.map((d) => d.english),
-    ]);
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
+    const opts = shuffle([w.english, ...distractors.map((d) => d.english)]);
     questions.push({
-      id: questions.length + 1,
-      section: "listening",
-      part: 4,
-      partLabel: "第四部分",
+      id: questions.length + 1, section: "listening", part: 4, partLabel: "第四部分",
       instruction: "Listen and choose the correct answer.",
-      prompt: "",
-      audioText: questionText,
+      prompt: "", audioText: w.example.hanzi,
       options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
       correctIndex: opts.indexOf(w.english),
     });
   }
 
-  // ═══════════════════════════════════════
-  // 二、阅读 READING (20 questions)
-  // ═══════════════════════════════════════
+  // 二、阅读 READING (20 questions, 17 min)
 
-  // Part 1 (Q21-25): Match — does the pinyin match the character? TRUE/FALSE
+  // Part 1 (5Q): Does the pinyin match the character? (真题: word → picture match)
   for (let i = 0; i < 5; i++) {
     const w = pool[qi++];
     const isMatch = Math.random() > 0.5;
-    const shownPinyin = isMatch ? w.pinyin : pick(vocabulary.filter((v) => v.id !== w.id), 1)[0].pinyin;
+    const shownPinyin = isMatch ? w.pinyin : pick(wordPool.filter((v) => v.id !== w.id), 1)[0].pinyin;
     questions.push({
-      id: questions.length + 1,
-      section: "reading",
-      part: 1,
-      partLabel: "第一部分",
+      id: questions.length + 1, section: "reading", part: 1, partLabel: "第一部分",
       instruction: "Does the pinyin match the character?",
-      context: w.hanzi,
-      prompt: shownPinyin,
-      options: ["√  Correct", "×  Incorrect"],
-      correctIndex: isMatch ? 0 : 1,
+      context: w.hanzi, prompt: shownPinyin,
+      options: ["√  Correct", "×  Incorrect"], correctIndex: isMatch ? 0 : 1,
     });
   }
 
-  // Part 2 (Q26-30): Match the word to its meaning
+  // Part 2 (5Q): Choose the correct meaning of the word (真题: sentence → picture)
   for (let i = 0; i < 5; i++) {
     const w = pool[qi++];
-    const distractors = sameCategoryDistractors(w, 2);
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
     const opts = shuffle([w.english, ...distractors.map((d) => d.english)]);
     questions.push({
-      id: questions.length + 1,
-      section: "reading",
-      part: 2,
-      partLabel: "第二部分",
+      id: questions.length + 1, section: "reading", part: 2, partLabel: "第二部分",
       instruction: "Choose the correct meaning.",
-      context: w.hanzi,
-      prompt: w.pinyin,
+      context: w.hanzi, prompt: w.pinyin,
       options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
       correctIndex: opts.indexOf(w.english),
     });
   }
 
-  // Part 3 (Q31-35): Choose the correct word to complete the sentence
+  // Part 3 (5Q): Fill in the blank — choose correct word (真题: fill-in-blank)
   for (let i = 0; i < 5; i++) {
     const w = pool[qi++];
-    const distractors = sameCategoryDistractors(w, 2);
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
     const blank = w.example.hanzi.replace(w.hanzi, "______");
     const opts = shuffle([w.hanzi, ...distractors.map((d) => d.hanzi)]);
     questions.push({
-      id: questions.length + 1,
-      section: "reading",
-      part: 3,
-      partLabel: "第三部分",
+      id: questions.length + 1, section: "reading", part: 3, partLabel: "第三部分",
       instruction: "Choose the word that completes the sentence.",
-      prompt: blank,
-      context: w.example.pinyin,
+      prompt: blank, context: w.example.pinyin,
       options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
       correctIndex: opts.indexOf(w.hanzi),
     });
   }
 
-  // Part 4 (Q36-40): Read the sentence, choose the correct meaning
+  // Part 4 (5Q): Read sentence — choose meaning (真题: read sentence → comprehension)
   for (let i = 0; i < 5; i++) {
     const w = pool[qi++];
-    const distractors = sameCategoryDistractors(w, 2);
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
     const opts = shuffle([w.example.english, ...distractors.map((d) => d.example.english)]);
     questions.push({
-      id: questions.length + 1,
-      section: "reading",
-      part: 4,
-      partLabel: "第四部分",
+      id: questions.length + 1, section: "reading", part: 4, partLabel: "第四部分",
       instruction: "Read the sentence. What does it mean?",
-      prompt: w.example.hanzi,
-      context: w.example.pinyin,
+      prompt: w.example.hanzi, context: w.example.pinyin,
       options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
       correctIndex: opts.indexOf(w.example.english),
     });
   }
 
-  return questions;
+  return { questions, meta: sectionMetaHSK1 };
+}
+
+function generateHSK2(wordPool: Word[]): { questions: Question[]; meta: typeof sectionMetaHSK2 } {
+  const pool = shuffle(wordPool);
+  let qi = 0;
+  const questions: Question[] = [];
+
+  // 一、听力 LISTENING (35 questions, ~25 min)
+
+  // Part 1 (10Q): Hear a sentence — does it match the shown word? (真题: sentence → picture T/F)
+  for (let i = 0; i < 10; i++) {
+    const w = pool[qi++];
+    const isMatch = Math.random() > 0.5;
+    const shown = isMatch ? w : pick(wordPool.filter((v) => v.id !== w.id && v.category === w.category), 1)[0]
+      ?? pick(wordPool.filter((v) => v.id !== w.id), 1)[0];
+    questions.push({
+      id: questions.length + 1, section: "listening", part: 1, partLabel: "第一部分",
+      instruction: "Listen to the sentence. Does it match the word shown?",
+      prompt: shown.hanzi, audioText: w.example.hanzi,
+      options: ["√  Correct", "×  Incorrect"], correctIndex: isMatch ? 0 : 1,
+    });
+  }
+
+  // Part 2 (10Q): Hear a dialogue — choose the correct word (真题: dialogue → picture from 3)
+  for (let i = 0; i < 10; i++) {
+    const w = pool[qi++];
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
+    const opts = shuffle([w.hanzi, ...distractors.map((d) => d.hanzi)]);
+    questions.push({
+      id: questions.length + 1, section: "listening", part: 2, partLabel: "第二部分",
+      instruction: "Listen to the dialogue. Which word is described?",
+      prompt: "", audioText: w.example.hanzi,
+      options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
+      correctIndex: opts.indexOf(w.hanzi),
+    });
+  }
+
+  // Part 3 (10Q): Hear two exchanges — what is it about? (真题: longer dialogue → picture)
+  for (let i = 0; i < 10; i++) {
+    const w = pool[qi++];
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
+    const opts = shuffle([w.english, ...distractors.map((d) => d.english)]);
+    questions.push({
+      id: questions.length + 1, section: "listening", part: 3, partLabel: "第三部分",
+      instruction: "Listen carefully. What is the dialogue about?",
+      prompt: "", audioText: w.example.hanzi,
+      options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
+      correctIndex: opts.indexOf(w.english),
+    });
+  }
+
+  // Part 4 (5Q): Hear a longer passage — answer comprehension question (真题: passage → text choice)
+  for (let i = 0; i < 5; i++) {
+    const w = pool[qi++];
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
+    const opts = shuffle([w.example.english, ...distractors.map((d) => d.example.english)]);
+    questions.push({
+      id: questions.length + 1, section: "listening", part: 4, partLabel: "第四部分",
+      instruction: "Listen and choose the correct answer.",
+      prompt: "", audioText: w.example.hanzi,
+      options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
+      correctIndex: opts.indexOf(w.example.english),
+    });
+  }
+
+  // 二、阅读 READING (25 questions, ~22 min)
+
+  // Part 1 (5Q): Does the pinyin match? (真题: sentence → picture match)
+  for (let i = 0; i < 5; i++) {
+    const w = pool[qi++];
+    const isMatch = Math.random() > 0.5;
+    const shownPinyin = isMatch ? w.pinyin : pick(wordPool.filter((v) => v.id !== w.id), 1)[0].pinyin;
+    questions.push({
+      id: questions.length + 1, section: "reading", part: 1, partLabel: "第一部分",
+      instruction: "Does the pinyin match the character?",
+      context: w.hanzi, prompt: shownPinyin,
+      options: ["√  Correct", "×  Incorrect"], correctIndex: isMatch ? 0 : 1,
+    });
+  }
+
+  // Part 2 (5Q): Fill in blank (真题: choose word for blank)
+  for (let i = 0; i < 5; i++) {
+    const w = pool[qi++];
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
+    const blank = w.example.hanzi.replace(w.hanzi, "______");
+    const opts = shuffle([w.hanzi, ...distractors.map((d) => d.hanzi)]);
+    questions.push({
+      id: questions.length + 1, section: "reading", part: 2, partLabel: "第二部分",
+      instruction: "Choose the word that completes the sentence.",
+      prompt: blank, context: w.example.pinyin,
+      options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
+      correctIndex: opts.indexOf(w.hanzi),
+    });
+  }
+
+  // Part 3 (5Q): Choose the correct meaning of the word
+  for (let i = 0; i < 5; i++) {
+    const w = pool[qi++];
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
+    const opts = shuffle([w.english, ...distractors.map((d) => d.english)]);
+    questions.push({
+      id: questions.length + 1, section: "reading", part: 3, partLabel: "第三部分",
+      instruction: "Choose the correct meaning.",
+      context: w.hanzi, prompt: w.pinyin,
+      options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
+      correctIndex: opts.indexOf(w.english),
+    });
+  }
+
+  // Part 4 (10Q): Read comprehension — sentence meaning (真题: read passage → answer question)
+  for (let i = 0; i < 10; i++) {
+    const w = pool[qi++];
+    const distractors = sameCategoryDistractors(w, 2, wordPool);
+    const opts = shuffle([w.example.english, ...distractors.map((d) => d.example.english)]);
+    questions.push({
+      id: questions.length + 1, section: "reading", part: 4, partLabel: "第四部分",
+      instruction: "Read the sentence. What does it mean?",
+      prompt: w.example.hanzi, context: w.example.pinyin,
+      options: opts.map((o, idx) => `${String.fromCharCode(65 + idx)}. ${o}`),
+      correctIndex: opts.indexOf(w.example.english),
+    });
+  }
+
+  return { questions, meta: sectionMetaHSK2 };
 }
 
 // ── Sections metadata ──
 
-const sectionMeta = [
+const sectionMetaHSK1 = [
   { section: "listening" as const, part: 1, label: "第一部分", range: [1, 5] },
   { section: "listening" as const, part: 2, label: "第二部分", range: [6, 10] },
   { section: "listening" as const, part: 3, label: "第三部分", range: [11, 15] },
@@ -219,6 +302,17 @@ const sectionMeta = [
   { section: "reading" as const, part: 2, label: "第二部分", range: [26, 30] },
   { section: "reading" as const, part: 3, label: "第三部分", range: [31, 35] },
   { section: "reading" as const, part: 4, label: "第四部分", range: [36, 40] },
+];
+
+const sectionMetaHSK2 = [
+  { section: "listening" as const, part: 1, label: "第一部分", range: [1, 10] },
+  { section: "listening" as const, part: 2, label: "第二部分", range: [11, 20] },
+  { section: "listening" as const, part: 3, label: "第三部分", range: [21, 30] },
+  { section: "listening" as const, part: 4, label: "第四部分", range: [31, 35] },
+  { section: "reading" as const, part: 1, label: "第一部分", range: [36, 40] },
+  { section: "reading" as const, part: 2, label: "第二部分", range: [41, 45] },
+  { section: "reading" as const, part: 3, label: "第三部分", range: [46, 50] },
+  { section: "reading" as const, part: 4, label: "第四部分", range: [51, 60] },
 ];
 
 // ── Component ──
@@ -233,6 +327,8 @@ export default function TestPage() {
   const [pastResults, setPastResults] = useState<TestResult[]>([]);
   const [showNav, setShowNav] = useState(false);
   const [playCount, setPlayCount] = useState<Record<number, number>>({});
+  const [testLevel, setTestLevel] = useState<1 | 2>(1);
+  const [examMeta, setExamMeta] = useState(sectionMetaHSK1);
   const timerRef = useRef<ReturnType<typeof setInterval>>(null);
 
   useEffect(() => {
@@ -240,11 +336,13 @@ export default function TestPage() {
   }, []);
 
   const startTest = () => {
-    const q = generateExam();
+    const wordPool = testLevel === 1 ? vocabulary : vocabulary2;
+    const { questions: q, meta } = testLevel === 1 ? generateHSK1(wordPool) : generateHSK2(wordPool);
     setQuestions(q);
+    setExamMeta(meta);
     setAnswers(new Array(q.length).fill(null));
     setCurrentQ(0);
-    setTimeLeft(40 * 60);
+    setTimeLeft(testLevel === 1 ? 40 * 60 : 55 * 60);
     setState("test");
     setShowNav(false);
 
@@ -281,8 +379,10 @@ export default function TestPage() {
       }
     });
 
-    const listeningScore = Math.round((listening / 20) * 100);
-    const readingScore = Math.round((reading / 20) * 100);
+    const totalListening = questions.filter((q) => q.section === "listening").length;
+    const totalReading = questions.filter((q) => q.section === "reading").length;
+    const listeningScore = Math.round((listening / totalListening) * 100);
+    const readingScore = Math.round((reading / totalReading) * 100);
     const totalScore = listeningScore + readingScore;
 
     const result: TestResult = {
@@ -311,8 +411,8 @@ export default function TestPage() {
   const latestResult = pastResults[pastResults.length - 1];
 
   const answeredCount = answers.filter((a) => a !== null).length;
-  const currentMeta = q ? sectionMeta.find((m) => q.id >= m.range[0] && q.id <= m.range[1]) : null;
-  const prevMeta = currentQ > 0 ? sectionMeta.find((m) => questions[currentQ - 1].id >= m.range[0] && questions[currentQ - 1].id <= m.range[1]) : null;
+  const currentMeta = q ? examMeta.find((m) => q.id >= m.range[0] && q.id <= m.range[1]) : null;
+  const prevMeta = currentQ > 0 ? examMeta.find((m) => questions[currentQ - 1].id >= m.range[0] && questions[currentQ - 1].id <= m.range[1]) : null;
   const isNewSection = currentMeta && (!prevMeta || currentMeta.section !== prevMeta.section || currentMeta.part !== prevMeta.part);
 
   return (
@@ -325,8 +425,24 @@ export default function TestPage() {
             <div className="text-center space-y-2 pt-2">
               <div className="text-[13px] text-ink-tertiary tracking-[0.2em] uppercase">Mock Examination</div>
               <h1 className="text-2xl font-bold text-ink">汉语水平考试</h1>
-              <div className="text-lg font-semibold text-ink-secondary">HSK（一级）</div>
-              <div className="text-[13px] text-ink-tertiary">Hànyǔ Shuǐpíng Kǎoshì — Level 1</div>
+              <div className="text-lg font-semibold text-ink-secondary">HSK（{testLevel === 1 ? "一" : "二"}级）</div>
+              <div className="text-[13px] text-ink-tertiary">Hànyǔ Shuǐpíng Kǎoshì — Level {testLevel}</div>
+            </div>
+
+            <div className="flex gap-1.5 justify-center">
+              {([1, 2] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => setTestLevel(l)}
+                  className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
+                    testLevel === l
+                      ? "bg-jade text-white"
+                      : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                  }`}
+                >
+                  {l === 1 ? t.hsk1 : t.hsk2}
+                </button>
+              ))}
             </div>
 
             <div className="border-t border-border" />
@@ -337,22 +453,22 @@ export default function TestPage() {
                 <div className="text-[13px] font-semibold text-ink-secondary uppercase tracking-wide">注意事项 Instructions</div>
               </div>
               <div className="p-4 space-y-3 text-[14px] text-ink-secondary leading-relaxed">
-                <p>This is a mock HSK Level 1 test following the official exam format.</p>
+                <p>This is a mock HSK Level {testLevel} test following the official exam format.</p>
                 <div className="grid grid-cols-1 gap-2">
                   <div className="flex justify-between py-2 border-b border-border/50">
                     <span>一、听力 {t.testPage.listening}</span>
-                    <span className="text-ink font-medium">20 questions &middot; 4 parts</span>
+                    <span className="text-ink font-medium">{testLevel === 1 ? 20 : 35} questions &middot; 4 parts</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-border/50">
                     <span>二、阅读 {t.testPage.reading}</span>
-                    <span className="text-ink font-medium">20 questions &middot; 4 parts</span>
+                    <span className="text-ink font-medium">{testLevel === 1 ? 20 : 25} questions &middot; 4 parts</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-border/50">
-                    <span>Total time</span>
-                    <span className="text-ink font-medium">40 minutes</span>
+                    <span>{t.testPage.totalTime}</span>
+                    <span className="text-ink font-medium">{testLevel === 1 ? 40 : 55} minutes</span>
                   </div>
                   <div className="flex justify-between py-2">
-                    <span>Pass score</span>
+                    <span>{t.testPage.passScore}</span>
                     <span className="text-ink font-medium">120 / 200 (60%)</span>
                   </div>
                 </div>
@@ -368,7 +484,7 @@ export default function TestPage() {
 
             {pastResults.length > 0 && (
               <div className="space-y-2">
-                <div className="text-[13px] font-semibold text-ink-secondary">Past Results</div>
+                <div className="text-[13px] font-semibold text-ink-secondary">{t.testPage.pastResults}</div>
                 {pastResults
                   .slice()
                   .reverse()
@@ -432,10 +548,10 @@ export default function TestPage() {
             {showNav && (
               <div className="rounded-xl border border-border bg-bg-raised p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[13px] font-semibold text-ink-secondary">Question Navigator</span>
-                  <button onClick={() => setShowNav(false)} className="text-ink-tertiary hover:text-ink text-[13px]">Close</button>
+                  <span className="text-[13px] font-semibold text-ink-secondary">{t.testPage.questionNav}</span>
+                  <button onClick={() => setShowNav(false)} className="text-ink-tertiary hover:text-ink text-[13px]">{t.testPage.close}</button>
                 </div>
-                {sectionMeta.map((s) => (
+                {examMeta.map((s) => (
                   <div key={`${s.section}-${s.part}`}>
                     <div className="text-[11px] text-ink-tertiary uppercase tracking-wide mb-1.5">
                       {s.section === "listening" ? "听力" : "阅读"} {s.label}
@@ -539,7 +655,7 @@ export default function TestPage() {
                         }`}
                       >
                         <IconVolume className="w-4.5 h-4.5" />
-                        <span>Play Audio</span>
+                        <span>{t.testPage.playAudio}</span>
                         <span className="text-[12px] ml-1 opacity-60">{plays}/{maxPlays}</span>
                       </button>
                     );
@@ -619,53 +735,105 @@ export default function TestPage() {
               <div className="rounded-xl bg-bg-raised border border-border p-4 text-center">
                 <div className="text-[11px] text-ink-tertiary uppercase tracking-wide">听力 {t.testPage.listening}</div>
                 <div className="text-2xl font-bold text-ink mt-1 tabular-nums">
-                  {Math.round((latestResult.answers.slice(0, 20).filter((a) => a.correct).length / 20) * 100)}
+                  {(() => {
+                    const totalL = questions.filter((q) => q.section === "listening").length;
+                    return Math.round((latestResult.answers.slice(0, totalL).filter((a) => a.correct).length / totalL) * 100);
+                  })()}
                 </div>
                 <div className="text-[12px] text-ink-tertiary">/ 100</div>
               </div>
               <div className="rounded-xl bg-bg-raised border border-border p-4 text-center">
                 <div className="text-[11px] text-ink-tertiary uppercase tracking-wide">阅读 {t.testPage.reading}</div>
                 <div className="text-2xl font-bold text-ink mt-1 tabular-nums">
-                  {Math.round((latestResult.answers.slice(20).filter((a) => a.correct).length / 20) * 100)}
+                  {(() => {
+                    const totalL = questions.filter((q) => q.section === "listening").length;
+                    const totalR = questions.filter((q) => q.section === "reading").length;
+                    return Math.round((latestResult.answers.slice(totalL).filter((a) => a.correct).length / totalR) * 100);
+                  })()}
                 </div>
                 <div className="text-[12px] text-ink-tertiary">/ 100</div>
               </div>
             </div>
 
             <div className="text-[13px] text-ink-tertiary text-center">
-              {latestResult.answers.filter((a) => a.correct).length}/40 correct &middot; Pass mark: 120/200
+              {latestResult.answers.filter((a) => a.correct).length}/{questions.length} {t.testPage.correct} &middot; {t.testPage.passScore}: 120/200
             </div>
 
-            {/* Wrong answers review */}
-            {questions.filter((_, i) => latestResult.answers[i] && !latestResult.answers[i].correct).length > 0 && (
-              <div className="space-y-2">
+            {/* Full review */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
                 <div className="text-[13px] font-semibold text-ink-secondary">{t.testPage.reviewAnswers}</div>
-                {questions
-                  .map((q, i) => ({ q, i }))
-                  .filter(({ i }) => latestResult.answers[i] && !latestResult.answers[i].correct)
-                  .slice(0, 15)
-                  .map(({ q }) => (
-                    <div key={q.id} className="rounded-xl bg-bg-raised border border-border p-3.5 text-[13px]">
-                      <div className="flex items-center gap-2 text-ink-tertiary mb-1">
-                        <span className="font-mono">Q{q.id}</span>
-                        <span className="uppercase text-[11px]">{q.section} · Part {q.part}</span>
-                      </div>
-                      <div className="text-ink">{q.prompt || q.instruction}</div>
-                      <div className="text-jade font-medium mt-1.5 flex items-center gap-1.5">
-                        <IconCheck className="w-3.5 h-3.5" />
-                        {q.options[q.correctIndex]}
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex gap-2 text-[12px] text-ink-tertiary">
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-jade inline-block" /> {latestResult.answers.filter((a) => a.correct).length}</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red inline-block" /> {latestResult.answers.filter((a) => !a.correct).length}</span>
+                </div>
               </div>
-            )}
+
+              {examMeta.map((sec) => (
+                <div key={`${sec.section}-${sec.part}`}>
+                  <div className="text-[11px] text-ink-tertiary uppercase tracking-wide mb-1.5 mt-3">
+                    {sec.section === "listening" ? `听力 ${t.testPage.listening}` : `阅读 ${t.testPage.reading}`} · {sec.label}
+                  </div>
+                  {questions.slice(sec.range[0] - 1, sec.range[1]).map((q) => {
+                    const idx = q.id - 1;
+                    const userAnswer = answers[idx];
+                    const isCorrect = latestResult.answers[idx]?.correct;
+                    const skipped = userAnswer === null;
+
+                    return (
+                      <div
+                        key={q.id}
+                        className={`rounded-xl border p-3.5 text-[13px] mb-1.5 ${
+                          isCorrect
+                            ? "border-jade/20 bg-jade-light/30"
+                            : "border-red/20 bg-red-light/30"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white ${isCorrect ? "bg-jade" : "bg-red"}`}>
+                            {q.id}
+                          </span>
+                          <span className="text-ink-secondary text-[12px]">{q.instruction}</span>
+                        </div>
+
+                        {q.prompt && <div className="text-[14px] text-ink mb-2">{q.prompt}</div>}
+                        {q.context && <div className="text-lg font-semibold text-ink mb-2">{q.context}</div>}
+
+                        <div className="space-y-1">
+                          {q.options.map((opt, oi) => {
+                            const isUserPick = userAnswer === oi;
+                            const isCorrectOpt = oi === q.correctIndex;
+                            let cls = "text-ink-tertiary";
+                            if (isCorrectOpt) cls = "text-jade font-medium";
+                            else if (isUserPick && !isCorrect) cls = "text-red line-through";
+
+                            return (
+                              <div key={oi} className={`flex items-center gap-2 ${cls}`}>
+                                {isCorrectOpt && <IconCheck className="w-3.5 h-3.5 text-jade shrink-0" />}
+                                {isUserPick && !isCorrect && <IconX className="w-3.5 h-3.5 text-red shrink-0" />}
+                                {!isCorrectOpt && !isUserPick && <span className="w-3.5 shrink-0" />}
+                                <span>{opt}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {skipped && (
+                          <div className="text-[12px] text-red mt-1.5 italic">Skipped</div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
 
             <div className="flex gap-2">
               <button
                 onClick={() => setState("intro")}
                 className="flex-1 rounded-xl border border-border hover:border-border-strong py-3 text-[14px] text-ink-secondary transition-colors"
               >
-                Back
+                {t.testPage.back}
               </button>
               <button
                 onClick={startTest}
