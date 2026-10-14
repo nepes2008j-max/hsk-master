@@ -132,7 +132,7 @@ export default function SettingsPage() {
             HSK Master — Chinese Language Learning & Exam Prep
           </div>
           <div className="text-[13px] text-ink-tertiary">
-            HSK 3.0 Level 1 &middot; 300 words &middot; 58 grammar points
+            HSK 3.0 Levels 1–2 &middot; 520 words &middot; 93 grammar points
           </div>
         </div>
       </div>
