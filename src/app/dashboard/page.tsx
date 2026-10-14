@@ -30,12 +30,10 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold text-ink tracking-tight">
-            {t.dashboard.title} <span className="text-ink-secondary font-normal">{t.dashboard.subtitle}</span>
-          </h1>
-        </div>
+      <div className="space-y-6">
+        <h1 className="text-xl font-bold text-ink tracking-tight">
+          {t.dashboard.title} <span className="text-ink-secondary font-normal text-[15px]">{t.dashboard.subtitle}</span>
+        </h1>
 
         {progress && isGamified && (
           <div className="flex gap-4 p-4 rounded-xl bg-bg-raised border border-border">
@@ -69,19 +67,19 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {sections.map(({ href, title, desc, Icon, accent }) => (
             <Link
               key={href}
               href={href}
-              className="group flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 transition-all hover:border-border-strong hover:shadow-sm active:scale-[0.98]"
+              className="group flex flex-col gap-3 rounded-xl border border-border bg-bg-raised p-3.5 transition-all hover:border-border-strong hover:shadow-sm active:scale-[0.97]"
             >
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${accent}`}>
-                <Icon className="w-5 h-5" />
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${accent}`}>
+                <Icon className="w-[18px] h-[18px]" />
               </div>
               <div className="min-w-0">
-                <div className="text-[15px] font-semibold text-ink group-hover:text-jade transition-colors">{title}</div>
-                <div className="text-[13px] text-ink-tertiary">{desc}</div>
+                <div className="text-[14px] font-semibold text-ink group-hover:text-jade transition-colors leading-tight">{title}</div>
+                <div className="text-[12px] text-ink-tertiary mt-0.5 leading-snug line-clamp-2">{desc}</div>
               </div>
             </Link>
           ))}

@@ -143,13 +143,13 @@ export default function DictionaryPage() {
             {filtered.map((word, i) => (
               <div
                 key={`${word.hanzi}-${i}`}
-                className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 hover:bg-bg-raised transition-colors group"
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-bg-raised active:bg-bg-sunken transition-colors"
               >
-                <span className="text-lg font-semibold text-ink min-w-[3.5rem]">{word.hanzi}</span>
-                {showPinyin && (
-                  <span className="text-[13px] text-ink-tertiary min-w-[4.5rem]">{word.pinyin}</span>
-                )}
-                <span className="text-[14px] text-ink-secondary flex-1">{tr(word.hanzi)?.meaning ?? word.english}</span>
+                <div className="flex flex-col min-w-[3rem]">
+                  <span className="text-[17px] font-semibold text-ink leading-tight">{word.hanzi}</span>
+                  {showPinyin && <span className="text-[11px] text-ink-tertiary leading-tight">{word.pinyin}</span>}
+                </div>
+                <span className="text-[13px] text-ink-secondary flex-1 leading-snug">{tr(word.hanzi)?.meaning ?? word.english}</span>
                 {word.hsk && (
                   <span className="text-[10px] font-bold text-jade bg-jade-light rounded px-1.5 py-0.5 shrink-0">
                     HSK{word.hsk}
@@ -157,7 +157,7 @@ export default function DictionaryPage() {
                 )}
                 <button
                   onClick={() => speak(word.hanzi)}
-                  className="p-1.5 rounded-lg text-ink-tertiary hover:text-jade hover:bg-jade-light transition-colors shrink-0 opacity-0 group-hover:opacity-100 sm:opacity-100"
+                  className="p-2 rounded-lg text-ink-tertiary hover:text-jade hover:bg-jade-light transition-colors shrink-0"
                 >
                   <IconVolume className="w-4 h-4" />
                 </button>

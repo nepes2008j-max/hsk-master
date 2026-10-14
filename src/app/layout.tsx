@@ -23,16 +23,14 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAF9F7" },
-    { media: "(prefers-color-scheme: dark)", color: "#0F0E0D" },
-  ],
+  viewportFit: "cover",
+  themeColor: "#FAF9F7",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="light" className={`${inter.variable} h-full`}>
-      <body className="min-h-full font-[family-name:var(--font-inter)]"><LangWrapper>{children}</LangWrapper></body>
+    <html lang="en" className={`${inter.variable}`}>
+      <body className="min-h-[100dvh] font-[family-name:var(--font-inter)]"><LangWrapper>{children}</LangWrapper></body>
     </html>
   );
 }

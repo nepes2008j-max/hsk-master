@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconHome, IconBook, IconPencil, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconGamepad } from "./Icons";
+import { IconHome, IconBook, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconPencil, IconGamepad } from "./Icons";
 import { useLang, type Lang } from "@/lib/i18n";
 
 const langCycle: Lang[] = ["en", "ru", "tk"];
@@ -17,7 +17,7 @@ export default function Nav() {
     setLang(langCycle[(i + 1) % langCycle.length]);
   };
 
-  const links = [
+  const allLinks = [
     { href: "/dashboard", label: t.home, Icon: IconHome },
     { href: "/learn/vocabulary", label: t.vocab, Icon: IconBook },
     { href: "/learn/grammar", label: t.grammar, Icon: IconPencil },
@@ -27,6 +27,16 @@ export default function Nav() {
     { href: "/test", label: t.test, Icon: IconClipboard },
     { href: "/games", label: t.games, Icon: IconGamepad },
   ] as const;
+
+  const mobileLinks = [
+    { href: "/dashboard", label: t.home, Icon: IconHome },
+    { href: "/learn/vocabulary", label: t.vocab, Icon: IconBook },
+    { href: "/cards", label: t.cards, Icon: IconCards },
+    { href: "/test", label: t.test, Icon: IconClipboard },
+    { href: "/games", label: t.games, Icon: IconGamepad },
+  ] as const;
+
+  const isActive = (href: string) => pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 
   return (
     <>
@@ -38,23 +48,20 @@ export default function Nav() {
         </Link>
 
         <div className="flex flex-col gap-0.5 px-3 py-3 flex-1">
-          {links.map(({ href, label, Icon }) => {
-            const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${
-                  active
-                    ? "bg-jade-light text-jade-text"
-                    : "text-ink-secondary hover:text-ink hover:bg-bg-sunken"
-                }`}
-              >
-                <Icon className="w-[18px] h-[18px]" />
-                {label}
-              </Link>
-            );
-          })}
+          {allLinks.map(({ href, label, Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${
+                isActive(href)
+                  ? "bg-jade-light text-jade-text"
+                  : "text-ink-secondary hover:text-ink hover:bg-bg-sunken"
+              }`}
+            >
+              <Icon className="w-[18px] h-[18px]" />
+              {label}
+            </Link>
+          ))}
         </div>
 
         <div className="px-3 pb-3 space-y-0.5">
@@ -79,31 +86,21 @@ export default function Nav() {
         </div>
       </nav>
 
-      {/* Mobile bottom bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-bg-raised/95 backdrop-blur-md safe-area-bottom">
-        <div className="flex justify-around items-center h-16 max-w-lg mx-auto">
-          {links.map(({ href, label, Icon }) => {
-            const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`flex flex-col items-center gap-0.5 px-1 py-1 min-w-[44px] transition-colors ${
-                  active ? "text-jade" : "text-ink-tertiary"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="text-[10px] font-medium">{label}</span>
-              </Link>
-            );
-          })}
-          <button
-            onClick={nextLang}
-            className="flex flex-col items-center gap-0.5 px-1 py-1 min-w-[44px] text-ink-tertiary"
-          >
-            <span className="w-5 h-5 flex items-center justify-center text-[10px] font-bold rounded border border-current">{langFlag[lang]}</span>
-            <span className="text-[10px] font-medium">{langFlag[lang]}</span>
-          </button>
+      {/* Mobile bottom bar — 5 key items only */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-bg-raised/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]">
+        <div className="flex justify-around items-center h-14 max-w-lg mx-auto px-2">
+          {mobileLinks.map(({ href, label, Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] py-1.5 rounded-lg transition-colors ${
+                isActive(href) ? "text-jade" : "text-ink-tertiary active:text-ink"
+              }`}
+            >
+              <Icon className="w-[22px] h-[22px]" />
+              <span className="text-[10px] font-medium leading-tight">{label}</span>
+            </Link>
+          ))}
         </div>
       </nav>
     </>

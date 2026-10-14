@@ -31,7 +31,7 @@ const includes = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100dvh]">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur-lg">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -39,16 +39,16 @@ export default function LandingPage() {
             <span className="text-xl font-bold text-jade">HSK</span>
             <span className="text-lg font-semibold text-ink">Master</span>
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Link href="/pricing" className="text-[14px] text-ink-secondary hover:text-ink font-medium hidden sm:block">
               Pricing
             </Link>
-            <Link href="/dashboard" className="text-[14px] text-ink-secondary hover:text-ink font-medium">
+            <Link href="/dashboard" className="text-[14px] text-ink-secondary hover:text-ink font-medium hidden sm:block">
               Log in
             </Link>
             <Link
               href="/dashboard"
-              className="bg-jade hover:bg-jade-hover text-white text-[14px] font-semibold px-4 py-2 rounded-lg transition-colors"
+              className="bg-jade hover:bg-jade-hover text-white text-[13px] sm:text-[14px] font-semibold px-3.5 py-2 rounded-lg transition-colors"
             >
               Start learning
             </Link>
@@ -57,46 +57,46 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-24 pb-12 sm:pb-16">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 text-[13px] font-medium text-jade-text bg-jade-light px-3 py-1 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 text-[12px] sm:text-[13px] font-medium text-jade-text bg-jade-light px-3 py-1 rounded-full mb-5">
             HSK 3.0 — Updated for 2026
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-ink leading-[1.1] tracking-tight">
-            Pass your HSK 1 exam.<br />
+          <h1 className="text-3xl sm:text-5xl font-bold text-ink leading-[1.1] tracking-tight">
+            Pass your HSK exam.<br />
             <span className="text-ink-secondary">Without the fluff.</span>
           </h1>
-          <p className="mt-5 text-lg text-ink-secondary leading-relaxed max-w-xl">
-            300 words. 58 grammar points. Stroke order. Mock tests. Everything mapped
+          <p className="mt-4 text-[15px] sm:text-lg text-ink-secondary leading-relaxed max-w-xl">
+            520 words. 93 grammar points. Stroke order. Mock tests. Everything mapped
             to what&apos;s actually on the exam — nothing that isn&apos;t.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 sm:mt-8 flex gap-2.5">
             <Link
               href="/dashboard"
-              className="bg-jade hover:bg-jade-hover text-white text-[15px] font-semibold px-6 py-3 rounded-lg transition-colors"
+              className="bg-jade hover:bg-jade-hover text-white text-[14px] sm:text-[15px] font-semibold px-5 sm:px-6 py-3 rounded-xl transition-colors"
             >
-              Start 5-day free trial
+              Start free trial
             </Link>
             <Link
               href="#pricing"
-              className="border border-border-strong hover:bg-bg-sunken text-ink text-[15px] font-medium px-6 py-3 rounded-lg transition-colors"
+              className="border border-border-strong hover:bg-bg-sunken text-ink text-[14px] sm:text-[15px] font-medium px-5 sm:px-6 py-3 rounded-xl transition-colors"
             >
-              View pricing
+              Pricing
             </Link>
           </div>
         </div>
 
         {/* Quick proof */}
-        <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6">
+        <div className="mt-10 sm:mt-16 grid grid-cols-4 gap-4 sm:gap-6">
           {[
-            { n: "300", l: "vocabulary words" },
-            { n: "58", l: "grammar points" },
+            { n: "520", l: "words" },
+            { n: "93", l: "grammar" },
             { n: "100+", l: "characters" },
-            { n: "40", l: "test questions" },
+            { n: "60", l: "test Q's" },
           ].map(({ n, l }) => (
             <div key={l}>
-              <div className="text-3xl font-bold text-jade tabular-nums">{n}</div>
-              <div className="text-[13px] text-ink-secondary mt-0.5">{l}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-jade tabular-nums">{n}</div>
+              <div className="text-[11px] sm:text-[13px] text-ink-secondary mt-0.5">{l}</div>
             </div>
           ))}
         </div>
