@@ -8,9 +8,11 @@ import { speak } from "@/lib/tts";
 import { useProgress } from "@/hooks/useProgress";
 import { IconVolume, IconCheck, IconChevron } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
+import { useGrammarTranslation } from "@/hooks/useGrammarTranslation";
 
 export default function GrammarPage() {
   const { t } = useLang();
+  const gt = useGrammarTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [level, setLevel] = useState<1 | 2>(1);
@@ -81,6 +83,7 @@ export default function GrammarPage() {
           {filtered.map((point) => {
             const completed = completedSet.has(point.id);
             const expanded = expandedId === point.id;
+            const tr = gt(point.id);
 
             return (
               <div
@@ -97,7 +100,7 @@ export default function GrammarPage() {
                 >
                   {completed && <IconCheck className="w-4.5 h-4.5 text-jade shrink-0" />}
                   <div className="flex-1 min-w-0">
-                    <div className="text-[15px] font-semibold text-ink">{point.title}</div>
+                    <div className="text-[15px] font-semibold text-ink">{tr?.title ?? point.title}</div>
                     <div className="text-[13px] text-ink-tertiary font-mono mt-0.5">{point.pattern}</div>
                   </div>
                   <IconChevron
@@ -108,7 +111,7 @@ export default function GrammarPage() {
 
                 {expanded && (
                   <div className="border-t border-border px-4 pb-4 pt-3 space-y-4">
-                    <p className="text-[14px] text-ink-secondary leading-relaxed">{point.explanation}</p>
+                    <p className="text-[14px] text-ink-secondary leading-relaxed">{tr?.explanation ?? point.explanation}</p>
 
                     <div className="space-y-2">
                       {point.examples.map((ex, i) => (
@@ -119,7 +122,7 @@ export default function GrammarPage() {
                           <div className="flex-1 space-y-0.5">
                             <div className="text-[15px] text-ink">{ex.hanzi}</div>
                             <div className="text-[13px] text-jade">{ex.pinyin}</div>
-                            <div className="text-[13px] text-ink-secondary">{ex.english}</div>
+                            <div className="text-[13px] text-ink-secondary">{tr?.examples[i] ?? ex.english}</div>
                           </div>
                           <button
                             onClick={() => speak(ex.hanzi, 0.7)}

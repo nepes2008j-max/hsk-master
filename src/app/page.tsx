@@ -19,8 +19,8 @@ const plans = [
 ];
 
 const includes = [
-  "All 300 HSK 1 vocabulary words",
-  "58 grammar points with examples",
+  "520 HSK 1–2 vocabulary words",
+  "93 grammar points with examples",
   "Stroke order practice (100+ chars)",
   "Unlimited flashcard decks",
   "Unlimited mock tests",

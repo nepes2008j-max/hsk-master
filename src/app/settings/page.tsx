@@ -85,7 +85,7 @@ export default function SettingsPage() {
                 <span className="text-[11px] uppercase tracking-wide">{t.settingsPage.wordsLearned}</span>
               </div>
               <div className="text-xl font-bold text-ink tabular-nums">
-                {progress.wordsLearned.length}<span className="text-ink-tertiary font-normal text-[13px]">/300</span>
+                {progress.wordsLearned.length}<span className="text-ink-tertiary font-normal text-[13px]">/520</span>
               </div>
             </div>
             <div className="rounded-xl bg-bg-sunken p-3.5 space-y-1">
@@ -94,7 +94,7 @@ export default function SettingsPage() {
                 <span className="text-[11px] uppercase tracking-wide">{t.settingsPage.grammarDone}</span>
               </div>
               <div className="text-xl font-bold text-ink tabular-nums">
-                {progress.grammarCompleted.length}<span className="text-ink-tertiary font-normal text-[13px]">/58</span>
+                {progress.grammarCompleted.length}<span className="text-ink-tertiary font-normal text-[13px]">/93</span>
               </div>
             </div>
             <div className="rounded-xl bg-bg-sunken p-3.5 space-y-1">

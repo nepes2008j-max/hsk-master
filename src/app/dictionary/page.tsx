@@ -13,12 +13,12 @@ export default function DictionaryPage() {
   const tr = useTranslation();
   const [search, setSearch] = useState("");
   const [activeTopic, setActiveTopic] = useState<string | null>(null);
-  const [hskOnly, setHskOnly] = useState(false);
+  const [hskFilter, setHskFilter] = useState<0 | 1 | 2>(0);
   const [showPinyin, setShowPinyin] = useState(true);
 
   const filtered = useMemo(() => {
     let words = dictionary;
-    if (hskOnly) words = words.filter((w) => w.hsk === 1);
+    if (hskFilter) words = words.filter((w) => w.hsk === hskFilter);
     if (activeTopic) words = words.filter((w) => w.topic === activeTopic);
     if (search) {
       const q = search.toLowerCase();
@@ -30,16 +30,16 @@ export default function DictionaryPage() {
       );
     }
     return words;
-  }, [search, activeTopic, hskOnly]);
+  }, [search, activeTopic, hskFilter]);
 
   const topicCounts = useMemo(() => {
     const counts = new Map<string, number>();
-    const source = hskOnly ? dictionary.filter((w) => w.hsk === 1) : dictionary;
+    const source = hskFilter ? dictionary.filter((w) => w.hsk === hskFilter) : dictionary;
     for (const w of source) {
       counts.set(w.topic, (counts.get(w.topic) || 0) + 1);
     }
     return counts;
-  }, [hskOnly]);
+  }, [hskFilter]);
 
   const currentTopicLabel = activeTopic
     ? topics.find((t) => t.id === activeTopic)?.label
@@ -56,22 +56,17 @@ export default function DictionaryPage() {
             </span>
           </h1>
           <div className="flex gap-1.5">
-            <button
-              onClick={() => setHskOnly(false)}
-              className={`rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
-                !hskOnly ? "bg-jade text-white" : "bg-bg-sunken text-ink-tertiary"
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setHskOnly(true)}
-              className={`rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
-                hskOnly ? "bg-jade text-white" : "bg-bg-sunken text-ink-tertiary"
-              }`}
-            >
-              HSK 1
-            </button>
+            {([0, 1, 2] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => setHskFilter(l)}
+                className={`rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
+                  hskFilter === l ? "bg-jade text-white" : "bg-bg-sunken text-ink-tertiary"
+                }`}
+              >
+                {l === 0 ? "All" : `HSK ${l}`}
+              </button>
+            ))}
           </div>
         </div>
 

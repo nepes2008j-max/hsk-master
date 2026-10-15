@@ -89,8 +89,8 @@ export default function CharactersPage() {
         const mistakes = data.totalMistakes;
         setQuizResult(
           mistakes === 0
-            ? "Perfect! No mistakes."
-            : `Completed with ${mistakes} mistake${mistakes > 1 ? "s" : ""}.`
+            ? t.charsPage.perfect
+            : `${mistakes} ${t.charsPage.mistakes}`
         );
         markCharacterPracticed(char);
       },

@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "HSK Master — Pass Your HSK Exam",
-  description: "The focused way to learn Chinese and pass the HSK exam. 300 vocabulary words, 58 grammar points, stroke order practice, flashcards, and mock tests — all in one app.",
+  description: "The focused way to learn Chinese and pass the HSK exam. 520 vocabulary words, 93 grammar points, stroke order practice, flashcards, and mock tests — all in one app.",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.svg",
