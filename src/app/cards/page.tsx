@@ -20,6 +20,7 @@ import { IconVolume, IconStar, IconX, IconCheck, IconCards, IconChevron } from "
 import { useLang } from "@/lib/i18n";
 
 type CardType = "hanzi-meaning" | "meaning-hanzi" | "audio-hanzi" | "hanzi-pinyin";
+type ReviewMode = "mixed" | "three-way" | "reading" | "recognition";
 
 interface FlashCard {
   id: string;
@@ -28,22 +29,37 @@ interface FlashCard {
   audio?: string;
   type: CardType;
   deck: string;
+  hanzi?: string;
+  pinyin?: string;
+  english?: string;
+}
+
+function buildCards(
+  words: { id: number; hanzi: string; pinyin: string; english: string }[],
+  prefix: string,
+  deck: string,
+): FlashCard[] {
+  return words.flatMap((w) => [
+    { id: `${prefix}-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck, hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+    { id: `${prefix}-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck, hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+  ]);
 }
 
 const HSK_CARDS: FlashCard[] = [
-  ...vocabulary.flatMap((w) => [
-    { id: `hsk-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "HSK 1" },
-    { id: `hsk-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "HSK 1" },
-  ]),
-  ...vocabulary2.flatMap((w) => [
-    { id: `hsk2-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "HSK 2" },
-    { id: `hsk2-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "HSK 2" },
-  ]),
+  ...buildCards(vocabulary, "hsk", "HSK 1"),
+  ...buildCards(vocabulary2, "hsk2", "HSK 2"),
   ...allAcademicWords.flatMap((w) => [
-    { id: `stem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "STEM" },
-    { id: `stem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "STEM" },
+    { id: `stem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+    { id: `stem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
   ]),
 ];
+
+function getHidden(): Set<string> {
+  try { return new Set(JSON.parse(localStorage.getItem("hsk-hidden-cards") || "[]")); } catch { return new Set(); }
+}
+function saveHidden(ids: Set<string>) {
+  try { localStorage.setItem("hsk-hidden-cards", JSON.stringify([...ids])); } catch { /* noop */ }
+}
 
 export default function CardsPage() {
   const { t } = useLang();
@@ -52,6 +68,7 @@ export default function CardsPage() {
   const [dueCards, setDueCards] = useState<FlashCard[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [flipStage, setFlipStage] = useState(0);
   const [userCards, setUserCards] = useState<UserCard[]>([]);
   const [newFront, setNewFront] = useState("");
   const [newBack, setNewBack] = useState("");
@@ -61,6 +78,10 @@ export default function CardsPage() {
   const [showNewDeckInput, setShowNewDeckInput] = useState(false);
   const [openDeck, setOpenDeck] = useState<string | null>(null);
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
+  const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
+  const [reviewMode, setReviewMode] = useState<ReviewMode>(() => {
+    try { return (localStorage.getItem("hsk-review-mode") as ReviewMode) || "mixed"; } catch { return "mixed"; }
+  });
 
   const userDecks = useMemo(() => {
     const deckSet = new Set(userCards.map((c) => c.deck));
@@ -97,9 +118,18 @@ export default function CardsPage() {
     const states = await getAllSRSStates();
     const stateMap = new Map(states.map((s) => [s.cardId, s]));
 
-    const reviewable = reviewDeck
+    let reviewable = reviewDeck
       ? all.filter((c) => c.deck === reviewDeck)
       : all;
+
+    // For non-mixed modes, only use hanzi-meaning cards (one per word)
+    if (reviewMode !== "mixed") {
+      reviewable = reviewable.filter((c) => c.type === "hanzi-meaning");
+    }
+
+    // Exclude hidden cards
+    const hidden = getHidden();
+    reviewable = reviewable.filter((c) => !hidden.has(c.id));
 
     const due = reviewable.filter((card) => {
       const state = stateMap.get(card.id);
@@ -110,11 +140,17 @@ export default function CardsPage() {
     setDueCards(shuffled);
     setCurrentIdx(0);
     setFlipped(false);
-  }, [reviewDeck]);
+    setFlipStage(0);
+  }, [reviewDeck, reviewMode]);
 
   useEffect(() => {
     loadCards();
   }, [loadCards]);
+
+  const changeMode = (mode: ReviewMode) => {
+    setReviewMode(mode);
+    try { localStorage.setItem("hsk-review-mode", mode); } catch { /* noop */ }
+  };
 
   const currentCard = dueCards[currentIdx];
 
@@ -126,10 +162,123 @@ export default function CardsPage() {
     if (currentIdx + 1 < dueCards.length) {
       setCurrentIdx(currentIdx + 1);
       setFlipped(false);
+      setFlipStage(0);
     } else {
       setDueCards([]);
     }
   };
+
+  const handleHide = () => {
+    if (!currentCard) return;
+    const next = new Set(hiddenIds);
+    next.add(currentCard.id);
+    setHiddenIds(next);
+    saveHidden(next);
+
+    if (currentIdx + 1 < dueCards.length) {
+      setDueCards((prev) => prev.filter((_, i) => i !== currentIdx));
+      setFlipped(false);
+      setFlipStage(0);
+    } else {
+      setDueCards((prev) => prev.filter((_, i) => i !== currentIdx));
+    }
+  };
+
+  const resetHidden = (deck?: string) => {
+    if (!deck) {
+      setHiddenIds(new Set());
+      saveHidden(new Set());
+    } else {
+      const deckCardIds = new Set(HSK_CARDS.filter((c) => c.deck === deck).map((c) => c.id));
+      const next = new Set([...hiddenIds].filter((id) => !deckCardIds.has(id)));
+      setHiddenIds(next);
+      saveHidden(next);
+    }
+  };
+
+  const hiddenCountForDeck = (deck: string) => {
+    const deckCardIds = HSK_CARDS.filter((c) => c.deck === deck).map((c) => c.id);
+    return deckCardIds.filter((id) => hiddenIds.has(id)).length;
+  };
+
+  const handleFlip = () => {
+    if (reviewMode === "three-way" && currentCard?.hanzi) {
+      if (flipStage < 2) {
+        setFlipStage(flipStage + 1);
+        if (flipStage === 0 && currentCard.audio) speak(currentCard.audio);
+      }
+    } else {
+      setFlipped(!flipped);
+      if (currentCard?.audio) speak(currentCard.audio);
+    }
+  };
+
+  // Render card content based on mode
+  const renderCardFront = () => {
+    if (!currentCard) return null;
+    const c = currentCard;
+    const hasRaw = c.hanzi && c.pinyin && c.english;
+
+    if (!hasRaw) return <div className="text-3xl font-bold text-ink">{c.front}</div>;
+
+    switch (reviewMode) {
+      case "reading":
+        return (
+          <div className="text-center">
+            <div className="text-3xl font-bold text-ink">{c.hanzi}</div>
+            <div className="text-lg text-primary mt-2">{c.pinyin}</div>
+          </div>
+        );
+      case "recognition":
+        return (
+          <div className="text-center">
+            <div className="text-2xl font-bold text-ink">{c.english}</div>
+            <div className="text-lg text-primary mt-2">{c.pinyin}</div>
+          </div>
+        );
+      case "three-way":
+        if (flipStage === 0) return <div className="text-3xl font-bold text-ink">{c.hanzi}</div>;
+        if (flipStage === 1) return (
+          <div className="text-center">
+            <div className="text-3xl font-bold text-ink">{c.hanzi}</div>
+            <div className="text-lg text-primary mt-2">{c.pinyin}</div>
+          </div>
+        );
+        return (
+          <div className="text-center">
+            <div className="text-3xl font-bold text-ink">{c.hanzi}</div>
+            <div className="text-lg text-primary mt-1">{c.pinyin}</div>
+            <div className="text-lg text-ink-secondary mt-1">{c.english}</div>
+          </div>
+        );
+      default:
+        return <div className="text-3xl font-bold text-ink">{c.front}</div>;
+    }
+  };
+
+  const renderCardBack = () => {
+    if (!currentCard) return null;
+    const c = currentCard;
+    const hasRaw = c.hanzi && c.pinyin && c.english;
+
+    if (!hasRaw) return <div className="text-3xl font-bold text-ink">{c.back}</div>;
+
+    switch (reviewMode) {
+      case "reading":
+        return <div className="text-2xl font-bold text-ink">{c.english}</div>;
+      case "recognition":
+        return <div className="text-3xl font-bold text-ink">{c.hanzi}</div>;
+      default:
+        return <div className="text-3xl font-bold text-ink">{c.back}</div>;
+    }
+  };
+
+  const isRevealed = reviewMode === "three-way" ? flipStage === 2 : flipped;
+  const showHint = reviewMode === "three-way" && flipStage === 0
+    ? t.cardsPage.tapPinyin
+    : reviewMode === "three-way" && flipStage === 1
+    ? t.cardsPage.tapMeaning
+    : t.cardsPage.showAnswer;
 
   const handleCreateDeck = () => {
     const name = newDeckName.trim();
@@ -168,6 +317,13 @@ export default function CardsPage() {
     { key: "create" as const, label: t.cardsPage.create },
   ];
 
+  const modes: { key: ReviewMode; label: string }[] = [
+    { key: "mixed", label: t.cardsPage.mixed },
+    { key: "three-way", label: t.cardsPage.threeWay },
+    { key: "reading", label: t.cardsPage.reading },
+    { key: "recognition", label: t.cardsPage.recognition },
+  ];
+
   const deckCards = openDeck ? userCards.filter((c) => c.deck === openDeck) : [];
 
   return (
@@ -194,6 +350,24 @@ export default function CardsPage() {
         {/* ── Review ── */}
         {tab === "review" && (
           <div className="space-y-4">
+            {/* Mode selector */}
+            <div>
+              <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold mb-1.5">{t.cardsPage.mode}</div>
+              <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                {modes.map((m) => (
+                  <button
+                    key={m.key}
+                    onClick={() => changeMode(m.key)}
+                    className={`shrink-0 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                      reviewMode === m.key ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                    }`}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Deck filter */}
             <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
               <button
@@ -225,46 +399,49 @@ export default function CardsPage() {
                 </div>
 
                 <button
-                  onClick={() => {
-                    setFlipped(!flipped);
-                    if (currentCard.audio) speak(currentCard.audio);
-                  }}
+                  onClick={handleFlip}
                   className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 transition-all hover:border-primary/50 hover:shadow-md active:scale-[0.99]"
                 >
-                  <div className="text-3xl font-bold text-ink">
-                    {flipped ? currentCard.back : currentCard.front}
-                  </div>
-                  {!flipped && (
-                    <div className="text-[13px] text-ink-tertiary">{t.cardsPage.showAnswer}</div>
+                  {isRevealed ? renderCardBack() : renderCardFront()}
+                  {!isRevealed && (
+                    <div className="text-[13px] text-ink-tertiary">{showHint}</div>
                   )}
                   <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
                 </button>
 
-                {flipped && (
-                  <div className="grid grid-cols-4 gap-2">
+                {isRevealed && (
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-4 gap-2">
+                      <button
+                        onClick={() => handleRate(1)}
+                        className="rounded-xl bg-warning-light py-2.5 text-[13px] font-medium text-warning-text transition-colors hover:bg-warning/10"
+                      >
+                        {t.cardsPage.again}
+                      </button>
+                      <button
+                        onClick={() => handleRate(3)}
+                        className="rounded-xl bg-accent-light py-2.5 text-[13px] font-medium text-accent-text transition-colors hover:bg-accent/10"
+                      >
+                        {t.cardsPage.hard}
+                      </button>
+                      <button
+                        onClick={() => handleRate(4)}
+                        className="rounded-xl bg-primary-light py-2.5 text-[13px] font-medium text-primary-text transition-colors hover:bg-primary/10"
+                      >
+                        {t.cardsPage.good}
+                      </button>
+                      <button
+                        onClick={() => handleRate(5)}
+                        className="rounded-xl bg-blue-light py-2.5 text-[13px] font-medium text-blue transition-colors hover:bg-blue/10"
+                      >
+                        {t.cardsPage.easy}
+                      </button>
+                    </div>
                     <button
-                      onClick={() => handleRate(1)}
-                      className="rounded-xl bg-warning-light py-2.5 text-[13px] font-medium text-warning-text transition-colors hover:bg-warning/10"
+                      onClick={handleHide}
+                      className="w-full rounded-xl border border-border py-2 text-[13px] font-medium text-ink-tertiary hover:text-warning hover:border-warning/30 transition-colors"
                     >
-                      {t.cardsPage.again}
-                    </button>
-                    <button
-                      onClick={() => handleRate(3)}
-                      className="rounded-xl bg-accent-light py-2.5 text-[13px] font-medium text-accent-text transition-colors hover:bg-accent/10"
-                    >
-                      {t.cardsPage.hard}
-                    </button>
-                    <button
-                      onClick={() => handleRate(4)}
-                      className="rounded-xl bg-primary-light py-2.5 text-[13px] font-medium text-primary-text transition-colors hover:bg-primary/10"
-                    >
-                      {t.cardsPage.good}
-                    </button>
-                    <button
-                      onClick={() => handleRate(5)}
-                      className="rounded-xl bg-blue-light py-2.5 text-[13px] font-medium text-blue transition-colors hover:bg-blue/10"
-                    >
-                      {t.cardsPage.easy}
+                      {t.cardsPage.hideCard}
                     </button>
                   </div>
                 )}
@@ -290,50 +467,31 @@ export default function CardsPage() {
         {/* ── Decks ── */}
         {tab === "decks" && !openDeck && (
           <div className="space-y-3">
-            {/* HSK 1 built-in deck */}
-            <button
-              onClick={() => setOpenDeck("HSK 1")}
-              className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
-            >
-              <div className="w-11 h-11 rounded-xl bg-primary-light flex items-center justify-center shrink-0">
-                <IconCards className="w-5.5 h-5.5 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[15px] font-semibold text-ink">HSK 1</div>
-                <div className="text-[13px] text-ink-tertiary">{vocabulary.length * 2} {t.cardsPage.cardsDue} &middot; {t.cardsPage.builtIn}</div>
-              </div>
-              <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
-            </button>
-
-            {/* HSK 2 built-in deck */}
-            <button
-              onClick={() => setOpenDeck("HSK 2")}
-              className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
-            >
-              <div className="w-11 h-11 rounded-xl bg-primary-light flex items-center justify-center shrink-0">
-                <IconCards className="w-5.5 h-5.5 text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[15px] font-semibold text-ink">HSK 2</div>
-                <div className="text-[13px] text-ink-tertiary">{vocabulary2.length * 2} {t.cardsPage.cardsDue} &middot; {t.cardsPage.builtIn}</div>
-              </div>
-              <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
-            </button>
-
-            {/* STEM built-in deck */}
-            <button
-              onClick={() => setOpenDeck("STEM")}
-              className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
-            >
-              <div className="w-11 h-11 rounded-xl bg-blue-light flex items-center justify-center shrink-0">
-                <IconCards className="w-5.5 h-5.5 text-blue" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-[15px] font-semibold text-ink">STEM / CSCA</div>
-                <div className="text-[13px] text-ink-tertiary">{allAcademicWords.length * 2} {t.cardsPage.cardsDue} &middot; {t.cardsPage.builtIn}</div>
-              </div>
-              <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
-            </button>
+            {(["HSK 1", "HSK 2", "STEM"] as const).map((deckName) => {
+              const hidden = hiddenCountForDeck(deckName);
+              const total = deckName === "HSK 1" ? vocabulary.length * 2
+                : deckName === "HSK 2" ? vocabulary2.length * 2
+                : allAcademicWords.length * 2;
+              return (
+                <button
+                  key={deckName}
+                  onClick={() => setOpenDeck(deckName)}
+                  className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
+                >
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${deckName === "STEM" ? "bg-blue-light" : "bg-primary-light"}`}>
+                    <IconCards className={`w-5.5 h-5.5 ${deckName === "STEM" ? "text-blue" : "text-primary"}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[15px] font-semibold text-ink">{deckName === "STEM" ? "STEM / CSCA" : deckName}</div>
+                    <div className="text-[13px] text-ink-tertiary">
+                      {total} {t.cardsPage.cardsDue} &middot; {t.cardsPage.builtIn}
+                      {hidden > 0 && <span className="ml-1 text-warning">({hidden} {t.cardsPage.hiddenCount})</span>}
+                    </div>
+                  </div>
+                  <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
+                </button>
+              );
+            })}
 
             {/* User decks */}
             {userDecks.map((deck) => {
@@ -383,7 +541,7 @@ export default function CardsPage() {
 
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-lg font-bold text-ink">{openDeck}</div>
+                <div className="text-lg font-bold text-ink">{openDeck === "STEM" ? "STEM / CSCA" : openDeck}</div>
                 <div className="text-[13px] text-ink-tertiary">
                   {openDeck === "HSK 1"
                     ? `${vocabulary.length * 2} cards`
@@ -403,10 +561,25 @@ export default function CardsPage() {
             </div>
 
             {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" ? (
-              <div className="text-[13px] text-ink-tertiary rounded-xl bg-bg-sunken p-4">
-                {openDeck === "STEM"
-                  ? `Built-in STEM deck with ${allAcademicWords.length * 2} flashcards — math, science & CS vocabulary for CSCA preparation.`
-                  : `Built-in ${openDeck} deck with ${openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all ${openDeck === "HSK 1" ? 300 : 197} words.`}
+              <div className="space-y-3">
+                <div className="text-[13px] text-ink-tertiary rounded-xl bg-bg-sunken p-4">
+                  {openDeck === "STEM"
+                    ? `Built-in STEM deck with ${allAcademicWords.length * 2} flashcards — math, science & CS vocabulary for CSCA preparation.`
+                    : `Built-in ${openDeck} deck with ${openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all ${openDeck === "HSK 1" ? 300 : 197} words.`}
+                </div>
+                {hiddenCountForDeck(openDeck) > 0 && (
+                  <div className="flex items-center justify-between rounded-xl border border-warning/20 bg-warning-light/50 p-3">
+                    <span className="text-[13px] text-warning-text">
+                      {hiddenCountForDeck(openDeck)} {t.cardsPage.hiddenCount}
+                    </span>
+                    <button
+                      onClick={() => resetHidden(openDeck)}
+                      className="text-[13px] font-medium text-primary hover:underline"
+                    >
+                      {t.cardsPage.resetHidden}
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="space-y-1.5">
