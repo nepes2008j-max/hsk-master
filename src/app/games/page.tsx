@@ -3,6 +3,9 @@
 import { useState, useMemo, useCallback } from "react";
 import AppShell from "@/components/AppShell";
 import { vocabulary } from "@/data/vocabulary";
+import { vocabulary2 } from "@/data/vocabulary2";
+
+const allVocab = [...vocabulary, ...vocabulary2];
 import { speak } from "@/lib/tts";
 import { useLang } from "@/lib/i18n";
 import { IconVolume } from "@/components/Icons";
@@ -96,7 +99,7 @@ const twisters = [
 ];
 
 function PinyinWriter({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage"] }) {
-  const words = useMemo(() => shuffle(vocabulary).slice(0, 20), []);
+  const words = useMemo(() => shuffle(allVocab).slice(0, 20), []);
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState("");
   const [result, setResult] = useState<"correct" | "wrong" | null>(null);
@@ -174,7 +177,7 @@ function PinyinWriter({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage
 }
 
 function ToneMaster({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage"] }) {
-  const toneWords = useMemo(() => shuffle(vocabulary.filter((w) => getWordTone(w.pinyin) >= 1 && getWordTone(w.pinyin) <= 4)).slice(0, 20), []);
+  const toneWords = useMemo(() => shuffle(allVocab.filter((w) => getWordTone(w.pinyin) >= 1 && getWordTone(w.pinyin) <= 4)).slice(0, 20), []);
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);

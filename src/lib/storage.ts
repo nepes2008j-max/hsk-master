@@ -122,3 +122,26 @@ export async function addXP(amount: number): Promise<number> {
   await saveProgress({ xp: newXP });
   return newXP;
 }
+
+export async function exportAllData(): Promise<string> {
+  const db = await getDB();
+  const [srs, userCards, tests, progress] = await Promise.all([
+    db.getAll("srs"),
+    db.getAll("userCards"),
+    db.getAll("tests"),
+    db.get("progress", "current"),
+  ]);
+  return JSON.stringify({ version: 1, exportDate: new Date().toISOString(), srs, userCards, tests, progress });
+}
+
+export async function importAllData(json: string): Promise<void> {
+  const data = JSON.parse(json);
+  if (!data || typeof data !== "object") throw new Error("Invalid backup file");
+  const db = await getDB();
+  const tx = db.transaction(["srs", "userCards", "tests", "progress"], "readwrite");
+  for (const s of data.srs ?? []) tx.objectStore("srs").put(s);
+  for (const c of data.userCards ?? []) tx.objectStore("userCards").put(c);
+  for (const t of data.tests ?? []) tx.objectStore("tests").put(t);
+  if (data.progress) tx.objectStore("progress").put(data.progress, "current");
+  await tx.done;
+}

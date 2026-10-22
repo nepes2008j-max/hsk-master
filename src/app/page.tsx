@@ -2,34 +2,29 @@
 
 import Link from "next/link";
 import { IconCheck, IconBook, IconBrush, IconCards, IconClipboard, IconPencil, IconStar } from "@/components/Icons";
-
-const features = [
-  { Icon: IconBook, title: "497 Vocabulary Words", desc: "Every word you need for HSK 1–2 with pinyin, meaning, and example sentences. Tap any word to hear native pronunciation." },
-  { Icon: IconPencil, title: "93 Grammar Points", desc: "Clear pattern explanations with real examples. No textbook jargon — just the structure you need to understand Chinese sentences." },
-  { Icon: IconBrush, title: "Stroke Order Practice", desc: "Write characters the right way. Animated stroke demos and interactive quizzes for 100+ essential characters." },
-  { Icon: IconCards, title: "Smart Flashcards", desc: "Spaced repetition that adapts to you. Pre-built HSK 1–2 decks plus create your own cards for anything you struggle with." },
-  { Icon: IconClipboard, title: "Mock HSK Tests", desc: "Timed exams matching the real HSK format — 40 questions for Level 1, 60 for Level 2. Listening and reading sections scored out of 200." },
-  { Icon: IconStar, title: "Your Way", desc: "Switch between gamified mode with XP and streaks, or clean study mode. Your progress syncs across both." },
-];
-
-const plans = [
-  { name: "Monthly", price: "¥30", period: "/month", desc: "Full access, cancel anytime", save: null },
-  { name: "6 Months", price: "¥150", period: "/6 months", desc: "Most popular", save: "Save 17%", featured: true },
-  { name: "Annual", price: "¥250", period: "/year", desc: "Best value", save: "Save 31%" },
-];
-
-const includes = [
-  "497 HSK 1–2 vocabulary words",
-  "93 grammar points with examples",
-  "Stroke order practice (100+ chars)",
-  "Unlimited flashcard decks",
-  "Unlimited mock tests",
-  "Progress tracking & streaks",
-  "Works offline",
-  "Phone + laptop access",
-];
+import { useLang } from "@/lib/i18n";
 
 export default function LandingPage() {
+  const { t } = useLang();
+  const l = t.landing;
+
+  const features = [
+    { Icon: IconBook, title: l.feat1, desc: l.feat1d },
+    { Icon: IconPencil, title: l.feat2, desc: l.feat2d },
+    { Icon: IconBrush, title: l.feat3, desc: l.feat3d },
+    { Icon: IconCards, title: l.feat4, desc: l.feat4d },
+    { Icon: IconClipboard, title: l.feat5, desc: l.feat5d },
+    { Icon: IconStar, title: l.feat6, desc: l.feat6d },
+  ];
+
+  const plans = [
+    { name: l.monthly, price: "¥30", period: l.perMonth, desc: l.monthDesc, save: null },
+    { name: l.sixMonths, price: "¥150", period: l.perSix, desc: l.sixDesc, save: "Save 17%", featured: true },
+    { name: l.annual, price: "¥250", period: l.perYear, desc: l.annualDesc, save: "Save 31%" },
+  ];
+
+  const includes = [l.incl1, l.incl2, l.incl3, l.incl4, l.incl5, l.incl6, l.incl7, l.incl8];
+
   return (
     <div className="min-h-[100dvh]">
       {/* Header */}
@@ -41,16 +36,16 @@ export default function LandingPage() {
           </Link>
           <div className="flex items-center gap-2">
             <Link href="/pricing" className="text-[14px] text-ink-secondary hover:text-ink font-medium hidden sm:block">
-              Pricing
+              {l.viewPricing}
             </Link>
             <Link href="/dashboard" className="text-[14px] text-ink-secondary hover:text-ink font-medium hidden sm:block">
-              Log in
+              {l.login}
             </Link>
             <Link
               href="/dashboard"
               className="bg-primary hover:bg-primary-hover text-white text-[13px] sm:text-[14px] font-semibold px-3.5 py-2 rounded-lg transition-colors"
             >
-              Start learning
+              {l.cta}
             </Link>
           </div>
         </div>
@@ -60,28 +55,27 @@ export default function LandingPage() {
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-24 pb-12 sm:pb-16">
         <div className="max-w-2xl">
           <div className="inline-flex items-center gap-2 text-[12px] sm:text-[13px] font-medium text-primary-text bg-primary-light px-3 py-1 rounded-full mb-5">
-            HSK 3.0 — Updated for 2026
+            {l.tagline}
           </div>
           <h1 className="text-3xl sm:text-5xl font-bold text-ink leading-[1.1] tracking-tight">
-            Pass your HSK exam.<br />
-            <span className="text-ink-secondary">Without the fluff.</span>
+            {l.hero}<br />
+            <span className="text-ink-secondary">{l.heroSub}</span>
           </h1>
           <p className="mt-4 text-[15px] sm:text-lg text-ink-secondary leading-relaxed max-w-xl">
-            497 words. 93 grammar points. Stroke order. Mock tests. Everything mapped
-            to what&apos;s actually on the exam — nothing that isn&apos;t.
+            {l.heroDesc}
           </p>
           <div className="mt-6 sm:mt-8 flex gap-2.5">
             <Link
               href="/dashboard"
               className="bg-primary hover:bg-primary-hover text-white text-[14px] sm:text-[15px] font-semibold px-5 sm:px-6 py-3 rounded-xl transition-colors"
             >
-              Start free trial
+              {l.startTrial}
             </Link>
             <Link
               href="#pricing"
               className="border border-border-strong hover:bg-bg-sunken text-ink text-[14px] sm:text-[15px] font-medium px-5 sm:px-6 py-3 rounded-xl transition-colors"
             >
-              Pricing
+              {l.viewPricing}
             </Link>
           </div>
         </div>
@@ -89,14 +83,14 @@ export default function LandingPage() {
         {/* Quick proof */}
         <div className="mt-10 sm:mt-16 grid grid-cols-4 gap-4 sm:gap-6">
           {[
-            { n: "497", l: "words" },
-            { n: "93", l: "grammar" },
-            { n: "100+", l: "characters" },
-            { n: "60", l: "test Q's" },
-          ].map(({ n, l }) => (
-            <div key={l}>
+            { n: "497", label: l.words },
+            { n: "93", label: l.grammarStat },
+            { n: "100+", label: l.characters },
+            { n: "60", label: l.testQs },
+          ].map(({ n, label }) => (
+            <div key={label}>
               <div className="text-2xl sm:text-3xl font-bold text-primary tabular-nums">{n}</div>
-              <div className="text-[11px] sm:text-[13px] text-ink-secondary mt-0.5">{l}</div>
+              <div className="text-[11px] sm:text-[13px] text-ink-secondary mt-0.5">{label}</div>
             </div>
           ))}
         </div>
@@ -105,9 +99,9 @@ export default function LandingPage() {
       {/* Features */}
       <section className="border-t border-border bg-bg-raised">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-          <h2 className="text-2xl sm:text-3xl font-bold text-ink">Everything you need. Nothing you don&apos;t.</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-ink">{l.featuresTitle}</h2>
           <p className="mt-3 text-ink-secondary max-w-xl">
-            Other apps teach you to order coffee. This one teaches you to pass HSK 1.
+            {l.featuresSub}
           </p>
 
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -127,9 +121,9 @@ export default function LandingPage() {
       {/* Pricing */}
       <section id="pricing" className="border-t border-border scroll-mt-14">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-          <h2 className="text-2xl sm:text-3xl font-bold text-ink">Simple pricing</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-ink">{l.simplePricing}</h2>
           <p className="mt-3 text-ink-secondary">
-            One plan. Everything included. Pick the duration that works for you.
+            {l.pricingDesc}
           </p>
 
           <div className="mt-10 grid sm:grid-cols-3 gap-4">
@@ -163,14 +157,14 @@ export default function LandingPage() {
                       : "bg-bg-sunken hover:bg-border text-ink"
                   }`}
                 >
-                  Get started
+                  {l.getStarted}
                 </Link>
               </div>
             ))}
           </div>
 
           <div className="mt-10 max-w-md">
-            <div className="text-[14px] font-semibold text-ink mb-3">Every plan includes:</div>
+            <div className="text-[14px] font-semibold text-ink mb-3">{l.everyPlan}</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
               {includes.map((item) => (
                 <div key={item} className="flex items-start gap-2 text-[13px] text-ink-secondary">
@@ -186,15 +180,15 @@ export default function LandingPage() {
       {/* CTA */}
       <section className="border-t border-border bg-bg-raised">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-ink">Ready to start?</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-ink">{l.readyToStart}</h2>
           <p className="mt-3 text-ink-secondary">
-            Most people pass HSK 1 in 2-4 months of daily practice. Start today.
+            {l.readyDesc}
           </p>
           <Link
             href="/dashboard"
             className="inline-block mt-6 bg-primary hover:bg-primary-hover text-white text-[15px] font-semibold px-8 py-3 rounded-lg transition-colors"
           >
-            Start 5-day free trial
+            {l.startTrialBtn}
           </Link>
         </div>
       </section>
@@ -208,15 +202,15 @@ export default function LandingPage() {
               <span className="text-[15px] font-semibold text-ink">Master</span>
             </div>
             <div className="flex gap-6 text-[13px] text-ink-tertiary">
-              <Link href="/pricing" className="hover:text-ink transition-colors">Pricing</Link>
-              <Link href="/dashboard" className="hover:text-ink transition-colors">Log in</Link>
+              <Link href="/pricing" className="hover:text-ink transition-colors">{l.viewPricing}</Link>
+              <Link href="/dashboard" className="hover:text-ink transition-colors">{l.login}</Link>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-border">
             <div className="flex flex-wrap justify-center gap-4 text-[12px] text-ink-tertiary">
-              <Link href="/terms" className="hover:text-ink transition-colors">Terms of Service</Link>
-              <Link href="/privacy" className="hover:text-ink transition-colors">Privacy Policy</Link>
-              <Link href="/refund" className="hover:text-ink transition-colors">Refund Policy</Link>
+              <Link href="/terms" className="hover:text-ink transition-colors">{l.terms}</Link>
+              <Link href="/privacy" className="hover:text-ink transition-colors">{l.privacy}</Link>
+              <Link href="/refund" className="hover:text-ink transition-colors">{l.refund}</Link>
             </div>
             <div className="text-[12px] text-ink-tertiary">&copy; 2026 HSK Master. All rights reserved.</div>
           </div>

@@ -3,37 +3,30 @@
 import Link from "next/link";
 import { IconCheck, IconChevron } from "@/components/Icons";
 import { getCheckoutUrl } from "@/lib/stripe";
-
-const plans = [
-  { id: "monthly", name: "Monthly", price: 30, period: "month", months: 1, desc: "Try it out, cancel anytime" },
-  { id: "semi", name: "6 Months", price: 150, period: "6 months", months: 6, desc: "Most popular choice", featured: true },
-  { id: "annual", name: "Annual", price: 250, period: "year", months: 12, desc: "Best value for committed learners" },
-];
-
-const allFeatures = [
-  { name: "HSK 1–2 vocabulary (497 words)", all: true },
-  { name: "Grammar points (93 patterns)", all: true },
-  { name: "Character stroke practice (100+ chars)", all: true },
-  { name: "Smart flashcards with SRS", all: true },
-  { name: "Custom flashcard decks", all: true },
-  { name: "Mock HSK tests (unlimited)", all: true },
-  { name: "Pronunciation audio", all: true },
-  { name: "Progress tracking", all: true },
-  { name: "Gamified & clean UI modes", all: true },
-  { name: "Offline access (PWA)", all: true },
-  { name: "Phone + laptop", all: true },
-];
-
-const faqs = [
-  { q: "Is there a free trial?", a: "Yes. You get 5 days of full access when you sign up — no credit card required." },
-  { q: "What payment methods do you accept?", a: "We accept WeChat Pay, Alipay, and international credit/debit cards via Stripe." },
-  { q: "Can I cancel anytime?", a: "Yes. Monthly plans cancel at the end of the billing period. No questions asked." },
-  { q: "Does it work offline?", a: "Yes. Install as a PWA on your phone or laptop and all vocabulary, grammar, and flashcard content works without internet." },
-  { q: "Is this the new HSK 3.0?", a: "Yes. All content follows the HSK 3.0 standard (300 words for Level 1), which officially launches December 2026." },
-  { q: "What if I need more than HSK 1?", a: "HSK 2-6 levels are coming. Your subscription will include new levels as they're added." },
-];
+import { useLang } from "@/lib/i18n";
 
 export default function PricingPage() {
+  const { t } = useLang();
+  const p = t.pricingPage;
+  const l = t.landing;
+
+  const plans = [
+    { id: "monthly", name: l.monthly, price: 30, period: "month", months: 1, desc: p.tryDesc },
+    { id: "semi", name: l.sixMonths, price: 150, period: "6 months", months: 6, desc: p.popularDesc, featured: true },
+    { id: "annual", name: l.annual, price: 250, period: "year", months: 12, desc: p.bestDesc },
+  ];
+
+  const allFeatures = [p.feat1, p.feat2, p.feat3, p.feat4, p.feat5, p.feat6, p.feat7, p.feat8, p.feat9, p.feat10, p.feat11];
+
+  const faqs = [
+    { q: p.faq1q, a: p.faq1a },
+    { q: p.faq2q, a: p.faq2a },
+    { q: p.faq3q, a: p.faq3a },
+    { q: p.faq4q, a: p.faq4a },
+    { q: p.faq5q, a: p.faq5a },
+    { q: p.faq6q, a: p.faq6a },
+  ];
+
   const monthlyRate = (price: number, months: number) => Math.round(price / months);
 
   return (
@@ -49,7 +42,7 @@ export default function PricingPage() {
             href="/dashboard"
             className="bg-primary hover:bg-primary-hover text-white text-[14px] font-semibold px-4 py-2 rounded-lg transition-colors"
           >
-            Start 5-day free trial
+            {p.startTrial}
           </Link>
         </div>
       </header>
@@ -58,11 +51,10 @@ export default function PricingPage() {
         {/* Hero */}
         <div className="pt-16 sm:pt-24 pb-12 max-w-2xl">
           <h1 className="text-3xl sm:text-4xl font-bold text-ink tracking-tight">
-            One plan. Everything included.
+            {p.title}
           </h1>
           <p className="mt-4 text-lg text-ink-secondary leading-relaxed">
-            Every subscription gives you full access to all HSK 1 content.
-            Pick the duration that fits your timeline.
+            {p.desc}
           </p>
         </div>
 
@@ -85,7 +77,7 @@ export default function PricingPage() {
                   <span className={`absolute -top-3 right-4 text-[12px] font-bold px-2.5 py-0.5 rounded-full ${
                     plan.featured ? "bg-primary text-white" : "bg-accent-light text-accent-text"
                   }`}>
-                    Save {savePercent}%
+                    {p.save} {savePercent}%
                   </span>
                 )}
 
@@ -98,7 +90,7 @@ export default function PricingPage() {
 
                 {plan.months > 1 && (
                   <div className="text-[13px] text-ink-secondary mt-1">
-                    ¥{monthly}/month
+                    ¥{monthly}{p.perMonth}
                   </div>
                 )}
 
@@ -112,7 +104,7 @@ export default function PricingPage() {
                       : "bg-bg-sunken hover:bg-border text-ink"
                   }`}
                 >
-                  Start 5-day free trial
+                  {p.startTrial}
                 </a>
               </div>
             );
@@ -121,9 +113,9 @@ export default function PricingPage() {
 
         {/* Feature list */}
         <div className="border-t border-border pt-12 pb-16">
-          <h2 className="text-xl font-bold text-ink">What&apos;s included</h2>
+          <h2 className="text-xl font-bold text-ink">{p.included}</h2>
           <div className="mt-6 grid sm:grid-cols-2 gap-x-12 gap-y-3">
-            {allFeatures.map(({ name }) => (
+            {allFeatures.map((name) => (
               <div key={name} className="flex items-center gap-2.5 text-[14px] text-ink-secondary py-1">
                 <IconCheck className="w-4.5 h-4.5 text-primary shrink-0" />
                 {name}
@@ -134,7 +126,7 @@ export default function PricingPage() {
 
         {/* FAQ */}
         <div className="border-t border-border pt-12 pb-20">
-          <h2 className="text-xl font-bold text-ink">Questions</h2>
+          <h2 className="text-xl font-bold text-ink">{p.questions}</h2>
           <div className="mt-6 max-w-2xl divide-y divide-border">
             {faqs.map(({ q, a }) => (
               <details key={q} className="group">

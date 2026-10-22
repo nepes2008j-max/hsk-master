@@ -4,6 +4,7 @@ import AppShell from "@/components/AppShell";
 import { useProgress } from "@/hooks/useProgress";
 import { IconCog, IconFire, IconStar, IconBook, IconPencil, IconBrush } from "@/components/Icons";
 import { useLang, type Lang } from "@/lib/i18n";
+import { exportAllData, importAllData } from "@/lib/storage";
 
 const langOptions: { id: Lang; label: string }[] = [
   { id: "en", label: "English" },
@@ -14,6 +15,29 @@ const langOptions: { id: Lang; label: string }[] = [
 export default function SettingsPage() {
   const { progress, toggleMode } = useProgress();
   const { lang, setLang, t } = useLang();
+
+  const handleExport = async () => {
+    const json = await exportAllData();
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `hsk-master-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      await importAllData(text);
+      window.location.reload();
+    } catch {
+      alert("Invalid backup file");
+    }
+  };
 
   if (!progress)
     return (
@@ -125,6 +149,31 @@ export default function SettingsPage() {
               <span className="text-[14px] font-semibold text-primary-text">{progress.xp} XP</span>
             </div>
           )}
+        </div>
+
+        <div className="rounded-xl border border-border bg-bg-raised p-5 space-y-4">
+          <div className="flex items-center gap-2.5 text-[13px] font-semibold text-ink-secondary uppercase tracking-wide">
+            <IconCog className="w-4 h-4" />
+            {t.settingsPage.data}
+          </div>
+          <div className="space-y-3">
+            <div>
+              <div className="text-[13px] text-ink-tertiary">{t.settingsPage.exportDesc}</div>
+              <button
+                onClick={handleExport}
+                className="mt-2 bg-primary text-white px-4 py-2 rounded-lg text-[13px] font-semibold hover:bg-primary-hover transition-colors"
+              >
+                {t.settingsPage.exportData}
+              </button>
+            </div>
+            <div className="border-t border-border pt-3">
+              <div className="text-[13px] text-ink-tertiary">{t.settingsPage.importDesc}</div>
+              <label className="mt-2 inline-block bg-bg-sunken text-ink px-4 py-2 rounded-lg text-[13px] font-medium border border-border hover:border-border-strong cursor-pointer transition-colors">
+                {t.settingsPage.importData}
+                <input type="file" accept=".json" className="hidden" onChange={handleImport} />
+              </label>
+            </div>
+          </div>
         </div>
 
         <div className="rounded-xl border border-border bg-bg-raised p-5 space-y-2">
