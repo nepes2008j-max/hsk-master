@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconHome, IconBook, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconPencil, IconGamepad, IconBookOpen } from "./Icons";
+import { IconHome, IconBook, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconPencil, IconGamepad, IconBookOpen, IconBeaker } from "./Icons";
 import { useLang, type Lang } from "@/lib/i18n";
 
 const langCycle: Lang[] = ["en", "ru", "tk"];
@@ -27,6 +27,7 @@ export default function Nav() {
     { href: "/test", label: t.test, Icon: IconClipboard },
     { href: "/games", label: t.games, Icon: IconGamepad },
     { href: "/books", label: t.books, Icon: IconBookOpen },
+    { href: "/academic", label: t.academic, Icon: IconBeaker },
   ] as const;
 
   const mobileLinks = [
