@@ -35,6 +35,8 @@ const t = {
       title: "HSK 1 Vocabulary",
       search: "Search words...",
       markLearned: "Mark as learned",
+      addToCards: "Add to Flashcards",
+      addedToCards: "Added!",
       learned: "Learned",
       example: "Example",
     },
@@ -203,6 +205,8 @@ const t = {
       title: "Словарь HSK 1",
       search: "Поиск слов...",
       markLearned: "Отметить как изученное",
+      addToCards: "В карточки",
+      addedToCards: "Добавлено!",
       learned: "Изучено",
       example: "Пример",
     },
@@ -371,6 +375,8 @@ const t = {
       title: "HSK 1 Söz baýlygy",
       search: "Söz gözle...",
       markLearned: "Öwrenilen diýip belläň",
+      addToCards: "Kartlara goş",
+      addedToCards: "Goşuldy!",
       learned: "Öwrenildi",
       example: "Mysal",
     },
@@ -539,7 +545,12 @@ export function LangProvider({ children }: { children: ReactNode }) {
   const setLang = (l: Lang) => {
     setLangState(l);
     try { localStorage.setItem("hsk-lang", l); } catch {}
+    try { document.documentElement.lang = l; } catch {}
   };
+
+  useEffect(() => {
+    if (lang) try { document.documentElement.lang = lang; } catch {}
+  }, [lang]);
 
   if (lang === null) {
     return (

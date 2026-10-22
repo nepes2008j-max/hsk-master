@@ -54,14 +54,14 @@ export default function DashboardPage() {
             </div>
             <div className="w-px bg-border" />
             <div className="flex-1 flex items-center">
-              <ProgressBar value={progress.wordsLearned.length} max={520} label={t.dashboard.vocabulary} className="w-full" />
+              <ProgressBar value={progress.wordsLearned.length} max={497} label={t.dashboard.vocabulary} className="w-full" />
             </div>
           </div>
         )}
 
         {progress && !isGamified && (
           <div className="p-4 rounded-xl bg-bg-raised border border-border space-y-3">
-            <ProgressBar value={progress.wordsLearned.length} max={520} label={t.dashboard.vocabulary} />
+            <ProgressBar value={progress.wordsLearned.length} max={497} label={t.dashboard.vocabulary} />
             <ProgressBar value={progress.grammarCompleted.length} max={93} label={t.dashboard.grammarLabel} />
             <ProgressBar value={progress.charactersPracticed.length} max={100} label={t.dashboard.characters} />
           </div>

@@ -18,6 +18,7 @@ export interface UserCard {
 export interface TestResult {
   id: string;
   date: number;
+  level?: 1 | 2;
   score: number;
   total: number;
   passed: boolean;

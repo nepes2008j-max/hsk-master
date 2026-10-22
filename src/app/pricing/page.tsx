@@ -11,8 +11,8 @@ const plans = [
 ];
 
 const allFeatures = [
-  { name: "HSK 1 vocabulary (300 words)", all: true },
-  { name: "Grammar points (58 patterns)", all: true },
+  { name: "HSK 1–2 vocabulary (497 words)", all: true },
+  { name: "Grammar points (93 patterns)", all: true },
   { name: "Character stroke practice (100+ chars)", all: true },
   { name: "Smart flashcards with SRS", all: true },
   { name: "Custom flashcard decks", all: true },

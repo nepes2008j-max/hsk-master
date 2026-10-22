@@ -60,6 +60,9 @@ export default function SettingsPage() {
               </div>
             </div>
             <button
+              role="switch"
+              aria-checked={progress.mode === "gamified"}
+              aria-label={t.settingsPage.uiMode}
               onClick={toggleMode}
               className={`relative w-[52px] h-[28px] rounded-full transition-colors ${
                 progress.mode === "gamified" ? "bg-jade" : "bg-border-strong"
@@ -85,7 +88,7 @@ export default function SettingsPage() {
                 <span className="text-[11px] uppercase tracking-wide">{t.settingsPage.wordsLearned}</span>
               </div>
               <div className="text-xl font-bold text-ink tabular-nums">
-                {progress.wordsLearned.length}<span className="text-ink-tertiary font-normal text-[13px]">/520</span>
+                {progress.wordsLearned.length}<span className="text-ink-tertiary font-normal text-[13px]">/497</span>
               </div>
             </div>
             <div className="rounded-xl bg-bg-sunken p-3.5 space-y-1">
@@ -132,7 +135,7 @@ export default function SettingsPage() {
             HSK Master — Chinese Language Learning & Exam Prep
           </div>
           <div className="text-[13px] text-ink-tertiary">
-            HSK 3.0 Levels 1–2 &middot; 520 words &middot; 93 grammar points
+            HSK 3.0 Levels 1–2 &middot; 497 words &middot; 93 grammar points
           </div>
         </div>
       </div>

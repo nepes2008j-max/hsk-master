@@ -4,11 +4,11 @@ import Link from "next/link";
 import { IconCheck, IconBook, IconBrush, IconCards, IconClipboard, IconPencil, IconStar } from "@/components/Icons";
 
 const features = [
-  { Icon: IconBook, title: "300 Vocabulary Words", desc: "Every word you need for HSK 1 with pinyin, meaning, and example sentences. Tap any word to hear native pronunciation." },
-  { Icon: IconPencil, title: "58 Grammar Points", desc: "Clear pattern explanations with real examples. No textbook jargon — just the structure you need to understand Chinese sentences." },
+  { Icon: IconBook, title: "497 Vocabulary Words", desc: "Every word you need for HSK 1–2 with pinyin, meaning, and example sentences. Tap any word to hear native pronunciation." },
+  { Icon: IconPencil, title: "93 Grammar Points", desc: "Clear pattern explanations with real examples. No textbook jargon — just the structure you need to understand Chinese sentences." },
   { Icon: IconBrush, title: "Stroke Order Practice", desc: "Write characters the right way. Animated stroke demos and interactive quizzes for 100+ essential characters." },
-  { Icon: IconCards, title: "Smart Flashcards", desc: "Spaced repetition that adapts to you. Pre-built HSK 1 deck plus create your own cards for anything you struggle with." },
-  { Icon: IconClipboard, title: "Mock HSK Tests", desc: "40-question timed exams matching the real format. Listening and reading sections scored out of 200. Know if you'd pass today." },
+  { Icon: IconCards, title: "Smart Flashcards", desc: "Spaced repetition that adapts to you. Pre-built HSK 1–2 decks plus create your own cards for anything you struggle with." },
+  { Icon: IconClipboard, title: "Mock HSK Tests", desc: "Timed exams matching the real HSK format — 40 questions for Level 1, 60 for Level 2. Listening and reading sections scored out of 200." },
   { Icon: IconStar, title: "Your Way", desc: "Switch between gamified mode with XP and streaks, or clean study mode. Your progress syncs across both." },
 ];
 
@@ -19,7 +19,7 @@ const plans = [
 ];
 
 const includes = [
-  "520 HSK 1–2 vocabulary words",
+  "497 HSK 1–2 vocabulary words",
   "93 grammar points with examples",
   "Stroke order practice (100+ chars)",
   "Unlimited flashcard decks",
@@ -67,7 +67,7 @@ export default function LandingPage() {
             <span className="text-ink-secondary">Without the fluff.</span>
           </h1>
           <p className="mt-4 text-[15px] sm:text-lg text-ink-secondary leading-relaxed max-w-xl">
-            520 words. 93 grammar points. Stroke order. Mock tests. Everything mapped
+            497 words. 93 grammar points. Stroke order. Mock tests. Everything mapped
             to what&apos;s actually on the exam — nothing that isn&apos;t.
           </p>
           <div className="mt-6 sm:mt-8 flex gap-2.5">
@@ -89,7 +89,7 @@ export default function LandingPage() {
         {/* Quick proof */}
         <div className="mt-10 sm:mt-16 grid grid-cols-4 gap-4 sm:gap-6">
           {[
-            { n: "520", l: "words" },
+            { n: "497", l: "words" },
             { n: "93", l: "grammar" },
             { n: "100+", l: "characters" },
             { n: "60", l: "test Q's" },

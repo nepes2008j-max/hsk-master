@@ -685,4 +685,15 @@ export const grammar: GrammarPoint[] = [
     ],
     category: "numbers",
   },
+  {
+    id: 59,
+    title: "Permission with 可以",
+    pattern: "可以 + Verb",
+    explanation: "可以 (kěyǐ) expresses permission ('may') or possibility ('can'). Negate with 不可以 for prohibition.",
+    examples: [
+      { hanzi: "我可以进来吗？", pinyin: "Wǒ kěyǐ jìnlái ma?", english: "May I come in?" },
+      { hanzi: "这里不可以抽烟。", pinyin: "Zhèlǐ bù kěyǐ chōuyān.", english: "Smoking is not allowed here." },
+    ],
+    category: "verbs",
+  },
 ];

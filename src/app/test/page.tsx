@@ -388,6 +388,7 @@ export default function TestPage() {
     const result: TestResult = {
       id: `test-${Date.now()}`,
       date: Date.now(),
+      level: testLevel,
       score: totalScore,
       total: 200,
       passed: totalScore >= 120,
@@ -499,7 +500,7 @@ export default function TestPage() {
                       }`}
                     >
                       <span className="text-[13px] text-ink-secondary">
-                        {new Date(r.date).toLocaleDateString()}
+                        {r.level ? `HSK ${r.level} · ` : ""}{new Date(r.date).toLocaleDateString()}
                       </span>
                       <span className={`text-[14px] font-bold ${r.passed ? "text-jade" : "text-red"}`}>
                         {r.score}/200 {r.passed ? t.testPage.passed : t.testPage.failed}
@@ -517,14 +518,14 @@ export default function TestPage() {
             {/* Exam top bar */}
             <div className="flex items-center justify-between">
               <div className="text-[14px] font-semibold text-ink">
-                HSK（一级）
+                HSK（{testLevel === 1 ? "一" : "二"}级）
               </div>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowNav(!showNav)}
                   className="text-[12px] text-ink-tertiary hover:text-ink transition-colors tabular-nums"
                 >
-                  {answeredCount}/40
+                  {answeredCount}/{questions.length}
                 </button>
                 <span
                   className={`text-[14px] font-mono font-bold tabular-nums px-2.5 py-1 rounded-lg ${
@@ -717,7 +718,7 @@ export default function TestPage() {
             {/* Score header */}
             <div className="text-center pt-2">
               <div className="text-[12px] text-ink-tertiary tracking-[0.2em] uppercase mb-2">
-                HSK（一级） Results
+                HSK（{testLevel === 1 ? "一" : "二"}级） Results
               </div>
               <div className={`inline-flex items-center justify-center w-24 h-24 rounded-3xl ${latestResult.passed ? "bg-jade-light" : "bg-red-light"}`}>
                 <span className={`text-4xl font-bold ${latestResult.passed ? "text-jade" : "text-red"}`}>

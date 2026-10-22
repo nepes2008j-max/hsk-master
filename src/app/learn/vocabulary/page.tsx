@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import AppShell from "@/components/AppShell";
 import { vocabulary, type Word } from "@/data/vocabulary";
 import { vocabulary2 } from "@/data/vocabulary2";
 import { speak } from "@/lib/tts";
 import { useProgress } from "@/hooks/useProgress";
-import { IconSearch, IconVolume, IconCheck, IconX } from "@/components/Icons";
+import { saveUserCard } from "@/lib/storage";
+import { IconSearch, IconVolume, IconCheck, IconX, IconCards } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -17,7 +18,15 @@ export default function VocabularyPage() {
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [showPinyin, setShowPinyin] = useState(true);
   const [level, setLevel] = useState<1 | 2>(1);
+  const [addedCard, setAddedCard] = useState(false);
   const { progress, markWordLearned } = useProgress();
+
+  useEffect(() => {
+    if (!selectedWord) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setSelectedWord(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedWord]);
 
   const learnedSet = useMemo(() => new Set(progress?.wordsLearned), [progress?.wordsLearned]);
 
@@ -89,7 +98,7 @@ export default function VocabularyPage() {
             return (
               <button
                 key={word.id}
-                onClick={() => setSelectedWord(word)}
+                onClick={() => { setSelectedWord(word); setAddedCard(false); }}
                 className={`w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-bg-raised active:bg-bg-sunken group ${
                   learned ? "border-l-2 border-jade" : ""
                 }`}
@@ -116,6 +125,8 @@ export default function VocabularyPage() {
 
         {selectedWord && (
           <div
+            role="dialog"
+            aria-label={selectedWord.hanzi}
             className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm p-4"
             onClick={() => setSelectedWord(null)}
           >
@@ -131,12 +142,14 @@ export default function VocabularyPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => speak(selectedWord.hanzi)}
+                    aria-label="Play pronunciation"
                     className="p-2.5 rounded-xl bg-jade-light text-jade hover:bg-jade hover:text-white transition-colors"
                   >
                     <IconVolume className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => setSelectedWord(null)}
+                    aria-label="Close"
                     className="p-2.5 rounded-xl bg-bg-sunken text-ink-tertiary hover:text-ink transition-colors"
                   >
                     <IconX className="w-5 h-5" />
@@ -174,10 +187,22 @@ export default function VocabularyPage() {
                   {t.vocabPage.markLearned}
                 </button>
                 <button
-                  onClick={() => setSelectedWord(null)}
-                  className="rounded-xl border border-border hover:border-border-strong px-5 py-3 text-[14px] text-ink-secondary transition-colors"
+                  onClick={async () => {
+                    await saveUserCard({
+                      id: `vocab-${selectedWord.id}`,
+                      front: selectedWord.hanzi,
+                      back: `${selectedWord.pinyin} — ${tr(selectedWord.hanzi)?.meaning ?? selectedWord.english}`,
+                      pinyin: selectedWord.pinyin,
+                      deck: level === 1 ? "HSK 1 Custom" : "HSK 2 Custom",
+                      created: Date.now(),
+                    });
+                    setAddedCard(true);
+                    setTimeout(() => setAddedCard(false), 1500);
+                  }}
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-border hover:border-jade hover:bg-jade-light px-4 py-3 text-[14px] text-ink-secondary hover:text-jade-text transition-colors"
                 >
-                  {t.close}
+                  <IconCards className="w-4 h-4" />
+                  {addedCard ? t.vocabPage.addedToCards : t.vocabPage.addToCards}
                 </button>
               </div>
             </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import AppShell from "@/components/AppShell";
 import { vocabulary } from "@/data/vocabulary";
+import { vocabulary2 } from "@/data/vocabulary2";
 import { speak } from "@/lib/tts";
 import {
   getSRSState,
@@ -28,10 +29,16 @@ interface FlashCard {
   deck: string;
 }
 
-const HSK_CARDS: FlashCard[] = vocabulary.flatMap((w) => [
-  { id: `hsk-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "HSK 1" },
-  { id: `hsk-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "HSK 1" },
-]);
+const HSK_CARDS: FlashCard[] = [
+  ...vocabulary.flatMap((w) => [
+    { id: `hsk-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "HSK 1" },
+    { id: `hsk-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "HSK 1" },
+  ]),
+  ...vocabulary2.flatMap((w) => [
+    { id: `hsk2-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "HSK 2" },
+    { id: `hsk2-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "HSK 2" },
+  ]),
+];
 
 export default function CardsPage() {
   const { t } = useLang();
@@ -58,6 +65,7 @@ export default function CardsPage() {
   const allDecks = useMemo(() => {
     const decks = new Map<string, { total: number; custom: boolean }>();
     decks.set("HSK 1", { total: vocabulary.length * 2, custom: false });
+    decks.set("HSK 2", { total: vocabulary2.length * 2, custom: false });
     for (const d of userDecks) {
       decks.set(d, { total: userCards.filter((c) => c.deck === d).length, custom: true });
     }
@@ -291,6 +299,21 @@ export default function CardsPage() {
               <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
             </button>
 
+            {/* HSK 2 built-in deck */}
+            <button
+              onClick={() => setOpenDeck("HSK 2")}
+              className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
+            >
+              <div className="w-11 h-11 rounded-xl bg-jade-light flex items-center justify-center shrink-0">
+                <IconCards className="w-5.5 h-5.5 text-jade" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[15px] font-semibold text-ink">HSK 2</div>
+                <div className="text-[13px] text-ink-tertiary">{vocabulary2.length * 2} {t.cardsPage.cardsDue} &middot; {t.cardsPage.builtIn}</div>
+              </div>
+              <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
+            </button>
+
             {/* User decks */}
             {userDecks.map((deck) => {
               const count = userCards.filter((c) => c.deck === deck).length;
@@ -343,6 +366,8 @@ export default function CardsPage() {
                 <div className="text-[13px] text-ink-tertiary">
                   {openDeck === "HSK 1"
                     ? `${vocabulary.length * 2} cards`
+                    : openDeck === "HSK 2"
+                    ? `${vocabulary2.length * 2} cards`
                     : `${deckCards.length} card${deckCards.length !== 1 ? "s" : ""}`}
                 </div>
               </div>
@@ -354,9 +379,9 @@ export default function CardsPage() {
               </button>
             </div>
 
-            {openDeck === "HSK 1" ? (
+            {openDeck === "HSK 1" || openDeck === "HSK 2" ? (
               <div className="text-[13px] text-ink-tertiary rounded-xl bg-bg-sunken p-4">
-                Built-in HSK 1 deck with {vocabulary.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all 300 words.
+                Built-in {openDeck} deck with {openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all {openDeck === "HSK 1" ? 300 : 197} words.
               </div>
             ) : (
               <div className="space-y-1.5">

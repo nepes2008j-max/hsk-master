@@ -57,6 +57,7 @@ export const grammarTk: Record<number, { title: string; explanation: string; exa
   56: { title: "Pul sanamak", explanation: "块 (kuài) ýuanyň gepleşik sözi, 毛 (máo) onlugyň.", examples: ["10 ýuan", "3,5 ýuan"] },
   57: { title: "第 bilen tertip sanlar", explanation: "第 (dì) sany tertip sanyna öwürýär — birinji, ikinji, üçünji we ş.m.", examples: ["birinji", "üçünji adam", "Bu meniň Hytaýa ilkinji gelişim."] },
   58: { title: "一些 bilen 'birnäçe'", explanation: "一些 (yìxiē) «birnäçe» ýa-da «käbir» manysyny berýär.", examples: ["Meniň birnäçe soragym bar.", "Maňa biraz suw ber."] },
+  59: { title: "可以 bilen rugsat", explanation: "可以 (kěyǐ) rugsady («bolýar») ýa-da mümkinçiligi aňladýar. Inkäri — 不可以 (bolmaýar).", examples: ["Girsem bolýarmy?", "Bu ýerde çilim çekmek bolanok."] },
   60: { title: "比 bilen deňeşdirmek", explanation: "比 (bǐ) iki zady deňeşdirýär. 比 soňundaky sypat bilen 很 ulanylmaýar.", examples: ["Ol menden uzyn.", "Bu gün düýnden sowuk.", "Hytaý dili iňlis dilinden kyn."] },
   61: { title: "一样 bilen 'meňzeş' aňlatmak", explanation: "一样 (yíyàng) «meňzeş» manysyny berýär. Deňeşdirilýän iki zady 跟 ýa-da 和 bilen baglanyşdyrýar.", examples: ["Men seniň ýaly uzyn.", "Bu şol bilen meňzeş.", "Onuň telefony meniňki bilen meňzeş."] },
   62: { title: "最 bilen iň ýokary dereje", explanation: "最 (zuì) «iň» manysyny berýär. Sypatyň ýa-da işligiň göni öňünde durýar.", examples: ["Ol iň owadan.", "Men hytaý naharyny iň köp halaýaryn.", "Bu iň arzan."] },
