@@ -121,9 +121,9 @@ function PinyinWriter({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage
   if (done) {
     return (
       <div className="text-center py-12 space-y-4">
-        <div className="text-5xl font-bold text-jade">{score}/{words.length}</div>
+        <div className="text-5xl font-bold text-primary">{score}/{words.length}</div>
         <div className="text-ink-secondary">{tr.score}</div>
-        <button onClick={() => { setIdx(0); setScore(0); setResult(null); setInput(""); }} className="bg-jade text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-jade-hover transition-colors">
+        <button onClick={() => { setIdx(0); setScore(0); setResult(null); setInput(""); }} className="bg-primary text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-hover transition-colors">
           {tr.next}
         </button>
       </div>
@@ -138,7 +138,7 @@ function PinyinWriter({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage
       </div>
 
       <div className="text-center py-8">
-        <button onClick={() => speak(word.hanzi)} className="text-6xl font-bold text-ink hover:text-jade transition-colors cursor-pointer">
+        <button onClick={() => speak(word.hanzi)} className="text-6xl font-bold text-ink hover:text-primary transition-colors cursor-pointer">
           {word.hanzi}
         </button>
         <div className="mt-2 text-[13px] text-ink-tertiary">{word.english}</div>
@@ -151,20 +151,20 @@ function PinyinWriter({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && check()}
             placeholder={tr.typeAnswer}
-            className="flex-1 px-4 py-3 rounded-lg border border-border bg-bg text-ink text-center text-lg focus:outline-none focus:border-jade"
+            className="flex-1 px-4 py-3 rounded-lg border border-border bg-bg text-ink text-center text-lg focus:outline-none focus:border-primary"
             autoFocus
           />
-          <button onClick={check} className="bg-jade text-white px-5 py-3 rounded-lg font-semibold hover:bg-jade-hover transition-colors">
+          <button onClick={check} className="bg-primary text-white px-5 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-colors">
             {tr.check}
           </button>
         </div>
       ) : (
         <div className="space-y-3 text-center">
-          <div className={`text-lg font-bold ${result === "correct" ? "text-jade" : "text-red"}`}>
+          <div className={`text-lg font-bold ${result === "correct" ? "text-primary" : "text-warning"}`}>
             {result === "correct" ? tr.correct : tr.wrong}
           </div>
           <div className="text-ink-secondary">{tr.correctAnswer}: <span className="font-semibold text-ink">{word.pinyin}</span></div>
-          <button onClick={next} className="bg-jade text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-jade-hover transition-colors">
+          <button onClick={next} className="bg-primary text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-hover transition-colors">
             {tr.next}
           </button>
         </div>
@@ -197,9 +197,9 @@ function ToneMaster({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage"]
   if (done) {
     return (
       <div className="text-center py-12 space-y-4">
-        <div className="text-5xl font-bold text-jade">{score}/{toneWords.length}</div>
+        <div className="text-5xl font-bold text-primary">{score}/{toneWords.length}</div>
         <div className="text-ink-secondary">{tr.score}</div>
-        <button onClick={() => { setIdx(0); setScore(0); setPicked(null); }} className="bg-jade text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-jade-hover transition-colors">
+        <button onClick={() => { setIdx(0); setScore(0); setPicked(null); }} className="bg-primary text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-hover transition-colors">
           {tr.next}
         </button>
       </div>
@@ -214,11 +214,11 @@ function ToneMaster({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage"]
       </div>
 
       <div className="text-center py-8">
-        <button onClick={() => speak(word.hanzi)} className="text-6xl font-bold text-ink hover:text-jade transition-colors cursor-pointer">
+        <button onClick={() => speak(word.hanzi)} className="text-6xl font-bold text-ink hover:text-primary transition-colors cursor-pointer">
           {word.hanzi}
         </button>
         <div className="mt-3 text-lg text-ink-secondary">{stripTones(word.pinyin)}</div>
-        <button onClick={() => speak(word.hanzi)} className="mt-2 inline-flex items-center gap-1.5 text-[13px] text-jade hover:text-jade-hover transition-colors">
+        <button onClick={() => speak(word.hanzi)} className="mt-2 inline-flex items-center gap-1.5 text-[13px] text-primary hover:text-primary-hover transition-colors">
           <IconVolume className="w-4 h-4" /> {tr.listen}
         </button>
       </div>
@@ -227,10 +227,10 @@ function ToneMaster({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage"]
 
       <div className="grid grid-cols-4 gap-3">
         {[1, 2, 3, 4].map((tone) => {
-          let cls = "border-border bg-bg-raised text-ink hover:border-jade";
+          let cls = "border-border bg-bg-raised text-ink hover:border-primary";
           if (picked !== null) {
-            if (tone === correctTone) cls = "border-jade bg-jade-light text-jade-text";
-            else if (tone === picked) cls = "border-red bg-red-light text-red-text";
+            if (tone === correctTone) cls = "border-primary bg-primary-light text-primary-text";
+            else if (tone === picked) cls = "border-warning bg-warning-light text-warning-text";
             else cls = "border-border bg-bg-raised text-ink-tertiary";
           }
           return (
@@ -248,11 +248,11 @@ function ToneMaster({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage"]
 
       {picked !== null && (
         <div className="text-center space-y-3">
-          <div className={`text-lg font-bold ${picked === correctTone ? "text-jade" : "text-red"}`}>
+          <div className={`text-lg font-bold ${picked === correctTone ? "text-primary" : "text-warning"}`}>
             {picked === correctTone ? tr.correct : tr.wrong}
           </div>
           <div className="text-ink-secondary">{tr.correctAnswer}: <span className="font-semibold text-ink">{word.pinyin}</span> (Tone {correctTone})</div>
-          <button onClick={next} className="bg-jade text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-jade-hover transition-colors">
+          <button onClick={next} className="bg-primary text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-hover transition-colors">
             {tr.next}
           </button>
         </div>
@@ -277,7 +277,7 @@ function ReadingStories({ t: tr, lang }: { t: ReturnType<typeof useLang>["t"]["g
             key={i}
             onClick={() => { setStoryIdx(i); setShowPinyin(false); setShowTranslation(false); }}
             className={`shrink-0 px-4 py-2 rounded-lg text-[14px] font-medium transition-colors ${
-              i === storyIdx ? "bg-jade text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+              i === storyIdx ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
             }`}
           >
             {s.title}
@@ -316,7 +316,7 @@ function ReadingStories({ t: tr, lang }: { t: ReturnType<typeof useLang>["t"]["g
         </button>
         <button
           onClick={() => speak(story.hanzi, 0.6)}
-          className="px-4 py-2 rounded-lg text-[14px] font-medium bg-jade text-white hover:bg-jade-hover transition-colors inline-flex items-center gap-1.5"
+          className="px-4 py-2 rounded-lg text-[14px] font-medium bg-primary text-white hover:bg-primary-hover transition-colors inline-flex items-center gap-1.5"
         >
           <IconVolume className="w-4 h-4" /> {tr.listen}
         </button>
@@ -364,13 +364,13 @@ function TongueTwisters({ t: tr, lang }: { t: ReturnType<typeof useLang>["t"]["g
         </button>
         <button
           onClick={() => speak(tw.hanzi, 0.6)}
-          className="px-4 py-2 rounded-lg text-[14px] font-medium bg-jade text-white hover:bg-jade-hover transition-colors inline-flex items-center gap-1.5"
+          className="px-4 py-2 rounded-lg text-[14px] font-medium bg-primary text-white hover:bg-primary-hover transition-colors inline-flex items-center gap-1.5"
         >
           <IconVolume className="w-4 h-4" /> {tr.listen}
         </button>
         <button
           onClick={() => speak(tw.hanzi, 1.0)}
-          className="px-4 py-2 rounded-lg text-[14px] font-medium border border-jade text-jade hover:bg-jade-light transition-colors"
+          className="px-4 py-2 rounded-lg text-[14px] font-medium border border-primary text-primary hover:bg-primary-light transition-colors"
         >
           x2
         </button>
@@ -382,7 +382,7 @@ function TongueTwisters({ t: tr, lang }: { t: ReturnType<typeof useLang>["t"]["g
             key={i}
             onClick={() => { setIdx(i); setShowPinyin(false); }}
             className={`w-8 h-8 rounded-full text-[13px] font-medium transition-colors ${
-              i === idx ? "bg-jade text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+              i === idx ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
             }`}
           >
             {i + 1}
@@ -416,7 +416,7 @@ export default function GamesPage() {
               key={id}
               onClick={() => setTab(id)}
               className={`shrink-0 px-4 py-2 rounded-lg text-[14px] font-medium transition-colors ${
-                tab === id ? "bg-jade text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                tab === id ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
               }`}
             >
               {label}

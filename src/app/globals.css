@@ -9,16 +9,16 @@
   --text: #1C1917;
   --text-secondary: #78716C;
   --text-tertiary: #8A8480;
-  --jade: #DC2626;
-  --jade-light: #FEF2F2;
-  --jade-hover: #B91C1C;
-  --jade-text: #991B1B;
-  --gold: #B45309;
-  --gold-light: #FEF3C7;
-  --gold-text: #92400E;
-  --red: #EA580C;
-  --red-light: #FFF7ED;
-  --red-text: #9A3412;
+  --primary: #DC2626;
+  --primary-light: #FEF2F2;
+  --primary-hover: #B91C1C;
+  --primary-text: #991B1B;
+  --accent: #B45309;
+  --accent-light: #FEF3C7;
+  --accent-text: #92400E;
+  --warning: #EA580C;
+  --warning-light: #FFF7ED;
+  --warning-text: #9A3412;
   --blue: #2563EB;
   --blue-light: #EFF6FF;
 }
@@ -32,16 +32,16 @@
   --color-ink: var(--text);
   --color-ink-secondary: var(--text-secondary);
   --color-ink-tertiary: var(--text-tertiary);
-  --color-jade: var(--jade);
-  --color-jade-light: var(--jade-light);
-  --color-jade-hover: var(--jade-hover);
-  --color-jade-text: var(--jade-text);
-  --color-gold: var(--gold);
-  --color-gold-light: var(--gold-light);
-  --color-gold-text: var(--gold-text);
-  --color-red: var(--red);
-  --color-red-light: var(--red-light);
-  --color-red-text: var(--red-text);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-text: var(--primary-text);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-text: var(--accent-text);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-warning-text: var(--warning-text);
   --color-blue: var(--blue);
   --color-blue-light: var(--blue-light);
 }
@@ -57,7 +57,7 @@ body {
 }
 
 ::selection {
-  background: var(--jade);
+  background: var(--primary);
   color: white;
 }
 

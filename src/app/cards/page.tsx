@@ -193,7 +193,7 @@ export default function CardsPage() {
               <button
                 onClick={() => setReviewDeck(null)}
                 className={`shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors ${
-                  !reviewDeck ? "bg-jade text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                  !reviewDeck ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                 }`}
               >
                 {t.cardsPage.allDecks}
@@ -203,7 +203,7 @@ export default function CardsPage() {
                   key={d}
                   onClick={() => setReviewDeck(d)}
                   className={`shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors ${
-                    reviewDeck === d ? "bg-jade text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                    reviewDeck === d ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
                   {d}
@@ -223,7 +223,7 @@ export default function CardsPage() {
                     setFlipped(!flipped);
                     if (currentCard.audio) speak(currentCard.audio);
                   }}
-                  className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 transition-all hover:border-jade/50 hover:shadow-md active:scale-[0.99]"
+                  className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 transition-all hover:border-primary/50 hover:shadow-md active:scale-[0.99]"
                 >
                   <div className="text-3xl font-bold text-ink">
                     {flipped ? currentCard.back : currentCard.front}
@@ -238,19 +238,19 @@ export default function CardsPage() {
                   <div className="grid grid-cols-4 gap-2">
                     <button
                       onClick={() => handleRate(1)}
-                      className="rounded-xl bg-red-light py-2.5 text-[13px] font-medium text-red-text transition-colors hover:bg-red/10"
+                      className="rounded-xl bg-warning-light py-2.5 text-[13px] font-medium text-warning-text transition-colors hover:bg-warning/10"
                     >
                       {t.cardsPage.again}
                     </button>
                     <button
                       onClick={() => handleRate(3)}
-                      className="rounded-xl bg-gold-light py-2.5 text-[13px] font-medium text-gold-text transition-colors hover:bg-gold/10"
+                      className="rounded-xl bg-accent-light py-2.5 text-[13px] font-medium text-accent-text transition-colors hover:bg-accent/10"
                     >
                       {t.cardsPage.hard}
                     </button>
                     <button
                       onClick={() => handleRate(4)}
-                      className="rounded-xl bg-jade-light py-2.5 text-[13px] font-medium text-jade-text transition-colors hover:bg-jade/10"
+                      className="rounded-xl bg-primary-light py-2.5 text-[13px] font-medium text-primary-text transition-colors hover:bg-primary/10"
                     >
                       {t.cardsPage.good}
                     </button>
@@ -265,14 +265,14 @@ export default function CardsPage() {
               </>
             ) : (
               <div className="text-center py-16">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-jade-light mb-4">
-                  <IconStar className="w-7 h-7 text-jade" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-light mb-4">
+                  <IconStar className="w-7 h-7 text-primary" />
                 </div>
                 <div className="text-[15px] font-semibold text-ink">{t.cardsPage.allCaughtUp}</div>
                 <div className="text-[13px] text-ink-tertiary mt-1">{t.cardsPage.noCards}</div>
                 <button
                   onClick={loadCards}
-                  className="mt-5 rounded-xl bg-jade hover:bg-jade-hover text-white px-5 py-2.5 text-[14px] font-medium transition-colors"
+                  className="mt-5 rounded-xl bg-primary hover:bg-primary-hover text-white px-5 py-2.5 text-[14px] font-medium transition-colors"
                 >
                   {t.cardsPage.refresh}
                 </button>
@@ -289,8 +289,8 @@ export default function CardsPage() {
               onClick={() => setOpenDeck("HSK 1")}
               className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
             >
-              <div className="w-11 h-11 rounded-xl bg-jade-light flex items-center justify-center shrink-0">
-                <IconCards className="w-5.5 h-5.5 text-jade" />
+              <div className="w-11 h-11 rounded-xl bg-primary-light flex items-center justify-center shrink-0">
+                <IconCards className="w-5.5 h-5.5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-[15px] font-semibold text-ink">HSK 1</div>
@@ -304,8 +304,8 @@ export default function CardsPage() {
               onClick={() => setOpenDeck("HSK 2")}
               className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
             >
-              <div className="w-11 h-11 rounded-xl bg-jade-light flex items-center justify-center shrink-0">
-                <IconCards className="w-5.5 h-5.5 text-jade" />
+              <div className="w-11 h-11 rounded-xl bg-primary-light flex items-center justify-center shrink-0">
+                <IconCards className="w-5.5 h-5.5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-[15px] font-semibold text-ink">HSK 2</div>
@@ -323,8 +323,8 @@ export default function CardsPage() {
                   onClick={() => setOpenDeck(deck)}
                   className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-gold-light flex items-center justify-center shrink-0">
-                    <IconCards className="w-5.5 h-5.5 text-gold" />
+                  <div className="w-11 h-11 rounded-xl bg-accent-light flex items-center justify-center shrink-0">
+                    <IconCards className="w-5.5 h-5.5 text-accent" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[15px] font-semibold text-ink">{deck}</div>
@@ -340,7 +340,7 @@ export default function CardsPage() {
                 <div className="text-[13px] text-ink-tertiary">{t.cardsPage.noCustomDecks}</div>
                 <button
                   onClick={() => setTab("create")}
-                  className="mt-3 rounded-xl bg-jade hover:bg-jade-hover text-white px-5 py-2.5 text-[14px] font-medium transition-colors"
+                  className="mt-3 rounded-xl bg-primary hover:bg-primary-hover text-white px-5 py-2.5 text-[14px] font-medium transition-colors"
                 >
                   {t.cardsPage.createFirst}
                 </button>
@@ -354,7 +354,7 @@ export default function CardsPage() {
           <div className="space-y-3">
             <button
               onClick={() => setOpenDeck(null)}
-              className="flex items-center gap-1 text-[13px] text-jade hover:underline"
+              className="flex items-center gap-1 text-[13px] text-primary hover:underline"
             >
               <IconChevron direction="left" className="w-3.5 h-3.5" />
               {t.cardsPage.allDecks}
@@ -373,7 +373,7 @@ export default function CardsPage() {
               </div>
               <button
                 onClick={() => { setReviewDeck(openDeck); setTab("review"); }}
-                className="rounded-xl bg-jade hover:bg-jade-hover text-white px-4 py-2 text-[13px] font-medium transition-colors"
+                className="rounded-xl bg-primary hover:bg-primary-hover text-white px-4 py-2 text-[13px] font-medium transition-colors"
               >
                 {t.cardsPage.reviewDeck}
               </button>
@@ -390,11 +390,11 @@ export default function CardsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="text-[15px] font-medium text-ink">{card.front}</div>
                       <div className="text-[13px] text-ink-secondary">{card.back}</div>
-                      {card.pinyin && <div className="text-[12px] text-jade mt-0.5">{card.pinyin}</div>}
+                      {card.pinyin && <div className="text-[12px] text-primary mt-0.5">{card.pinyin}</div>}
                     </div>
                     <button
                       onClick={() => handleDeleteCard(card.id)}
-                      className="p-1.5 rounded-lg text-ink-tertiary hover:text-red hover:bg-red-light transition-colors shrink-0"
+                      className="p-1.5 rounded-lg text-ink-tertiary hover:text-warning hover:bg-warning-light transition-colors shrink-0"
                     >
                       <IconX className="w-4 h-4" />
                     </button>
@@ -425,7 +425,7 @@ export default function CardsPage() {
                     onClick={() => { setNewDeck(d); setShowNewDeckInput(false); }}
                     className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
                       newDeck === d && !showNewDeckInput
-                        ? "bg-jade text-white"
+                        ? "bg-primary text-white"
                         : "bg-bg-sunken text-ink-secondary hover:text-ink"
                     }`}
                   >
@@ -436,7 +436,7 @@ export default function CardsPage() {
                   onClick={() => { setShowNewDeckInput(true); setNewDeck(""); }}
                   className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
                     showNewDeckInput
-                      ? "bg-jade text-white"
+                      ? "bg-primary text-white"
                       : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
@@ -451,13 +451,13 @@ export default function CardsPage() {
                     onChange={(e) => setNewDeckName(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleCreateDeck()}
                     placeholder={t.cardsPage.deckPlaceholder}
-                    className="flex-1 rounded-xl border border-border bg-bg-raised px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-jade focus:ring-1 focus:ring-jade/20 transition-colors"
+                    className="flex-1 rounded-xl border border-border bg-bg-raised px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
                     autoFocus
                   />
                   <button
                     onClick={handleCreateDeck}
                     disabled={!newDeckName.trim()}
-                    className="rounded-xl bg-jade hover:bg-jade-hover text-white px-4 py-2.5 text-[14px] font-medium transition-colors disabled:opacity-40"
+                    className="rounded-xl bg-primary hover:bg-primary-hover text-white px-4 py-2.5 text-[14px] font-medium transition-colors disabled:opacity-40"
                   >
                     <IconCheck className="w-4 h-4" />
                   </button>
@@ -485,24 +485,24 @@ export default function CardsPage() {
                 value={newFront}
                 onChange={(e) => setNewFront(e.target.value)}
                 placeholder={t.cardsPage.front}
-                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-jade focus:ring-1 focus:ring-jade/20 transition-colors"
+                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
               />
               <input
                 value={newPinyin}
                 onChange={(e) => setNewPinyin(e.target.value)}
                 placeholder={t.cardsPage.pinyin}
-                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-jade focus:ring-1 focus:ring-jade/20 transition-colors"
+                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
               />
               <input
                 value={newBack}
                 onChange={(e) => setNewBack(e.target.value)}
                 placeholder={t.cardsPage.back}
-                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-jade focus:ring-1 focus:ring-jade/20 transition-colors"
+                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
               />
               <button
                 onClick={handleCreateCard}
                 disabled={!newFront.trim() || !newBack.trim()}
-                className="w-full rounded-xl bg-jade hover:bg-jade-hover text-white py-3 text-[14px] font-semibold transition-colors disabled:opacity-40 disabled:hover:bg-jade"
+                className="w-full rounded-xl bg-primary hover:bg-primary-hover text-white py-3 text-[14px] font-semibold transition-colors disabled:opacity-40 disabled:hover:bg-primary"
               >
                 {t.cardsPage.addCard}
               </button>

@@ -38,7 +38,7 @@ export default function SettingsPage() {
                 key={opt.id}
                 onClick={() => setLang(opt.id)}
                 className={`rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${
-                  lang === opt.id ? "bg-jade text-white" : "bg-bg-sunken text-ink-tertiary hover:text-ink"
+                  lang === opt.id ? "bg-primary text-white" : "bg-bg-sunken text-ink-tertiary hover:text-ink"
                 }`}
               >
                 {opt.label}
@@ -65,7 +65,7 @@ export default function SettingsPage() {
               aria-label={t.settingsPage.uiMode}
               onClick={toggleMode}
               className={`relative w-[52px] h-[28px] rounded-full transition-colors ${
-                progress.mode === "gamified" ? "bg-jade" : "bg-border-strong"
+                progress.mode === "gamified" ? "bg-primary" : "bg-border-strong"
               }`}
             >
               <span
@@ -120,9 +120,9 @@ export default function SettingsPage() {
             </div>
           </div>
           {progress.mode === "gamified" && (
-            <div className="flex items-center gap-2 rounded-xl bg-jade-light/50 p-3">
-              <IconStar className="w-4.5 h-4.5 text-jade" />
-              <span className="text-[14px] font-semibold text-jade-text">{progress.xp} XP</span>
+            <div className="flex items-center gap-2 rounded-xl bg-primary-light/50 p-3">
+              <IconStar className="w-4.5 h-4.5 text-primary" />
+              <span className="text-[14px] font-semibold text-primary-text">{progress.xp} XP</span>
             </div>
           )}
         </div>

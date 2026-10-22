@@ -6,7 +6,7 @@ export default function RefundPage() {
       <header className="sticky top-0 z-40 border-b border-border bg-bg/95 backdrop-blur-md">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5">
-            <span className="text-lg font-bold text-jade">HSK</span>
+            <span className="text-lg font-bold text-primary">HSK</span>
             <span className="text-[15px] font-semibold text-ink">Master</span>
           </Link>
           <Link href="/" className="text-[13px] text-ink-tertiary hover:text-ink transition-colors">Back</Link>
@@ -30,7 +30,7 @@ export default function RefundPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-ink mb-3">How to Request a Refund</h2>
-            <p>To request a refund, email us at <a href="mailto:support@hskmaster.com" className="text-jade hover:underline">support@hskmaster.com</a> with:</p>
+            <p>To request a refund, email us at <a href="mailto:support@hskmaster.com" className="text-primary hover:underline">support@hskmaster.com</a> with:</p>
             <ul className="list-disc pl-5 space-y-2 mt-2">
               <li>Your account email address.</li>
               <li>The reason for the refund (optional, helps us improve).</li>
@@ -66,7 +66,7 @@ export default function RefundPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-ink mb-3">Contact</h2>
-            <p>For billing or refund questions, contact us at <a href="mailto:support@hskmaster.com" className="text-jade hover:underline">support@hskmaster.com</a>.</p>
+            <p>For billing or refund questions, contact us at <a href="mailto:support@hskmaster.com" className="text-primary hover:underline">support@hskmaster.com</a>.</p>
           </section>
         </div>
       </main>

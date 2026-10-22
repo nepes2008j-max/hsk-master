@@ -61,7 +61,7 @@ export default function DictionaryPage() {
                 key={l}
                 onClick={() => setHskFilter(l)}
                 className={`rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
-                  hskFilter === l ? "bg-jade text-white" : "bg-bg-sunken text-ink-tertiary"
+                  hskFilter === l ? "bg-primary text-white" : "bg-bg-sunken text-ink-tertiary"
                 }`}
               >
                 {l === 0 ? "All" : `HSK ${l}`}
@@ -79,13 +79,13 @@ export default function DictionaryPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t.dictPage.searchPlaceholder}
-              className="w-full rounded-xl border border-border bg-bg-raised pl-9 pr-3 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-jade focus:ring-1 focus:ring-jade/20 transition-colors"
+              className="w-full rounded-xl border border-border bg-bg-raised pl-9 pr-3 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
             />
           </div>
           <button
             onClick={() => setShowPinyin(!showPinyin)}
             className={`rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors ${
-              showPinyin ? "bg-jade-light text-jade-text" : "bg-bg-sunken text-ink-tertiary"
+              showPinyin ? "bg-primary-light text-primary-text" : "bg-bg-sunken text-ink-tertiary"
             }`}
           >
             拼音
@@ -98,7 +98,7 @@ export default function DictionaryPage() {
             {activeTopic ? (
               <button
                 onClick={() => setActiveTopic(null)}
-                className="flex items-center gap-1 text-[13px] text-jade hover:underline"
+                className="flex items-center gap-1 text-[13px] text-primary hover:underline"
               >
                 <IconChevron direction="left" className="w-3.5 h-3.5" />
                 {t.dictPage.allTopics}
@@ -146,13 +146,13 @@ export default function DictionaryPage() {
                 </div>
                 <span className="text-[13px] text-ink-secondary flex-1 leading-snug">{tr(word.hanzi)?.meaning ?? word.english}</span>
                 {word.hsk && (
-                  <span className="text-[10px] font-bold text-jade bg-jade-light rounded px-1.5 py-0.5 shrink-0">
+                  <span className="text-[10px] font-bold text-primary bg-primary-light rounded px-1.5 py-0.5 shrink-0">
                     HSK{word.hsk}
                   </span>
                 )}
                 <button
                   onClick={() => speak(word.hanzi)}
-                  className="p-2 rounded-lg text-ink-tertiary hover:text-jade hover:bg-jade-light transition-colors shrink-0"
+                  className="p-2 rounded-lg text-ink-tertiary hover:text-primary hover:bg-primary-light transition-colors shrink-0"
                 >
                   <IconVolume className="w-4 h-4" />
                 </button>

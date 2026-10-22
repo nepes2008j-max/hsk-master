@@ -6,7 +6,7 @@ export default function TermsPage() {
       <header className="sticky top-0 z-40 border-b border-border bg-bg/95 backdrop-blur-md">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5">
-            <span className="text-lg font-bold text-jade">HSK</span>
+            <span className="text-lg font-bold text-primary">HSK</span>
             <span className="text-[15px] font-semibold text-ink">Master</span>
           </Link>
           <Link href="/" className="text-[13px] text-ink-tertiary hover:text-ink transition-colors">Back</Link>
@@ -37,7 +37,7 @@ export default function TermsPage() {
             <h2 className="text-lg font-semibold text-ink mb-3">4. Subscriptions and Payment</h2>
             <ul className="list-disc pl-5 space-y-2">
               <li>HSK Master offers paid subscription plans billed monthly, semi-annually, or annually.</li>
-              <li>All fees are in Chinese Yuan (CNY) and are non-refundable except as described in our <Link href="/refund" className="text-jade hover:underline">Refund Policy</Link>.</li>
+              <li>All fees are in Chinese Yuan (CNY) and are non-refundable except as described in our <Link href="/refund" className="text-primary hover:underline">Refund Policy</Link>.</li>
               <li>Subscriptions auto-renew at the end of each billing cycle. You may cancel at any time before the next renewal date.</li>
               <li>We reserve the right to change pricing with 30 days&apos; notice. Price changes do not affect your current billing cycle.</li>
             </ul>
@@ -92,7 +92,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-ink mb-3">13. Contact</h2>
-            <p>For questions about these Terms, contact us at <a href="mailto:support@hskmaster.com" className="text-jade hover:underline">support@hskmaster.com</a>.</p>
+            <p>For questions about these Terms, contact us at <a href="mailto:support@hskmaster.com" className="text-primary hover:underline">support@hskmaster.com</a>.</p>
           </section>
         </div>
       </main>

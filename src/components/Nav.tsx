@@ -43,7 +43,7 @@ export default function Nav() {
       {/* Desktop sidebar */}
       <nav className="hidden md:flex flex-col w-[220px] min-h-screen border-r border-border bg-bg-raised">
         <Link href="/" className="flex items-center gap-2 px-5 py-5 border-b border-border">
-          <span className="text-xl font-bold text-jade">HSK</span>
+          <span className="text-xl font-bold text-primary">HSK</span>
           <span className="text-lg font-semibold text-ink">Master</span>
         </Link>
 
@@ -54,7 +54,7 @@ export default function Nav() {
               href={href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${
                 isActive(href)
-                  ? "bg-jade-light text-jade-text"
+                  ? "bg-primary-light text-primary-text"
                   : "text-ink-secondary hover:text-ink hover:bg-bg-sunken"
               }`}
             >
@@ -76,7 +76,7 @@ export default function Nav() {
             href="/settings"
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors ${
               pathname === "/settings"
-                ? "bg-jade-light text-jade-text"
+                ? "bg-primary-light text-primary-text"
                 : "text-ink-secondary hover:text-ink hover:bg-bg-sunken"
             }`}
           >
@@ -94,7 +94,7 @@ export default function Nav() {
               key={href}
               href={href}
               className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] py-1.5 rounded-lg transition-colors ${
-                isActive(href) ? "text-jade" : "text-ink-tertiary active:text-ink"
+                isActive(href) ? "text-primary" : "text-ink-tertiary active:text-ink"
               }`}
             >
               <Icon className="w-[22px] h-[22px]" />

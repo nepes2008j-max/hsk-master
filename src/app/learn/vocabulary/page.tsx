@@ -60,7 +60,7 @@ export default function VocabularyPage() {
               onClick={() => setLevel(l)}
               className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
                 level === l
-                  ? "bg-jade text-white"
+                  ? "bg-primary text-white"
                   : "bg-bg-sunken text-ink-secondary hover:text-ink"
               }`}
             >
@@ -77,14 +77,14 @@ export default function VocabularyPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t.vocabPage.search}
-              className="w-full rounded-lg border border-border bg-bg-raised pl-9 pr-3 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-jade focus:ring-1 focus:ring-jade/20 transition-colors"
+              className="w-full rounded-lg border border-border bg-bg-raised pl-9 pr-3 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
             />
           </div>
           <button
             onClick={() => setShowPinyin(!showPinyin)}
             className={`rounded-lg px-3.5 py-2.5 text-[14px] font-medium transition-colors ${
               showPinyin
-                ? "bg-jade-light text-jade-text"
+                ? "bg-primary-light text-primary-text"
                 : "bg-bg-sunken text-ink-tertiary"
             }`}
           >
@@ -100,7 +100,7 @@ export default function VocabularyPage() {
                 key={word.id}
                 onClick={() => { setSelectedWord(word); setAddedCard(false); }}
                 className={`w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-bg-raised active:bg-bg-sunken group ${
-                  learned ? "border-l-2 border-jade" : ""
+                  learned ? "border-l-2 border-primary" : ""
                 }`}
               >
                 <div className="flex flex-col min-w-[3rem]">
@@ -113,7 +113,7 @@ export default function VocabularyPage() {
                     e.stopPropagation();
                     speak(word.hanzi);
                   }}
-                  className="p-2 rounded-lg text-ink-tertiary hover:text-jade hover:bg-jade-light transition-colors shrink-0"
+                  className="p-2 rounded-lg text-ink-tertiary hover:text-primary hover:bg-primary-light transition-colors shrink-0"
                   aria-label={`Play pronunciation of ${word.hanzi}`}
                 >
                   <IconVolume className="w-4 h-4" />
@@ -137,13 +137,13 @@ export default function VocabularyPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="text-4xl font-bold text-ink">{selectedWord.hanzi}</div>
-                  <div className="text-lg text-jade mt-1">{selectedWord.pinyin}</div>
+                  <div className="text-lg text-primary mt-1">{selectedWord.pinyin}</div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => speak(selectedWord.hanzi)}
                     aria-label="Play pronunciation"
-                    className="p-2.5 rounded-xl bg-jade-light text-jade hover:bg-jade hover:text-white transition-colors"
+                    className="p-2.5 rounded-xl bg-primary-light text-primary hover:bg-primary hover:text-white transition-colors"
                   >
                     <IconVolume className="w-5 h-5" />
                   </button>
@@ -164,7 +164,7 @@ export default function VocabularyPage() {
 
               <div className="rounded-xl bg-bg-sunken p-4 space-y-1.5">
                 <div className="text-[15px] text-ink">{selectedWord.example.hanzi}</div>
-                <div className="text-[13px] text-jade">{selectedWord.example.pinyin}</div>
+                <div className="text-[13px] text-primary">{selectedWord.example.pinyin}</div>
                 <div className="text-[13px] text-ink-secondary">{tr(selectedWord.hanzi)?.example ?? selectedWord.example.english}</div>
                 <button
                   onClick={() => speak(selectedWord.example.hanzi, 0.7)}
@@ -181,7 +181,7 @@ export default function VocabularyPage() {
                     markWordLearned(selectedWord.hanzi);
                     setSelectedWord(null);
                   }}
-                  className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-jade hover:bg-jade-hover text-white py-3 font-semibold text-[14px] transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-white py-3 font-semibold text-[14px] transition-colors"
                 >
                   <IconCheck className="w-4 h-4" />
                   {t.vocabPage.markLearned}
@@ -199,7 +199,7 @@ export default function VocabularyPage() {
                     setAddedCard(true);
                     setTimeout(() => setAddedCard(false), 1500);
                   }}
-                  className="flex items-center justify-center gap-1.5 rounded-xl border border-border hover:border-jade hover:bg-jade-light px-4 py-3 text-[14px] text-ink-secondary hover:text-jade-text transition-colors"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border border-border hover:border-primary hover:bg-primary-light px-4 py-3 text-[14px] text-ink-secondary hover:text-primary-text transition-colors"
                 >
                   <IconCards className="w-4 h-4" />
                   {addedCard ? t.vocabPage.addedToCards : t.vocabPage.addToCards}

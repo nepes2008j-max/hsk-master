@@ -6,7 +6,7 @@ export default function PrivacyPage() {
       <header className="sticky top-0 z-40 border-b border-border bg-bg/95 backdrop-blur-md">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5">
-            <span className="text-lg font-bold text-jade">HSK</span>
+            <span className="text-lg font-bold text-primary">HSK</span>
             <span className="text-[15px] font-semibold text-ink">Master</span>
           </Link>
           <Link href="/" className="text-[13px] text-ink-tertiary hover:text-ink transition-colors">Back</Link>
@@ -75,7 +75,7 @@ export default function PrivacyPage() {
               <li><strong>Export</strong> your study data.</li>
               <li><strong>Opt out</strong> of marketing communications.</li>
             </ul>
-            <p className="mt-3">To exercise these rights, contact us at <a href="mailto:privacy@hskmaster.com" className="text-jade hover:underline">privacy@hskmaster.com</a>.</p>
+            <p className="mt-3">To exercise these rights, contact us at <a href="mailto:privacy@hskmaster.com" className="text-primary hover:underline">privacy@hskmaster.com</a>.</p>
           </section>
 
           <section>
@@ -95,7 +95,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-ink mb-3">10. International Users</h2>
-            <p>If you are accessing HSK Master from the European Union, you have additional rights under the General Data Protection Regulation (GDPR), including the right to data portability and the right to restrict processing. We process your data based on contractual necessity (providing the Service) and legitimate interests (improving the Service). For EU-specific requests, contact <a href="mailto:privacy@hskmaster.com" className="text-jade hover:underline">privacy@hskmaster.com</a>.</p>
+            <p>If you are accessing HSK Master from the European Union, you have additional rights under the General Data Protection Regulation (GDPR), including the right to data portability and the right to restrict processing. We process your data based on contractual necessity (providing the Service) and legitimate interests (improving the Service). For EU-specific requests, contact <a href="mailto:privacy@hskmaster.com" className="text-primary hover:underline">privacy@hskmaster.com</a>.</p>
           </section>
 
           <section>
@@ -105,7 +105,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-lg font-semibold text-ink mb-3">12. Contact</h2>
-            <p>For privacy-related questions or requests, contact us at <a href="mailto:privacy@hskmaster.com" className="text-jade hover:underline">privacy@hskmaster.com</a>.</p>
+            <p>For privacy-related questions or requests, contact us at <a href="mailto:privacy@hskmaster.com" className="text-primary hover:underline">privacy@hskmaster.com</a>.</p>
           </section>
         </div>
       </main>

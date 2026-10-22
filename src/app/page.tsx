@@ -36,7 +36,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur-lg">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5">
-            <span className="text-xl font-bold text-jade">HSK</span>
+            <span className="text-xl font-bold text-primary">HSK</span>
             <span className="text-lg font-semibold text-ink">Master</span>
           </Link>
           <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/dashboard"
-              className="bg-jade hover:bg-jade-hover text-white text-[13px] sm:text-[14px] font-semibold px-3.5 py-2 rounded-lg transition-colors"
+              className="bg-primary hover:bg-primary-hover text-white text-[13px] sm:text-[14px] font-semibold px-3.5 py-2 rounded-lg transition-colors"
             >
               Start learning
             </Link>
@@ -59,7 +59,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-24 pb-12 sm:pb-16">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 text-[12px] sm:text-[13px] font-medium text-jade-text bg-jade-light px-3 py-1 rounded-full mb-5">
+          <div className="inline-flex items-center gap-2 text-[12px] sm:text-[13px] font-medium text-primary-text bg-primary-light px-3 py-1 rounded-full mb-5">
             HSK 3.0 — Updated for 2026
           </div>
           <h1 className="text-3xl sm:text-5xl font-bold text-ink leading-[1.1] tracking-tight">
@@ -73,7 +73,7 @@ export default function LandingPage() {
           <div className="mt-6 sm:mt-8 flex gap-2.5">
             <Link
               href="/dashboard"
-              className="bg-jade hover:bg-jade-hover text-white text-[14px] sm:text-[15px] font-semibold px-5 sm:px-6 py-3 rounded-xl transition-colors"
+              className="bg-primary hover:bg-primary-hover text-white text-[14px] sm:text-[15px] font-semibold px-5 sm:px-6 py-3 rounded-xl transition-colors"
             >
               Start free trial
             </Link>
@@ -95,7 +95,7 @@ export default function LandingPage() {
             { n: "60", l: "test Q's" },
           ].map(({ n, l }) => (
             <div key={l}>
-              <div className="text-2xl sm:text-3xl font-bold text-jade tabular-nums">{n}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-primary tabular-nums">{n}</div>
               <div className="text-[11px] sm:text-[13px] text-ink-secondary mt-0.5">{l}</div>
             </div>
           ))}
@@ -113,8 +113,8 @@ export default function LandingPage() {
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map(({ Icon, title, desc }) => (
               <div key={title}>
-                <div className="w-9 h-9 rounded-lg bg-jade-light flex items-center justify-center mb-3">
-                  <Icon className="w-[18px] h-[18px] text-jade" />
+                <div className="w-9 h-9 rounded-lg bg-primary-light flex items-center justify-center mb-3">
+                  <Icon className="w-[18px] h-[18px] text-primary" />
                 </div>
                 <h3 className="text-[15px] font-semibold text-ink">{title}</h3>
                 <p className="mt-1.5 text-[14px] text-ink-secondary leading-relaxed">{desc}</p>
@@ -138,13 +138,13 @@ export default function LandingPage() {
                 key={plan.name}
                 className={`relative rounded-xl border p-6 flex flex-col ${
                   plan.featured
-                    ? "border-jade bg-jade-light ring-1 ring-jade/20"
+                    ? "border-primary bg-primary-light ring-1 ring-primary/20"
                     : "border-border bg-bg-raised"
                 }`}
               >
                 {plan.save && (
                   <span className={`absolute -top-3 right-4 text-[12px] font-semibold px-2.5 py-0.5 rounded-full ${
-                    plan.featured ? "bg-jade text-white" : "bg-gold-light text-gold-text"
+                    plan.featured ? "bg-primary text-white" : "bg-accent-light text-accent-text"
                   }`}>
                     {plan.save}
                   </span>
@@ -159,7 +159,7 @@ export default function LandingPage() {
                   href="/dashboard"
                   className={`mt-6 block text-center text-[14px] font-semibold py-2.5 rounded-lg transition-colors ${
                     plan.featured
-                      ? "bg-jade hover:bg-jade-hover text-white"
+                      ? "bg-primary hover:bg-primary-hover text-white"
                       : "bg-bg-sunken hover:bg-border text-ink"
                   }`}
                 >
@@ -174,7 +174,7 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
               {includes.map((item) => (
                 <div key={item} className="flex items-start gap-2 text-[13px] text-ink-secondary">
-                  <IconCheck className="w-4 h-4 text-jade shrink-0 mt-0.5" />
+                  <IconCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                   {item}
                 </div>
               ))}
@@ -192,7 +192,7 @@ export default function LandingPage() {
           </p>
           <Link
             href="/dashboard"
-            className="inline-block mt-6 bg-jade hover:bg-jade-hover text-white text-[15px] font-semibold px-8 py-3 rounded-lg transition-colors"
+            className="inline-block mt-6 bg-primary hover:bg-primary-hover text-white text-[15px] font-semibold px-8 py-3 rounded-lg transition-colors"
           >
             Start 5-day free trial
           </Link>
@@ -204,7 +204,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-1.5">
-              <span className="text-lg font-bold text-jade">HSK</span>
+              <span className="text-lg font-bold text-primary">HSK</span>
               <span className="text-[15px] font-semibold text-ink">Master</span>
             </div>
             <div className="flex gap-6 text-[13px] text-ink-tertiary">

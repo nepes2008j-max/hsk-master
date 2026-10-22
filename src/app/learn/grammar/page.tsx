@@ -44,7 +44,7 @@ export default function GrammarPage() {
               onClick={() => { setLevel(l); setActiveCategory(null); }}
               className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
                 level === l
-                  ? "bg-jade text-white"
+                  ? "bg-primary text-white"
                   : "bg-bg-sunken text-ink-secondary hover:text-ink"
               }`}
             >
@@ -58,7 +58,7 @@ export default function GrammarPage() {
             onClick={() => setActiveCategory(null)}
             className={`shrink-0 rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
               !activeCategory
-                ? "bg-jade text-white"
+                ? "bg-primary text-white"
                 : "bg-bg-sunken text-ink-secondary hover:text-ink"
             }`}
           >
@@ -70,7 +70,7 @@ export default function GrammarPage() {
               onClick={() => setActiveCategory(cat)}
               className={`shrink-0 rounded-full px-3.5 py-1.5 text-[13px] font-medium capitalize transition-colors ${
                 activeCategory === cat
-                  ? "bg-jade text-white"
+                  ? "bg-primary text-white"
                   : "bg-bg-sunken text-ink-secondary hover:text-ink"
               }`}
             >
@@ -90,7 +90,7 @@ export default function GrammarPage() {
                 key={point.id}
                 className={`rounded-xl border transition-colors ${
                   completed
-                    ? "border-jade/30 bg-jade-light/30"
+                    ? "border-primary/30 bg-primary-light/30"
                     : "border-border bg-bg-raised"
                 }`}
               >
@@ -98,7 +98,7 @@ export default function GrammarPage() {
                   onClick={() => setExpandedId(expanded ? null : point.id)}
                   className="w-full flex items-center gap-3 p-4 text-left"
                 >
-                  {completed && <IconCheck className="w-4.5 h-4.5 text-jade shrink-0" />}
+                  {completed && <IconCheck className="w-4.5 h-4.5 text-primary shrink-0" />}
                   <div className="flex-1 min-w-0">
                     <div className="text-[15px] font-semibold text-ink">{tr?.title ?? point.title}</div>
                     <div className="text-[13px] text-ink-tertiary font-mono mt-0.5">{point.pattern}</div>
@@ -121,12 +121,12 @@ export default function GrammarPage() {
                         >
                           <div className="flex-1 space-y-0.5">
                             <div className="text-[15px] text-ink">{ex.hanzi}</div>
-                            <div className="text-[13px] text-jade">{ex.pinyin}</div>
+                            <div className="text-[13px] text-primary">{ex.pinyin}</div>
                             <div className="text-[13px] text-ink-secondary">{tr?.examples[i] ?? ex.english}</div>
                           </div>
                           <button
                             onClick={() => speak(ex.hanzi, 0.7)}
-                            className="p-1.5 rounded-lg text-ink-tertiary hover:text-jade hover:bg-jade-light transition-colors shrink-0"
+                            className="p-1.5 rounded-lg text-ink-tertiary hover:text-primary hover:bg-primary-light transition-colors shrink-0"
                           >
                             <IconVolume className="w-4 h-4" />
                           </button>
@@ -137,7 +137,7 @@ export default function GrammarPage() {
                     {!completed && (
                       <button
                         onClick={() => markGrammarCompleted(point.id)}
-                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-jade hover:bg-jade-hover text-white py-2.5 text-[14px] font-semibold transition-colors"
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-white py-2.5 text-[14px] font-semibold transition-colors"
                       >
                         <IconCheck className="w-4 h-4" />
                         {t.vocabPage.markLearned}

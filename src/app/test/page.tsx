@@ -437,7 +437,7 @@ export default function TestPage() {
                   onClick={() => setTestLevel(l)}
                   className={`rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors ${
                     testLevel === l
-                      ? "bg-jade text-white"
+                      ? "bg-primary text-white"
                       : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
@@ -478,7 +478,7 @@ export default function TestPage() {
 
             <button
               onClick={startTest}
-              className="w-full rounded-xl bg-jade hover:bg-jade-hover text-white py-4 font-semibold text-[16px] transition-colors"
+              className="w-full rounded-xl bg-primary hover:bg-primary-hover text-white py-4 font-semibold text-[16px] transition-colors"
             >
               开始考试 &mdash; {t.testPage.startTest}
             </button>
@@ -495,14 +495,14 @@ export default function TestPage() {
                       key={r.id}
                       className={`flex items-center justify-between rounded-xl p-3.5 border ${
                         r.passed
-                          ? "bg-jade-light/50 border-jade/20"
-                          : "bg-red-light/50 border-red/20"
+                          ? "bg-primary-light/50 border-primary/20"
+                          : "bg-warning-light/50 border-warning/20"
                       }`}
                     >
                       <span className="text-[13px] text-ink-secondary">
                         {r.level ? `HSK ${r.level} · ` : ""}{new Date(r.date).toLocaleDateString()}
                       </span>
-                      <span className={`text-[14px] font-bold ${r.passed ? "text-jade" : "text-red"}`}>
+                      <span className={`text-[14px] font-bold ${r.passed ? "text-primary" : "text-warning"}`}>
                         {r.score}/200 {r.passed ? t.testPage.passed : t.testPage.failed}
                       </span>
                     </div>
@@ -529,7 +529,7 @@ export default function TestPage() {
                 </button>
                 <span
                   className={`text-[14px] font-mono font-bold tabular-nums px-2.5 py-1 rounded-lg ${
-                    timeLeft < 300 ? "bg-red-light text-red" : "bg-bg-sunken text-ink"
+                    timeLeft < 300 ? "bg-warning-light text-warning" : "bg-bg-sunken text-ink"
                   }`}
                 >
                   {formatTime(timeLeft)}
@@ -540,7 +540,7 @@ export default function TestPage() {
             {/* Progress bar */}
             <div className="w-full bg-bg-sunken rounded-full h-1">
               <div
-                className="bg-jade h-full rounded-full transition-all duration-300"
+                className="bg-primary h-full rounded-full transition-all duration-300"
                 style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}
               />
             </div>
@@ -568,9 +568,9 @@ export default function TestPage() {
                             onClick={() => { setCurrentQ(idx); setShowNav(false); }}
                             className={`w-8 h-8 rounded-lg text-[12px] font-medium transition-colors ${
                               active
-                                ? "bg-jade text-white"
+                                ? "bg-primary text-white"
                                 : answered
-                                ? "bg-jade-light text-jade-text"
+                                ? "bg-primary-light text-primary-text"
                                 : "bg-bg-sunken text-ink-tertiary hover:text-ink"
                             }`}
                           >
@@ -583,7 +583,7 @@ export default function TestPage() {
                 ))}
                 <button
                   onClick={finishTest}
-                  className="w-full rounded-xl bg-red hover:bg-red/90 text-white py-2.5 text-[13px] font-medium transition-colors mt-2"
+                  className="w-full rounded-xl bg-warning hover:bg-warning/90 text-white py-2.5 text-[13px] font-medium transition-colors mt-2"
                 >
                   交卷 — {t.testPage.submit} ({answeredCount}/40)
                 </button>
@@ -617,7 +617,7 @@ export default function TestPage() {
                     <div className="mb-1">
                       <div className="text-2xl font-bold text-ink">{q.context}</div>
                       {q.section === "reading" && (
-                        <div className="text-[12px] text-jade mt-0.5">{q.context}</div>
+                        <div className="text-[12px] text-primary mt-0.5">{q.context}</div>
                       )}
                     </div>
                   )}
@@ -672,7 +672,7 @@ export default function TestPage() {
                     onClick={() => selectAnswer(i)}
                     className={`w-full text-left rounded-xl border p-3.5 text-[14px] transition-all ${
                       answers[currentQ] === i
-                        ? "border-jade bg-jade-light/50 text-ink font-medium ring-1 ring-jade/20"
+                        ? "border-primary bg-primary-light/50 text-ink font-medium ring-1 ring-primary/20"
                         : "border-border bg-bg-raised text-ink-secondary hover:border-border-strong hover:text-ink"
                     }`}
                   >
@@ -695,7 +695,7 @@ export default function TestPage() {
               {currentQ < questions.length - 1 ? (
                 <button
                   onClick={() => setCurrentQ(currentQ + 1)}
-                  className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-jade hover:bg-jade-hover text-white py-3 text-[14px] font-medium transition-colors"
+                  className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-primary hover:bg-primary-hover text-white py-3 text-[14px] font-medium transition-colors"
                 >
                   {t.testPage.next}
                   <IconChevron direction="right" className="w-4 h-4" />
@@ -703,7 +703,7 @@ export default function TestPage() {
               ) : (
                 <button
                   onClick={finishTest}
-                  className="flex-1 rounded-xl bg-red hover:bg-red/90 text-white py-3 text-[14px] font-semibold transition-colors"
+                  className="flex-1 rounded-xl bg-warning hover:bg-warning/90 text-white py-3 text-[14px] font-semibold transition-colors"
                 >
                   交卷 {t.testPage.submit}
                 </button>
@@ -720,13 +720,13 @@ export default function TestPage() {
               <div className="text-[12px] text-ink-tertiary tracking-[0.2em] uppercase mb-2">
                 HSK（{testLevel === 1 ? "一" : "二"}级） Results
               </div>
-              <div className={`inline-flex items-center justify-center w-24 h-24 rounded-3xl ${latestResult.passed ? "bg-jade-light" : "bg-red-light"}`}>
-                <span className={`text-4xl font-bold ${latestResult.passed ? "text-jade" : "text-red"}`}>
+              <div className={`inline-flex items-center justify-center w-24 h-24 rounded-3xl ${latestResult.passed ? "bg-primary-light" : "bg-warning-light"}`}>
+                <span className={`text-4xl font-bold ${latestResult.passed ? "text-primary" : "text-warning"}`}>
                   {latestResult.score}
                 </span>
               </div>
               <div className="text-ink-tertiary text-[14px] mt-1">/ 200</div>
-              <div className={`text-lg font-bold mt-2 ${latestResult.passed ? "text-jade" : "text-red"}`}>
+              <div className={`text-lg font-bold mt-2 ${latestResult.passed ? "text-primary" : "text-warning"}`}>
                 {latestResult.passed ? `合格 ${t.testPage.passed}` : `未通过 ${t.testPage.failed}`}
               </div>
             </div>
@@ -765,8 +765,8 @@ export default function TestPage() {
               <div className="flex items-center justify-between">
                 <div className="text-[13px] font-semibold text-ink-secondary">{t.testPage.reviewAnswers}</div>
                 <div className="flex gap-2 text-[12px] text-ink-tertiary">
-                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-jade inline-block" /> {latestResult.answers.filter((a) => a.correct).length}</span>
-                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red inline-block" /> {latestResult.answers.filter((a) => !a.correct).length}</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-primary inline-block" /> {latestResult.answers.filter((a) => a.correct).length}</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-warning inline-block" /> {latestResult.answers.filter((a) => !a.correct).length}</span>
                 </div>
               </div>
 
@@ -786,12 +786,12 @@ export default function TestPage() {
                         key={q.id}
                         className={`rounded-xl border p-3.5 text-[13px] mb-1.5 ${
                           isCorrect
-                            ? "border-jade/20 bg-jade-light/30"
-                            : "border-red/20 bg-red-light/30"
+                            ? "border-primary/20 bg-primary-light/30"
+                            : "border-warning/20 bg-warning-light/30"
                         }`}
                       >
                         <div className="flex items-center gap-2 mb-2">
-                          <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white ${isCorrect ? "bg-jade" : "bg-red"}`}>
+                          <span className={`w-6 h-6 rounded-lg flex items-center justify-center text-[11px] font-bold text-white ${isCorrect ? "bg-primary" : "bg-warning"}`}>
                             {q.id}
                           </span>
                           <span className="text-ink-secondary text-[12px]">{q.instruction}</span>
@@ -805,13 +805,13 @@ export default function TestPage() {
                             const isUserPick = userAnswer === oi;
                             const isCorrectOpt = oi === q.correctIndex;
                             let cls = "text-ink-tertiary";
-                            if (isCorrectOpt) cls = "text-jade font-medium";
-                            else if (isUserPick && !isCorrect) cls = "text-red line-through";
+                            if (isCorrectOpt) cls = "text-primary font-medium";
+                            else if (isUserPick && !isCorrect) cls = "text-warning line-through";
 
                             return (
                               <div key={oi} className={`flex items-center gap-2 ${cls}`}>
-                                {isCorrectOpt && <IconCheck className="w-3.5 h-3.5 text-jade shrink-0" />}
-                                {isUserPick && !isCorrect && <IconX className="w-3.5 h-3.5 text-red shrink-0" />}
+                                {isCorrectOpt && <IconCheck className="w-3.5 h-3.5 text-primary shrink-0" />}
+                                {isUserPick && !isCorrect && <IconX className="w-3.5 h-3.5 text-warning shrink-0" />}
                                 {!isCorrectOpt && !isUserPick && <span className="w-3.5 shrink-0" />}
                                 <span>{opt}</span>
                               </div>
@@ -820,7 +820,7 @@ export default function TestPage() {
                         </div>
 
                         {skipped && (
-                          <div className="text-[12px] text-red mt-1.5 italic">Skipped</div>
+                          <div className="text-[12px] text-warning mt-1.5 italic">Skipped</div>
                         )}
                       </div>
                     );
@@ -838,7 +838,7 @@ export default function TestPage() {
               </button>
               <button
                 onClick={startTest}
-                className="flex-1 rounded-xl bg-jade hover:bg-jade-hover text-white py-3 text-[14px] font-semibold transition-colors"
+                className="flex-1 rounded-xl bg-primary hover:bg-primary-hover text-white py-3 text-[14px] font-semibold transition-colors"
               >
                 {t.testPage.tryAgain}
               </button>

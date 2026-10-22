@@ -557,7 +557,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
       <div className="min-h-screen bg-bg flex items-center justify-center px-4">
         <div className="w-full max-w-sm space-y-6 text-center">
           <div className="space-y-1">
-            <div className="text-2xl font-bold text-jade">HSK Master</div>
+            <div className="text-2xl font-bold text-primary">HSK Master</div>
             <div className="text-[14px] text-ink-tertiary">汉语水平考试</div>
           </div>
 
@@ -566,7 +566,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
               <button
                 key={l}
                 onClick={() => setLang(l)}
-                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3.5 text-[15px] font-medium text-ink hover:border-jade hover:text-jade transition-colors"
+                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3.5 text-[15px] font-medium text-ink hover:border-primary hover:text-primary transition-colors"
               >
                 {t[l].langName}
               </button>

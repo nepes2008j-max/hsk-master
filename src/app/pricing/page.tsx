@@ -42,12 +42,12 @@ export default function PricingPage() {
       <header className="border-b border-border bg-bg/90 backdrop-blur-lg">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1.5">
-            <span className="text-xl font-bold text-jade">HSK</span>
+            <span className="text-xl font-bold text-primary">HSK</span>
             <span className="text-lg font-semibold text-ink">Master</span>
           </Link>
           <Link
             href="/dashboard"
-            className="bg-jade hover:bg-jade-hover text-white text-[14px] font-semibold px-4 py-2 rounded-lg transition-colors"
+            className="bg-primary hover:bg-primary-hover text-white text-[14px] font-semibold px-4 py-2 rounded-lg transition-colors"
           >
             Start 5-day free trial
           </Link>
@@ -77,13 +77,13 @@ export default function PricingPage() {
                 key={plan.id}
                 className={`relative rounded-xl border p-6 flex flex-col ${
                   plan.featured
-                    ? "border-jade bg-jade-light ring-1 ring-jade/20"
+                    ? "border-primary bg-primary-light ring-1 ring-primary/20"
                     : "border-border bg-bg-raised"
                 }`}
               >
                 {savePercent > 0 && (
                   <span className={`absolute -top-3 right-4 text-[12px] font-bold px-2.5 py-0.5 rounded-full ${
-                    plan.featured ? "bg-jade text-white" : "bg-gold-light text-gold-text"
+                    plan.featured ? "bg-primary text-white" : "bg-accent-light text-accent-text"
                   }`}>
                     Save {savePercent}%
                   </span>
@@ -108,7 +108,7 @@ export default function PricingPage() {
                   href={getCheckoutUrl(plan.id) || "/dashboard"}
                   className={`mt-6 block text-center text-[14px] font-semibold py-3 rounded-lg transition-colors ${
                     plan.featured
-                      ? "bg-jade hover:bg-jade-hover text-white"
+                      ? "bg-primary hover:bg-primary-hover text-white"
                       : "bg-bg-sunken hover:bg-border text-ink"
                   }`}
                 >
@@ -125,7 +125,7 @@ export default function PricingPage() {
           <div className="mt-6 grid sm:grid-cols-2 gap-x-12 gap-y-3">
             {allFeatures.map(({ name }) => (
               <div key={name} className="flex items-center gap-2.5 text-[14px] text-ink-secondary py-1">
-                <IconCheck className="w-4.5 h-4.5 text-jade shrink-0" />
+                <IconCheck className="w-4.5 h-4.5 text-primary shrink-0" />
                 {name}
               </div>
             ))}
@@ -138,7 +138,7 @@ export default function PricingPage() {
           <div className="mt-6 max-w-2xl divide-y divide-border">
             {faqs.map(({ q, a }) => (
               <details key={q} className="group">
-                <summary className="flex items-center justify-between py-4 cursor-pointer text-[15px] font-medium text-ink hover:text-jade transition-colors list-none [&::-webkit-details-marker]:hidden">
+                <summary className="flex items-center justify-between py-4 cursor-pointer text-[15px] font-medium text-ink hover:text-primary transition-colors list-none [&::-webkit-details-marker]:hidden">
                   {q}
                   <IconChevron direction="down" className="w-4 h-4 text-ink-tertiary transition-transform group-open:rotate-180" />
                 </summary>

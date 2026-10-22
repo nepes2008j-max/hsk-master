@@ -131,7 +131,7 @@ export default function CharactersPage() {
             <div className="text-5xl font-bold text-ink">{char}</div>
             <div className="text-[13px] text-ink-tertiary mt-1.5 flex items-center justify-center gap-1.5">
               {currentIdx + 1} / {characters.length}
-              {practiced && <IconCheck className="w-3.5 h-3.5 text-jade" />}
+              {practiced && <IconCheck className="w-3.5 h-3.5 text-primary" />}
             </div>
           </div>
           <button
@@ -155,7 +155,7 @@ export default function CharactersPage() {
             onClick={handleAnimate}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-[14px] font-medium transition-colors ${
               mode === "animate"
-                ? "bg-jade text-white"
+                ? "bg-primary text-white"
                 : "bg-bg-sunken text-ink-secondary hover:text-ink"
             }`}
           >
@@ -166,7 +166,7 @@ export default function CharactersPage() {
             onClick={handleQuiz}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-[14px] font-medium transition-colors ${
               mode === "quiz"
-                ? "bg-jade text-white"
+                ? "bg-primary text-white"
                 : "bg-bg-sunken text-ink-secondary hover:text-ink"
             }`}
           >
@@ -182,7 +182,7 @@ export default function CharactersPage() {
         </div>
 
         {quizResult && (
-          <div className="text-center text-[14px] font-semibold text-jade">
+          <div className="text-center text-[14px] font-semibold text-primary">
             {quizResult}
           </div>
         )}
@@ -199,7 +199,7 @@ export default function CharactersPage() {
                 className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-bg-sunken transition-colors"
               >
                 <span className="text-lg font-semibold text-ink min-w-[3rem]">{w.hanzi}</span>
-                <span className="text-[13px] text-jade min-w-[4rem]">{w.pinyin}</span>
+                <span className="text-[13px] text-primary min-w-[4rem]">{w.pinyin}</span>
                 <span className="text-[13px] text-ink-secondary flex-1">{tr(w.hanzi)?.meaning ?? w.english}</span>
                 <IconVolume className="w-3.5 h-3.5 text-ink-tertiary shrink-0" />
               </button>
@@ -214,7 +214,7 @@ export default function CharactersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t.charsPage.searchChars}
-            className="w-full rounded-lg border border-border bg-bg-raised pl-9 pr-3 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-jade focus:ring-1 focus:ring-jade/20 transition-colors"
+            className="w-full rounded-lg border border-border bg-bg-raised pl-9 pr-3 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
           />
         </div>
 
@@ -233,9 +233,9 @@ export default function CharactersPage() {
                 }}
                 className={`text-[13px] p-1.5 rounded-lg transition-colors ${
                   idx === currentIdx
-                    ? "bg-jade text-white"
+                    ? "bg-primary text-white"
                     : done
-                    ? "bg-jade-light text-jade-text"
+                    ? "bg-primary-light text-primary-text"
                     : "bg-bg-sunken text-ink-secondary hover:text-ink"
                 }`}
               >

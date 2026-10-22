@@ -17,13 +17,13 @@ export default function DashboardPage() {
   }, []);
 
   const sections = [
-    { href: "/learn/vocabulary", title: t.dashboard.vocabulary, desc: t.dashboard.vocabDesc, Icon: IconBook, accent: "bg-jade-light text-jade" },
+    { href: "/learn/vocabulary", title: t.dashboard.vocabulary, desc: t.dashboard.vocabDesc, Icon: IconBook, accent: "bg-primary-light text-primary" },
     { href: "/learn/grammar", title: t.dashboard.grammarLabel, desc: t.dashboard.grammarDesc, Icon: IconPencil, accent: "bg-blue-light text-blue" },
-    { href: "/learn/characters", title: t.dashboard.characters, desc: t.dashboard.charsDesc, Icon: IconBrush, accent: "bg-gold-light text-gold" },
+    { href: "/learn/characters", title: t.dashboard.characters, desc: t.dashboard.charsDesc, Icon: IconBrush, accent: "bg-accent-light text-accent" },
     { href: "/dictionary", title: t.dictPage.title, desc: t.dashboard.dictDesc, Icon: IconGlobe, accent: "bg-blue-light text-blue" },
-    { href: "/cards", title: t.cards, desc: t.dashboard.cardsDesc, Icon: IconCards, accent: "bg-jade-light text-jade" },
-    { href: "/test", title: t.test, desc: t.dashboard.testDesc, Icon: IconClipboard, accent: "bg-red-light text-red" },
-    { href: "/games", title: t.games, desc: t.gamesPage.desc, Icon: IconGamepad, accent: "bg-gold-light text-gold" },
+    { href: "/cards", title: t.cards, desc: t.dashboard.cardsDesc, Icon: IconCards, accent: "bg-primary-light text-primary" },
+    { href: "/test", title: t.test, desc: t.dashboard.testDesc, Icon: IconClipboard, accent: "bg-warning-light text-warning" },
+    { href: "/games", title: t.games, desc: t.gamesPage.desc, Icon: IconGamepad, accent: "bg-accent-light text-accent" },
   ] as const;
 
   const isGamified = progress?.mode === "gamified";
@@ -38,7 +38,7 @@ export default function DashboardPage() {
         {progress && isGamified && (
           <div className="flex gap-4 p-4 rounded-xl bg-bg-raised border border-border">
             <div className="flex items-center gap-2">
-              <IconFire className="w-5 h-5 text-gold" />
+              <IconFire className="w-5 h-5 text-accent" />
               <div>
                 <div className="text-lg font-bold text-ink tabular-nums">{progress.streak}</div>
                 <div className="text-[11px] text-ink-tertiary uppercase tracking-wide">{t.dashboard.streak}</div>
@@ -46,7 +46,7 @@ export default function DashboardPage() {
             </div>
             <div className="w-px bg-border" />
             <div className="flex items-center gap-2">
-              <IconStar className="w-5 h-5 text-jade" />
+              <IconStar className="w-5 h-5 text-primary" />
               <div>
                 <div className="text-lg font-bold text-ink tabular-nums">{progress.xp}</div>
                 <div className="text-[11px] text-ink-tertiary uppercase tracking-wide">XP</div>
@@ -78,7 +78,7 @@ export default function DashboardPage() {
                 <Icon className="w-[18px] h-[18px]" />
               </div>
               <div className="min-w-0">
-                <div className="text-[14px] font-semibold text-ink group-hover:text-jade transition-colors leading-tight">{title}</div>
+                <div className="text-[14px] font-semibold text-ink group-hover:text-primary transition-colors leading-tight">{title}</div>
                 <div className="text-[12px] text-ink-tertiary mt-0.5 leading-snug line-clamp-2">{desc}</div>
               </div>
             </Link>
