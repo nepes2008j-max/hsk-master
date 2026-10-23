@@ -17,6 +17,8 @@ const t = {
     cards: "Cards",
     test: "Test",
     settings: "Settings",
+    signIn: "Sign in with Google",
+    signOut: "Sign out",
     dashboard: {
       title: "HSK 1",
       subtitle: "学习",
@@ -316,6 +318,8 @@ const t = {
     cards: "Карточки",
     test: "Тест",
     settings: "Настройки",
+    signIn: "Войти через Google",
+    signOut: "Выйти",
     dashboard: {
       title: "HSK 1",
       subtitle: "学习",
@@ -615,6 +619,8 @@ const t = {
     cards: "Kartlar",
     test: "Synag",
     settings: "Sazlamalar",
+    signIn: "Google bilen giriş",
+    signOut: "Çykmak",
     dashboard: {
       title: "HSK 1",
       subtitle: "学习",

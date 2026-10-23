@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { LangProvider } from "@/lib/i18n";
+import { AuthProvider } from "@/lib/auth";
 import type { ReactNode } from "react";
 
 export function LangWrapper({ children }: { children: ReactNode }) {
@@ -13,5 +14,5 @@ export function LangWrapper({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  return <LangProvider>{children}</LangProvider>;
+  return <AuthProvider><LangProvider>{children}</LangProvider></AuthProvider>;
 }
