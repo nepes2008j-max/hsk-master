@@ -5,7 +5,9 @@ import { useProgress } from "@/hooks/useProgress";
 import { IconCog, IconFire, IconStar, IconBook, IconPencil, IconBrush } from "@/components/Icons";
 import { useLang, type Lang } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
+import { useSubscription } from "@/hooks/useSubscription";
 import { exportAllData, importAllData } from "@/lib/storage";
+import Link from "next/link";
 
 const langOptions: { id: Lang; label: string }[] = [
   { id: "en", label: "English" },
@@ -17,6 +19,7 @@ export default function SettingsPage() {
   const { progress, toggleMode } = useProgress();
   const { lang, setLang, t } = useLang();
   const { user, signInWithGoogle, logout } = useAuth();
+  const { subscription, isPremium, trialDaysLeft } = useSubscription();
 
   const handleExport = async () => {
     const json = await exportAllData();
@@ -84,6 +87,30 @@ export default function SettingsPage() {
             </button>
           )}
         </div>
+
+        {user && (
+          <div className="rounded-xl border border-border bg-bg-raised p-5 space-y-3">
+            <div className="text-[13px] font-semibold text-ink-secondary uppercase tracking-wide">
+              Subscription
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <span className={`inline-block px-2.5 py-0.5 rounded-full text-[13px] font-semibold ${
+                  isPremium ? "bg-green-100 text-green-700" : "bg-bg-sunken text-ink-tertiary"
+                }`}>
+                  {subscription.plan === "trial" ? `Trial (${trialDaysLeft}d left)` :
+                   subscription.plan === "free" ? "Free" :
+                   subscription.plan.charAt(0).toUpperCase() + subscription.plan.slice(1)}
+                </span>
+              </div>
+              {!isPremium && (
+                <Link href="/pricing" className="text-primary text-[13px] font-semibold hover:underline">
+                  {t.premiumGate.upgrade}
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="rounded-xl border border-border bg-bg-raised p-5 space-y-4">
           <div className="flex items-center gap-2.5 text-[13px] font-semibold text-ink-secondary uppercase tracking-wide">

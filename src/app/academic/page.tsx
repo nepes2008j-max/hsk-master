@@ -7,6 +7,7 @@ import { speak } from "@/lib/tts";
 import { saveUserCard, type UserCard } from "@/lib/storage";
 import { IconVolume, IconCheck } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
+import PremiumGate from "@/components/PremiumGate";
 
 export default function AcademicPage() {
   const { t } = useLang();
@@ -48,6 +49,7 @@ export default function AcademicPage() {
 
   return (
     <AppShell>
+      <PremiumGate>
       <div className="space-y-5">
         <div>
           <h1 className="text-2xl font-bold text-ink tracking-tight">{t.academicPage.title}</h1>
@@ -163,6 +165,7 @@ export default function AcademicPage() {
           </div>
         )}
       </div>
+      </PremiumGate>
     </AppShell>
   );
 }

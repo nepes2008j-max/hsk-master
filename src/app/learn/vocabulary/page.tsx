@@ -10,6 +10,7 @@ import { saveUserCard } from "@/lib/storage";
 import { IconSearch, IconVolume, IconCheck, IconX, IconCards } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSubscription } from "@/hooks/useSubscription";
 
 export default function VocabularyPage() {
   const { t } = useLang();
@@ -20,6 +21,7 @@ export default function VocabularyPage() {
   const [level, setLevel] = useState<1 | 2>(1);
   const [addedCard, setAddedCard] = useState(false);
   const { progress, markWordLearned } = useProgress();
+  const { isPremium } = useSubscription();
 
   useEffect(() => {
     if (!selectedWord) return;
@@ -54,19 +56,24 @@ export default function VocabularyPage() {
         </div>
 
         <div className="flex gap-1.5">
-          {([1, 2] as const).map((l) => (
-            <button
-              key={l}
-              onClick={() => setLevel(l)}
-              className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
-                level === l
-                  ? "bg-primary text-white"
-                  : "bg-bg-sunken text-ink-secondary hover:text-ink"
-              }`}
-            >
-              {l === 1 ? t.hsk1 : t.hsk2}
-            </button>
-          ))}
+          {([1, 2] as const).map((l) => {
+            const locked = l === 2 && !isPremium;
+            return (
+              <button
+                key={l}
+                onClick={() => !locked && setLevel(l)}
+                className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+                  level === l
+                    ? "bg-primary text-white"
+                    : locked
+                      ? "bg-bg-sunken text-ink-tertiary cursor-not-allowed"
+                      : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                }`}
+              >
+                {l === 1 ? t.hsk1 : t.hsk2}{locked && " 🔒"}
+              </button>
+            );
+          })}
         </div>
 
         <div className="flex gap-2">

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { IconCheck, IconBook, IconBrush, IconCards, IconClipboard, IconPencil, IconStar } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
+import FloatingChars from "@/components/FloatingChars";
+import AnimatedCounter from "@/components/AnimatedCounter";
 
 export default function LandingPage() {
   const { t } = useLang();
@@ -52,47 +54,60 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-24 pb-12 sm:pb-16">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 text-[12px] sm:text-[13px] font-medium text-primary-text bg-primary-light px-3 py-1 rounded-full mb-5">
-            {l.tagline}
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-bold text-ink leading-[1.1] tracking-tight">
-            {l.hero}<br />
-            <span className="text-ink-secondary">{l.heroSub}</span>
-          </h1>
-          <p className="mt-4 text-[15px] sm:text-lg text-ink-secondary leading-relaxed max-w-xl">
-            {l.heroDesc}
-          </p>
-          <div className="mt-6 sm:mt-8 flex gap-2.5">
-            <Link
-              href="/dashboard"
-              className="bg-primary hover:bg-primary-hover text-white text-[14px] sm:text-[15px] font-semibold px-5 sm:px-6 py-3 rounded-xl transition-colors"
-            >
-              {l.startTrial}
-            </Link>
-            <Link
-              href="#pricing"
-              className="border border-border-strong hover:bg-bg-sunken text-ink text-[14px] sm:text-[15px] font-medium px-5 sm:px-6 py-3 rounded-xl transition-colors"
-            >
-              {l.viewPricing}
-            </Link>
-          </div>
-        </div>
+      <section className="relative overflow-hidden">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-orange-50 animate-[gradientShift_8s_ease-in-out_infinite]" />
 
-        {/* Quick proof */}
-        <div className="mt-10 sm:mt-16 grid grid-cols-4 gap-4 sm:gap-6">
-          {[
-            { n: "497", label: l.words },
-            { n: "93", label: l.grammarStat },
-            { n: "100+", label: l.characters },
-            { n: "60", label: l.testQs },
-          ].map(({ n, label }) => (
-            <div key={label}>
-              <div className="text-2xl sm:text-3xl font-bold text-primary tabular-nums">{n}</div>
-              <div className="text-[11px] sm:text-[13px] text-ink-secondary mt-0.5">{label}</div>
+        {/* Radial glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] sm:w-[900px] sm:h-[900px] rounded-full bg-gradient-radial from-primary/[0.06] to-transparent pointer-events-none" />
+
+        {/* Floating Chinese characters */}
+        <FloatingChars />
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-12 sm:pt-28 pb-14 sm:pb-20">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 text-[12px] sm:text-[13px] font-medium text-primary-text bg-white/80 backdrop-blur-sm border border-primary/20 px-3 py-1 rounded-full mb-5 animate-[fadeInUp_0.6s_ease-out]">
+              {l.tagline}
             </div>
-          ))}
+            <h1 className="text-3xl sm:text-5xl font-bold text-ink leading-[1.1] tracking-tight animate-[fadeInUp_0.6s_ease-out_0.1s_both]">
+              {l.hero}<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-red-400">{l.heroSub}</span>
+            </h1>
+            <p className="mt-4 text-[15px] sm:text-lg text-ink-secondary leading-relaxed max-w-xl animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
+              {l.heroDesc}
+            </p>
+            <div className="mt-6 sm:mt-8 flex gap-2.5 animate-[fadeInUp_0.6s_ease-out_0.3s_both]">
+              <Link
+                href="/dashboard"
+                className="group bg-primary hover:bg-primary-hover text-white text-[14px] sm:text-[15px] font-semibold px-5 sm:px-6 py-3 rounded-xl transition-all shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
+              >
+                {l.startTrial}
+              </Link>
+              <Link
+                href="#pricing"
+                className="border border-border-strong hover:bg-bg-sunken text-ink text-[14px] sm:text-[15px] font-medium px-5 sm:px-6 py-3 rounded-xl transition-colors"
+              >
+                {l.viewPricing}
+              </Link>
+            </div>
+          </div>
+
+          {/* Animated stat counters */}
+          <div className="mt-10 sm:mt-16 grid grid-cols-4 gap-4 sm:gap-6 animate-[fadeInUp_0.6s_ease-out_0.4s_both]">
+            {[
+              { n: "497", label: l.words },
+              { n: "93", label: l.grammarStat },
+              { n: "100+", label: l.characters },
+              { n: "60", label: l.testQs },
+            ].map(({ n, label }) => (
+              <div key={label}>
+                <div className="text-2xl sm:text-3xl font-bold text-primary tabular-nums">
+                  <AnimatedCounter target={n} />
+                </div>
+                <div className="text-[11px] sm:text-[13px] text-ink-secondary mt-0.5">{label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -105,9 +120,12 @@ export default function LandingPage() {
           </p>
 
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map(({ Icon, title, desc }) => (
-              <div key={title}>
-                <div className="w-9 h-9 rounded-lg bg-primary-light flex items-center justify-center mb-3">
+            {features.map(({ Icon, title, desc }, i) => (
+              <div
+                key={title}
+                className="group rounded-xl border border-transparent hover:border-border hover:bg-bg p-4 -m-4 transition-all duration-300 hover:shadow-sm"
+              >
+                <div className="w-9 h-9 rounded-lg bg-primary-light flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                   <Icon className="w-[18px] h-[18px] text-primary" />
                 </div>
                 <h3 className="text-[15px] font-semibold text-ink">{title}</h3>
@@ -130,10 +148,10 @@ export default function LandingPage() {
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative rounded-xl border p-6 flex flex-col ${
+                className={`relative rounded-xl border p-6 flex flex-col transition-all duration-300 hover:-translate-y-1 ${
                   plan.featured
-                    ? "border-primary bg-primary-light ring-1 ring-primary/20"
-                    : "border-border bg-bg-raised"
+                    ? "border-primary bg-gradient-to-b from-red-50 to-orange-50/50 ring-1 ring-primary/20 shadow-lg shadow-primary/10"
+                    : "border-border bg-bg-raised hover:shadow-md"
                 }`}
               >
                 {plan.save && (
@@ -151,9 +169,9 @@ export default function LandingPage() {
                 <p className="text-[13px] text-ink-tertiary mt-1">{plan.desc}</p>
                 <Link
                   href="/dashboard"
-                  className={`mt-6 block text-center text-[14px] font-semibold py-2.5 rounded-lg transition-colors ${
+                  className={`mt-6 block text-center text-[14px] font-semibold py-2.5 rounded-lg transition-all ${
                     plan.featured
-                      ? "bg-primary hover:bg-primary-hover text-white"
+                      ? "bg-primary hover:bg-primary-hover text-white shadow-md shadow-primary/20 hover:shadow-lg"
                       : "bg-bg-sunken hover:bg-border text-ink"
                   }`}
                 >
@@ -178,15 +196,17 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-border bg-bg-raised">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
+      <section className="relative border-t border-border overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-red-50 via-white to-orange-50" />
+        <FloatingChars />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-ink">{l.readyToStart}</h2>
           <p className="mt-3 text-ink-secondary">
             {l.readyDesc}
           </p>
           <Link
             href="/dashboard"
-            className="inline-block mt-6 bg-primary hover:bg-primary-hover text-white text-[15px] font-semibold px-8 py-3 rounded-lg transition-colors"
+            className="inline-block mt-6 bg-primary hover:bg-primary-hover text-white text-[15px] font-semibold px-8 py-3 rounded-lg transition-all shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
           >
             {l.startTrialBtn}
           </Link>

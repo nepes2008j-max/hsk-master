@@ -37,6 +37,10 @@ export interface ProgressData {
 
 let dbPromise: Promise<IDBPDatabase> | null = null;
 
+let _onWrite: (() => void) | null = null;
+export function setOnWrite(fn: (() => void) | null) { _onWrite = fn; }
+function notifyWrite() { _onWrite?.(); }
+
 function getDB() {
   if (!dbPromise) {
     dbPromise = openDB(DB_NAME, DB_VERSION, {
@@ -57,6 +61,7 @@ export async function getSRSState(cardId: string): Promise<CardState | undefined
 }
 export async function saveSRSState(state: CardState): Promise<void> {
   await (await getDB()).put("srs", state);
+  notifyWrite();
 }
 export async function getAllSRSStates(): Promise<CardState[]> {
   return (await getDB()).getAll("srs");
@@ -65,17 +70,20 @@ export async function getAllSRSStates(): Promise<CardState[]> {
 // User cards
 export async function saveUserCard(card: UserCard): Promise<void> {
   await (await getDB()).put("userCards", card);
+  notifyWrite();
 }
 export async function getUserCards(): Promise<UserCard[]> {
   return (await getDB()).getAll("userCards");
 }
 export async function deleteUserCard(id: string): Promise<void> {
   await (await getDB()).delete("userCards", id);
+  notifyWrite();
 }
 
 // Test results
 export async function saveTestResult(result: TestResult): Promise<void> {
   await (await getDB()).put("tests", result);
+  notifyWrite();
 }
 export async function getTestResults(): Promise<TestResult[]> {
   return (await getDB()).getAll("tests");
@@ -99,9 +107,10 @@ export async function getProgress(): Promise<ProgressData> {
 }
 
 export async function saveProgress(data: Partial<ProgressData>): Promise<void> {
-  const db = await getDB();
-  const current = (await db.get("progress", "current")) ?? { ...DEFAULT_PROGRESS };
-  await db.put("progress", { ...current, ...data }, "current");
+  const idb = await getDB();
+  const current = (await idb.get("progress", "current")) ?? { ...DEFAULT_PROGRESS };
+  await idb.put("progress", { ...current, ...data }, "current");
+  notifyWrite();
 }
 
 export async function updateStreak(): Promise<number> {

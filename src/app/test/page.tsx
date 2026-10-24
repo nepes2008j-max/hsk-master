@@ -8,6 +8,8 @@ import { speak } from "@/lib/tts";
 import { saveTestResult, getTestResults, type TestResult } from "@/lib/storage";
 import { IconVolume, IconCheck, IconChevron, IconX } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
+import PremiumGate from "@/components/PremiumGate";
+import Confetti from "@/components/Confetti";
 
 // ── Types ──
 
@@ -418,6 +420,7 @@ export default function TestPage() {
 
   return (
     <AppShell>
+      <PremiumGate>
       <div className="space-y-5">
         {/* ── Intro ── */}
         {state === "intro" && (
@@ -715,6 +718,7 @@ export default function TestPage() {
         {/* ── Results ── */}
         {state === "results" && latestResult && (
           <div className="space-y-6">
+            <Confetti active={latestResult.passed} />
             {/* Score header */}
             <div className="text-center pt-2">
               <div className="text-[12px] text-ink-tertiary tracking-[0.2em] uppercase mb-2">
@@ -846,6 +850,7 @@ export default function TestPage() {
           </div>
         )}
       </div>
+      </PremiumGate>
     </AppShell>
   );
 }

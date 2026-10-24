@@ -5,6 +5,7 @@ import AppShell from "@/components/AppShell";
 import { lessons, bookTitle, bookTitleEn, type BookLesson, type BookWord, type BookGrammar } from "@/data/book-hyjc";
 import { speak } from "@/lib/tts";
 import { useLang } from "@/lib/i18n";
+import PremiumGate from "@/components/PremiumGate";
 import { IconVolume, IconChevron } from "@/components/Icons";
 
 type View = "lessons" | "detail" | "quiz";
@@ -216,6 +217,7 @@ export default function BooksPage() {
   if (view === "lessons") {
     return (
       <AppShell>
+        <PremiumGate>
         <div className="space-y-5">
           <div>
             <h1 className="text-2xl font-bold text-ink">{bt.title}</h1>
@@ -241,6 +243,7 @@ export default function BooksPage() {
             ))}
           </div>
         </div>
+        </PremiumGate>
       </AppShell>
     );
   }
@@ -248,6 +251,7 @@ export default function BooksPage() {
   // Lesson detail
   return (
     <AppShell>
+      <PremiumGate>
       <div className="space-y-5">
         {/* Header */}
         <div>
@@ -358,6 +362,7 @@ export default function BooksPage() {
           <GrammarQuiz lesson={lesson} allLessons={lessons} t={bt} />
         )}
       </div>
+      </PremiumGate>
     </AppShell>
   );
 }

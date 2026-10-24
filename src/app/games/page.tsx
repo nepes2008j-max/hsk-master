@@ -9,6 +9,8 @@ const allVocab = [...vocabulary, ...vocabulary2];
 import { speak } from "@/lib/tts";
 import { useLang } from "@/lib/i18n";
 import { IconVolume } from "@/components/Icons";
+import { useSubscription } from "@/hooks/useSubscription";
+import PremiumGate from "@/components/PremiumGate";
 
 type Tab = "pinyin" | "tone" | "reading" | "twister";
 
@@ -400,6 +402,7 @@ export default function GamesPage() {
   const [tab, setTab] = useState<Tab>("pinyin");
   const { t, lang } = useLang();
   const tr = t.gamesPage;
+  const { isPremium } = useSubscription();
 
   const tabs: { id: Tab; label: string; desc: string }[] = [
     { id: "pinyin", label: tr.pinyinWriter, desc: tr.pinyinWriterDesc },
@@ -414,24 +417,27 @@ export default function GamesPage() {
         <h1 className="text-2xl font-bold text-ink">{tr.title}</h1>
 
         <div className="flex gap-2 overflow-x-auto pb-1">
-          {tabs.map(({ id, label }) => (
-            <button
-              key={id}
-              onClick={() => setTab(id)}
-              className={`shrink-0 px-4 py-2 rounded-lg text-[14px] font-medium transition-colors ${
-                tab === id ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
+          {tabs.map(({ id, label }) => {
+            const locked = !isPremium && (id === "reading" || id === "twister");
+            return (
+              <button
+                key={id}
+                onClick={() => setTab(id)}
+                className={`shrink-0 px-4 py-2 rounded-lg text-[14px] font-medium transition-colors ${
+                  tab === id ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                }`}
+              >
+                {label}{locked && " 🔒"}
+              </button>
+            );
+          })}
         </div>
 
         <div className="pt-2">
           {tab === "pinyin" && <PinyinWriter t={tr} />}
           {tab === "tone" && <ToneMaster t={tr} />}
-          {tab === "reading" && <ReadingStories t={tr} lang={lang} />}
-          {tab === "twister" && <TongueTwisters t={tr} lang={lang} />}
+          {tab === "reading" && (isPremium ? <ReadingStories t={tr} lang={lang} /> : <PremiumGate><></></PremiumGate>)}
+          {tab === "twister" && (isPremium ? <TongueTwisters t={tr} lang={lang} /> : <PremiumGate><></></PremiumGate>)}
         </div>
       </div>
     </AppShell>

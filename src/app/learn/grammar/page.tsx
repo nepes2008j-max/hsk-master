@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import { grammar, type GrammarPoint } from "@/data/grammar";
 import { grammar2 } from "@/data/grammar2";
 import { speak } from "@/lib/tts";
 import { useProgress } from "@/hooks/useProgress";
-import { IconVolume, IconCheck, IconChevron } from "@/components/Icons";
+import { IconVolume, IconCheck, IconChevron, IconPlay } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 import { useGrammarTranslation } from "@/hooks/useGrammarTranslation";
+import { useSubscription } from "@/hooks/useSubscription";
 
 export default function GrammarPage() {
   const { t } = useLang();
@@ -17,6 +19,7 @@ export default function GrammarPage() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [level, setLevel] = useState<1 | 2>(1);
   const { progress, markGrammarCompleted } = useProgress();
+  const { isPremium } = useSubscription();
 
   const completedSet = useMemo(() => new Set(progress?.grammarCompleted), [progress?.grammarCompleted]);
 
@@ -32,25 +35,39 @@ export default function GrammarPage() {
       <div className="space-y-5">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-ink tracking-tight">{t.grammarPage.title}</h1>
-          <span className="text-[13px] text-ink-tertiary">
-            {progress?.grammarCompleted.length ?? 0}/{grammarList.length} {t.testPage.completed}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-[13px] text-ink-tertiary">
+              {progress?.grammarCompleted.length ?? 0}/{grammarList.length} {t.testPage.completed}
+            </span>
+            <Link
+              href={`/learn/grammar/practice?level=${level}`}
+              className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white px-3.5 py-1.5 rounded-lg text-[13px] font-semibold transition-colors"
+            >
+              <IconPlay className="w-3.5 h-3.5" />
+              {t.grammarPage.practice}
+            </Link>
+          </div>
         </div>
 
         <div className="flex gap-1.5">
-          {([1, 2] as const).map((l) => (
-            <button
-              key={l}
-              onClick={() => { setLevel(l); setActiveCategory(null); }}
-              className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
-                level === l
-                  ? "bg-primary text-white"
-                  : "bg-bg-sunken text-ink-secondary hover:text-ink"
-              }`}
-            >
-              {l === 1 ? t.hsk1 : t.hsk2}
-            </button>
-          ))}
+          {([1, 2] as const).map((l) => {
+            const locked = l === 2 && !isPremium;
+            return (
+              <button
+                key={l}
+                onClick={() => !locked && (setLevel(l), setActiveCategory(null))}
+                className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors ${
+                  level === l
+                    ? "bg-primary text-white"
+                    : locked
+                      ? "bg-bg-sunken text-ink-tertiary cursor-not-allowed"
+                      : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                }`}
+              >
+                {l === 1 ? t.hsk1 : t.hsk2}{locked && " 🔒"}
+              </button>
+            );
+          })}
         </div>
 
         <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
@@ -134,15 +151,23 @@ export default function GrammarPage() {
                       ))}
                     </div>
 
-                    {!completed && (
-                      <button
-                        onClick={() => markGrammarCompleted(point.id)}
-                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-white py-2.5 text-[14px] font-semibold transition-colors"
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/learn/grammar/practice?level=${level}&id=${point.id}`}
+                        className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-white py-2.5 text-[14px] font-semibold transition-colors"
                       >
-                        <IconCheck className="w-4 h-4" />
-                        {t.vocabPage.markLearned}
-                      </button>
-                    )}
+                        <IconPlay className="w-4 h-4" />
+                        {t.grammarPage.practice}
+                      </Link>
+                      {!completed && (
+                        <button
+                          onClick={() => markGrammarCompleted(point.id)}
+                          className="flex items-center justify-center gap-2 rounded-xl bg-bg-sunken hover:bg-bg border border-border text-ink-secondary py-2.5 px-4 text-[14px] font-medium transition-colors"
+                        >
+                          <IconCheck className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

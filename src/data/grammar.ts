@@ -7,6 +7,36 @@ export interface GrammarPoint {
   category: string;
 }
 
+export interface MCQExercise {
+  type: "mcq";
+  prompt: string;
+  options: string[];
+  answer: number;
+}
+
+export interface FillExercise {
+  type: "fill";
+  sentence: string;
+  answer: string;
+  distractors: string[];
+}
+
+export interface ReorderExercise {
+  type: "reorder";
+  english: string;
+  words: string[];
+  answer: string[];
+}
+
+export interface TranslateExercise {
+  type: "translate";
+  english: string;
+  answer: string;
+  accept?: string[];
+}
+
+export type Exercise = MCQExercise | FillExercise | ReorderExercise | TranslateExercise;
+
 export const grammar: GrammarPoint[] = [
   // === sentence-structure ===
   {
