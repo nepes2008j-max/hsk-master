@@ -18,6 +18,7 @@ import {
 import { newCardState, review, isDue } from "@/lib/srs";
 import { IconVolume, IconStar, IconX, IconCheck, IconCards, IconChevron } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
+import { useRef } from "react";
 
 type CardType = "hanzi-meaning" | "meaning-hanzi" | "audio-hanzi" | "hanzi-pinyin";
 type ReviewMode = "mixed" | "three-way" | "reading" | "recognition";
@@ -82,6 +83,9 @@ export default function CardsPage() {
   const [reviewMode, setReviewMode] = useState<ReviewMode>(() => {
     try { return (localStorage.getItem("hsk-review-mode") as ReviewMode) || "mixed"; } catch { return "mixed"; }
   });
+  const [swipeClass, setSwipeClass] = useState("");
+  const [cardKey, setCardKey] = useState(0);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const userDecks = useMemo(() => {
     const deckSet = new Set(userCards.map((c) => c.deck));
@@ -159,13 +163,18 @@ export default function CardsPage() {
     const existing = (await getSRSState(currentCard.id)) ?? newCardState(currentCard.id);
     await saveSRSState(review(existing, quality));
 
-    if (currentIdx + 1 < dueCards.length) {
-      setCurrentIdx(currentIdx + 1);
-      setFlipped(false);
-      setFlipStage(0);
-    } else {
-      setDueCards([]);
-    }
+    setSwipeClass(quality >= 3 ? "card-swipe-right" : "card-swipe-left");
+    setTimeout(() => {
+      setSwipeClass("");
+      setCardKey((k) => k + 1);
+      if (currentIdx + 1 < dueCards.length) {
+        setCurrentIdx(currentIdx + 1);
+        setFlipped(false);
+        setFlipStage(0);
+      } else {
+        setDueCards([]);
+      }
+    }, 300);
   };
 
   const handleHide = () => {
@@ -398,16 +407,34 @@ export default function CardsPage() {
                   {reviewDeck && <span className="ml-1">in {reviewDeck}</span>}
                 </div>
 
-                <button
+                <div
+                  ref={cardRef}
+                  key={cardKey}
+                  className={`w-full ${swipeClass || "card-enter"}`}
                   onClick={handleFlip}
-                  className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 transition-all hover:border-primary/50 hover:shadow-md active:scale-[0.99]"
                 >
-                  {isRevealed ? renderCardBack() : renderCardFront()}
-                  {!isRevealed && (
-                    <div className="text-[13px] text-ink-tertiary">{showHint}</div>
+                  {reviewMode === "three-way" ? (
+                    <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:shadow-lg active:scale-[0.98] transition-all">
+                      {isRevealed ? renderCardBack() : renderCardFront()}
+                      {!isRevealed && <div className="text-[13px] text-ink-tertiary">{showHint}</div>}
+                      <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                    </div>
+                  ) : (
+                    <div className="card-perspective">
+                      <div className={`card-inner w-full h-[220px] rounded-2xl border-2 border-border cursor-pointer hover:border-primary/50 hover:shadow-lg ${flipped ? "flipped" : ""}`}>
+                        <div className="card-face w-full h-full rounded-2xl bg-bg-raised p-8 flex flex-col items-center justify-center gap-4">
+                          {renderCardFront()}
+                          <div className="text-[13px] text-ink-tertiary">{showHint}</div>
+                          <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                        </div>
+                        <div className="card-face card-back w-full h-full rounded-2xl bg-bg-raised p-8 flex flex-col items-center justify-center gap-4">
+                          {renderCardBack()}
+                          <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                        </div>
+                      </div>
+                    </div>
                   )}
-                  <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
-                </button>
+                </div>
 
                 {isRevealed && (
                   <div className="space-y-2">
