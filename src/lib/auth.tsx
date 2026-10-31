@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { onAuthStateChanged, signInWithPopup, signOut, GoogleAuthProvider, type User } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut, GoogleAuthProvider, type User } from "firebase/auth";
 import { auth } from "./firebase";
 import { startSync, stopSync, pullAndMerge, pushToCloud } from "./sync";
 
@@ -35,7 +35,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }), []);
 
-  const signInWithGoogle = async () => { await signInWithPopup(auth, googleProvider); };
+  const signInWithGoogle = async () => {
+    try { await signInWithPopup(auth, googleProvider); }
+    catch { await signInWithRedirect(auth, googleProvider); }
+  };
   const logout = async () => {
     await pushToCloud().catch(() => {});
     stopSync();

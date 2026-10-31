@@ -2,14 +2,14 @@
 
 import { useState, useMemo, useCallback } from "react";
 import AppShell from "@/components/AppShell";
-import { lessons, bookTitle, bookTitleEn, type BookLesson, type BookWord, type BookGrammar } from "@/data/book-hyjc";
+import { lessons as hyjcLessons, bookTitle as hyjcTitle, bookTitleEn as hyjcTitleEn, type BookLesson, type BookWord, type BookGrammar } from "@/data/book-hyjc";
+import { xzzgLessons, xzzgTitle, xzzgTitleEn } from "@/data/book-xzzg";
 import { speak } from "@/lib/tts";
 import { useLang } from "@/lib/i18n";
-import PremiumGate from "@/components/PremiumGate";
 import { IconVolume, IconChevron } from "@/components/Icons";
 
 type View = "lessons" | "detail" | "quiz";
-type Tab = "vocab" | "grammar" | "test";
+type Tab = "vocab" | "dialogue" | "grammar" | "test";
 type QuizType = "vocab" | "grammar";
 
 function shuffle<T>(arr: T[]): T[] {
@@ -191,20 +191,29 @@ function GrammarQuiz({ lesson, allLessons, t }: { lesson: BookLesson; allLessons
   );
 }
 
+const books = [
+  { id: "hyjc", title: hyjcTitle, titleEn: hyjcTitleEn, lessons: hyjcLessons },
+  { id: "xzzg", title: xzzgTitle, titleEn: xzzgTitleEn, lessons: xzzgLessons },
+] as const;
+
 export default function BooksPage() {
-  const { t } = useLang();
+  const { lang, t } = useLang();
   const bt = t.booksPage;
+  const [bookId, setBookId] = useState<string>("hyjc");
   const [view, setView] = useState<View>("lessons");
   const [lessonId, setLessonId] = useState(1);
   const [tab, setTab] = useState<Tab>("vocab");
   const [quizType, setQuizType] = useState<QuizType | null>(null);
+  const [expandedLines, setExpandedLines] = useState<number[]>([]);
 
-  const lesson = lessons.find((l) => l.id === lessonId)!;
+  const book = books.find((b) => b.id === bookId)!;
+  const lesson = book.lessons.find((l) => l.id === lessonId)!;
 
   const openLesson = (id: number) => {
     setLessonId(id);
     setTab("vocab");
     setQuizType(null);
+    setExpandedLines([]);
     setView("detail");
   };
 
@@ -213,19 +222,41 @@ export default function BooksPage() {
     setQuizType(null);
   };
 
+  const switchBook = (id: string) => {
+    setBookId(id);
+    setLessonId(1);
+    setTab("vocab");
+    setQuizType(null);
+    setView("lessons");
+  };
+
   // Lesson list
   if (view === "lessons") {
     return (
       <AppShell>
-        <PremiumGate>
         <div className="space-y-5">
           <div>
             <h1 className="text-2xl font-bold text-ink">{bt.title}</h1>
-            <div className="text-[14px] text-ink-secondary mt-1">{bookTitle} · {bookTitleEn}</div>
+          </div>
+
+          {/* Book selector */}
+          <div className="flex gap-2">
+            {books.map((b) => (
+              <button
+                key={b.id}
+                onClick={() => switchBook(b.id)}
+                className={`flex-1 rounded-xl border-2 p-3 text-left transition-colors ${
+                  bookId === b.id ? "border-primary bg-primary-light" : "border-border bg-bg-raised hover:border-primary"
+                }`}
+              >
+                <div className={`text-[14px] font-semibold ${bookId === b.id ? "text-primary-text" : "text-ink"}`}>{b.title}</div>
+                <div className="text-[12px] text-ink-tertiary">{b.titleEn}</div>
+              </button>
+            ))}
           </div>
 
           <div className="space-y-2">
-            {lessons.map((l) => (
+            {book.lessons.map((l) => (
               <button
                 key={l.id}
                 onClick={() => openLesson(l.id)}
@@ -243,7 +274,6 @@ export default function BooksPage() {
             ))}
           </div>
         </div>
-        </PremiumGate>
       </AppShell>
     );
   }
@@ -251,7 +281,6 @@ export default function BooksPage() {
   // Lesson detail
   return (
     <AppShell>
-      <PremiumGate>
       <div className="space-y-5">
         {/* Header */}
         <div>
@@ -266,16 +295,16 @@ export default function BooksPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1.5">
-          {(["vocab", "grammar", "test"] as Tab[]).map((id) => (
+        <div className="flex gap-1.5 overflow-x-auto">
+          {(lesson.dialogue?.length ? ["vocab", "dialogue", "grammar", "test"] as Tab[] : ["vocab", "grammar", "test"] as Tab[]).map((id) => (
             <button
               key={id}
               onClick={() => { setTab(id); setQuizType(null); }}
-              className={`px-4 py-2 rounded-lg text-[14px] font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg text-[14px] font-medium transition-colors whitespace-nowrap ${
                 tab === id ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
               }`}
             >
-              {id === "vocab" ? bt.vocabulary : id === "grammar" ? bt.grammar : bt.test}
+              {id === "vocab" ? bt.vocabulary : id === "dialogue" ? bt.dialogueTab : id === "grammar" ? bt.grammar : bt.test}
             </button>
           ))}
         </div>
@@ -295,6 +324,48 @@ export default function BooksPage() {
                 <div className="text-[14px] text-ink-secondary text-right">{w.english}</div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Dialogue tab */}
+        {tab === "dialogue" && lesson.dialogue && (
+          <div className="space-y-3">
+            <p className="text-[12px] text-muted text-center">{bt.tapHint}</p>
+            <div className="rounded-xl border border-border bg-bg-raised p-5 space-y-3">
+              {lesson.dialogue.map((d, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 cursor-pointer rounded-lg px-2 py-1.5 -mx-2 hover:bg-black/[0.03] transition-colors"
+                  onClick={() => setExpandedLines(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i])}
+                >
+                  <button onClick={(e) => { e.stopPropagation(); speak(d.line); }} className="text-primary hover:text-primary-hover transition-colors mt-1 shrink-0">
+                    <IconVolume className="w-3.5 h-3.5" />
+                  </button>
+                  <div className="flex-1">
+                    <span className="text-[13px] font-bold text-primary">{d.speaker}:</span>
+                    <span className="text-[15px] text-ink ml-2">{d.line}</span>
+                    {expandedLines.includes(i) && (d.pinyin || d.en || d.ru || d.tk) && (
+                      <div className="mt-1 space-y-0.5">
+                        {d.pinyin && <p className="text-[13px] text-muted italic">{d.pinyin}</p>}
+                        {(lang === "ru" ? (d.ru || d.en) : lang === "tk" ? (d.tk || d.en) : d.en) && (
+                          <p className="text-[13px] text-blue-600">{lang === "ru" ? (d.ru || d.en) : lang === "tk" ? (d.tk || d.en) : d.en}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => {
+                const full = lesson.dialogue!.map((d) => `${d.speaker}，${d.line}`).join("。");
+                speak(full);
+              }}
+              className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary bg-primary-light px-4 py-3 text-[14px] font-semibold text-primary hover:bg-primary hover:text-white transition-colors"
+            >
+              <IconVolume className="w-4 h-4" />
+              {bt.listenAll}
+            </button>
           </div>
         )}
 
@@ -355,14 +426,13 @@ export default function BooksPage() {
         )}
 
         {tab === "test" && quizType === "vocab" && (
-          <VocabQuiz lesson={lesson} allLessons={lessons} t={bt} />
+          <VocabQuiz lesson={lesson} allLessons={book.lessons as BookLesson[]} t={bt} />
         )}
 
         {tab === "test" && quizType === "grammar" && (
-          <GrammarQuiz lesson={lesson} allLessons={lessons} t={bt} />
+          <GrammarQuiz lesson={lesson} allLessons={book.lessons as BookLesson[]} t={bt} />
         )}
       </div>
-      </PremiumGate>
     </AppShell>
   );
 }

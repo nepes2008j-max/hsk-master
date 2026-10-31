@@ -10,12 +10,22 @@ export interface BookGrammar {
   examples: { zh: string; en: string }[];
 }
 
+export interface DialogueLine {
+  speaker: string;
+  line: string;
+  pinyin?: string;
+  en?: string;
+  ru?: string;
+  tk?: string;
+}
+
 export interface BookLesson {
   id: number;
   title: string;
   titleEn: string;
   words: BookWord[];
   grammar: BookGrammar[];
+  dialogue?: DialogueLine[];
 }
 
 export const bookTitle = "汉语教程";
