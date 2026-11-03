@@ -21,7 +21,8 @@ import { useLang } from "@/lib/i18n";
 import { useRef } from "react";
 
 type CardType = "hanzi-meaning" | "meaning-hanzi" | "audio-hanzi" | "hanzi-pinyin";
-type ReviewMode = "mixed" | "three-way" | "reading" | "recognition";
+type ReviewMode = "mixed" | "three-way" | "reading" | "recognition" | "writing";
+type WritingTarget = "pinyin" | "hanzi";
 
 interface FlashCard {
   id: string;
@@ -86,6 +87,13 @@ export default function CardsPage() {
   const [swipeClass, setSwipeClass] = useState("");
   const [cardKey, setCardKey] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [writingTarget, setWritingTarget] = useState<WritingTarget>("pinyin");
+  const [writingInput, setWritingInput] = useState("");
+  const [writingResult, setWritingResult] = useState<"correct" | "incorrect" | null>(null);
+  const [cardLimit, setCardLimit] = useState<number>(() => {
+    try { const v = localStorage.getItem("hsk-card-limit"); return v !== null ? (parseInt(v) || 0) : 20; } catch { return 20; }
+  });
+  const writingInputRef = useRef<HTMLInputElement>(null);
 
   const userDecks = useMemo(() => {
     const deckSet = new Set(userCards.map((c) => c.deck));
@@ -127,8 +135,11 @@ export default function CardsPage() {
       : all;
 
     // For non-mixed modes, only use hanzi-meaning cards (one per word)
-    if (reviewMode !== "mixed") {
+    if (reviewMode !== "mixed" && reviewMode !== "writing") {
       reviewable = reviewable.filter((c) => c.type === "hanzi-meaning");
+    }
+    if (reviewMode === "writing") {
+      reviewable = reviewable.filter((c) => c.type === "hanzi-meaning" && c.hanzi && c.pinyin);
     }
 
     // Exclude hidden cards
@@ -140,12 +151,14 @@ export default function CardsPage() {
       return !state || isDue(state);
     });
 
-    const shuffled = due.sort(() => Math.random() - 0.5).slice(0, 20);
-    setDueCards(shuffled);
+    const shuffled = due.sort(() => Math.random() - 0.5);
+    setDueCards(cardLimit > 0 ? shuffled.slice(0, cardLimit) : shuffled);
     setCurrentIdx(0);
     setFlipped(false);
     setFlipStage(0);
-  }, [reviewDeck, reviewMode]);
+    setWritingInput("");
+    setWritingResult(null);
+  }, [reviewDeck, reviewMode, cardLimit]);
 
   useEffect(() => {
     loadCards();
@@ -153,7 +166,14 @@ export default function CardsPage() {
 
   const changeMode = (mode: ReviewMode) => {
     setReviewMode(mode);
+    setWritingInput("");
+    setWritingResult(null);
     try { localStorage.setItem("hsk-review-mode", mode); } catch { /* noop */ }
+  };
+
+  const changeCardLimit = (limit: number) => {
+    setCardLimit(limit);
+    try { localStorage.setItem("hsk-card-limit", String(limit)); } catch { /* noop */ }
   };
 
   const currentCard = dueCards[currentIdx];
@@ -171,6 +191,8 @@ export default function CardsPage() {
         setCurrentIdx(currentIdx + 1);
         setFlipped(false);
         setFlipStage(0);
+        setWritingInput("");
+        setWritingResult(null);
       } else {
         setDueCards([]);
       }
@@ -208,6 +230,17 @@ export default function CardsPage() {
   const hiddenCountForDeck = (deck: string) => {
     const deckCardIds = HSK_CARDS.filter((c) => c.deck === deck).map((c) => c.id);
     return deckCardIds.filter((id) => hiddenIds.has(id)).length;
+  };
+
+  const handleWritingCheck = () => {
+    if (!currentCard) return;
+    const answer = writingInput.trim().toLowerCase();
+    const expected = writingTarget === "pinyin"
+      ? (currentCard.pinyin || "").toLowerCase()
+      : (currentCard.hanzi || "");
+    const isCorrect = answer === expected;
+    setWritingResult(isCorrect ? "correct" : "incorrect");
+    setFlipped(true);
   };
 
   const handleFlip = () => {
@@ -282,7 +315,7 @@ export default function CardsPage() {
     }
   };
 
-  const isRevealed = reviewMode === "three-way" ? flipStage === 2 : flipped;
+  const isRevealed = reviewMode === "three-way" ? flipStage === 2 : reviewMode === "writing" ? writingResult !== null : flipped;
   const showHint = reviewMode === "three-way" && flipStage === 0
     ? t.cardsPage.tapPinyin
     : reviewMode === "three-way" && flipStage === 1
@@ -331,6 +364,7 @@ export default function CardsPage() {
     { key: "three-way", label: t.cardsPage.threeWay },
     { key: "reading", label: t.cardsPage.reading },
     { key: "recognition", label: t.cardsPage.recognition },
+    { key: "writing", label: t.cardsPage.writing },
   ];
 
   const deckCards = openDeck ? userCards.filter((c) => c.deck === openDeck) : [];
@@ -377,6 +411,44 @@ export default function CardsPage() {
               </div>
             </div>
 
+            {/* Card count */}
+            <div className="flex items-center gap-2">
+              <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold">{t.cardsPage.cardCount}</div>
+              {[10, 20, 50, 0].map((n) => (
+                <button
+                  key={n}
+                  onClick={() => changeCardLimit(n)}
+                  className={`rounded-lg px-2.5 py-1 text-[13px] font-medium transition-colors ${
+                    cardLimit === n ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                  }`}
+                >
+                  {n === 0 ? t.cardsPage.infinite : n}
+                </button>
+              ))}
+            </div>
+
+            {/* Writing target toggle */}
+            {reviewMode === "writing" && (
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => setWritingTarget("pinyin")}
+                  className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                    writingTarget === "pinyin" ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                  }`}
+                >
+                  {t.cardsPage.typePinyin}
+                </button>
+                <button
+                  onClick={() => setWritingTarget("hanzi")}
+                  className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                    writingTarget === "hanzi" ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                  }`}
+                >
+                  {t.cardsPage.typeHanzi}
+                </button>
+              </div>
+            )}
+
             {/* Deck filter */}
             <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
               <button
@@ -411,9 +483,55 @@ export default function CardsPage() {
                   ref={cardRef}
                   key={cardKey}
                   className={`w-full ${swipeClass || "card-enter"}`}
-                  onClick={handleFlip}
+                  onClick={reviewMode === "writing" ? undefined : handleFlip}
                 >
-                  {reviewMode === "three-way" ? (
+                  {reviewMode === "writing" ? (
+                    <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-6 flex flex-col items-center justify-center gap-3">
+                      <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                      {writingTarget === "pinyin" ? (
+                        <div className="text-3xl font-bold text-ink">{currentCard.hanzi}</div>
+                      ) : (
+                        <div className="text-center">
+                          <div className="text-lg text-primary">{currentCard.pinyin}</div>
+                          <div className="text-xl font-medium text-ink mt-1">{currentCard.english}</div>
+                        </div>
+                      )}
+                      {writingResult === null ? (
+                        <div className="w-full max-w-xs flex gap-2 mt-2" onClick={(e) => e.stopPropagation()}>
+                          <input
+                            ref={writingInputRef}
+                            value={writingInput}
+                            onChange={(e) => setWritingInput(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleWritingCheck()}
+                            placeholder={writingTarget === "pinyin" ? t.cardsPage.typePinyin : t.cardsPage.typeHanzi}
+                            className="flex-1 rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-ink text-center placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                            autoFocus
+                          />
+                          <button
+                            onClick={handleWritingCheck}
+                            disabled={!writingInput.trim()}
+                            className="rounded-xl bg-primary hover:bg-primary-hover text-white px-4 py-2.5 text-[14px] font-medium transition-colors disabled:opacity-40"
+                          >
+                            {t.cardsPage.check}
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-center mt-2">
+                          <div className={`text-[15px] font-semibold ${writingResult === "correct" ? "text-green-600" : "text-warning"}`}>
+                            {writingResult === "correct" ? t.cardsPage.correct : t.cardsPage.incorrect}
+                          </div>
+                          {writingResult === "incorrect" && (
+                            <div className="text-[14px] text-ink-secondary mt-1">
+                              {t.cardsPage.expected}: <span className="font-bold text-ink">{writingTarget === "pinyin" ? currentCard.pinyin : currentCard.hanzi}</span>
+                            </div>
+                          )}
+                          <div className="text-[13px] text-ink-tertiary mt-1">
+                            {currentCard.hanzi} · {currentCard.pinyin} · {currentCard.english}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : reviewMode === "three-way" ? (
                     <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:shadow-lg active:scale-[0.98] transition-all">
                       {isRevealed ? renderCardBack() : renderCardFront()}
                       {!isRevealed && <div className="text-[13px] text-ink-tertiary">{showHint}</div>}
