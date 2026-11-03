@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useLang, type Lang } from "@/lib/i18n";
 
-type GMap = Record<number, { title: string; explanation: string; examples: string[] }>;
+type GMap = Record<number, { title: string; explanation: string; examples: string[]; detailedExplanation?: string; tips?: string[]; comparisons?: string[] }>;
 
 let cache: Partial<Record<Lang, GMap>> = {};
 

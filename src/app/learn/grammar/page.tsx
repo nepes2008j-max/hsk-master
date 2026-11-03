@@ -130,6 +130,38 @@ export default function GrammarPage() {
                   <div className="border-t border-border px-4 pb-4 pt-3 space-y-4">
                     <p className="text-[14px] text-ink-secondary leading-relaxed">{tr?.explanation ?? point.explanation}</p>
 
+                    {(tr?.detailedExplanation ?? point.detailedExplanation) && (
+                      <div className="rounded-xl bg-bg-sunken p-4 space-y-3">
+                        {(tr?.detailedExplanation ?? point.detailedExplanation)!.split("\n\n").map((para, i) => (
+                          <p key={i} className="text-[13px] text-ink-secondary leading-relaxed">{para}</p>
+                        ))}
+                      </div>
+                    )}
+
+                    {((tr?.tips ?? point.tips)?.length ?? 0) > 0 && (
+                      <div className="space-y-1.5">
+                        <div className="text-[13px] font-semibold text-ink">Tips</div>
+                        {(tr?.tips ?? point.tips)!.map((tip, i) => (
+                          <div key={i} className="flex gap-2 text-[13px] text-ink-secondary">
+                            <span className="text-primary shrink-0">•</span>
+                            <span>{tip}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {((tr?.comparisons ?? point.comparisons)?.length ?? 0) > 0 && (
+                      <div className="space-y-1.5">
+                        <div className="text-[13px] font-semibold text-ink">Compare</div>
+                        {(tr?.comparisons ?? point.comparisons)!.map((comp, i) => (
+                          <div key={i} className="flex gap-2 text-[13px] text-ink-secondary">
+                            <span className="text-amber-500 shrink-0">⇄</span>
+                            <span>{comp}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
                     <div className="space-y-2">
                       {point.examples.map((ex, i) => (
                         <div
