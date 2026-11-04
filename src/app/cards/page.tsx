@@ -31,6 +31,7 @@ interface FlashCard {
   audio?: string;
   type: CardType;
   deck: string;
+  sub?: string;
   hanzi?: string;
   pinyin?: string;
   english?: string;
@@ -47,6 +48,11 @@ function buildCards(
   ]);
 }
 
+// Sub-decks are views of the Special deck (same cards, shared progress).
+const SPECIAL_SUBS = ["Chemistry", "Math", "Trigonometry"] as const;
+const specialWords = (d: string) => (d === "Special" ? chemLabWords : chemLabWords.filter((w) => w.sub === d));
+const inDeck = (c: FlashCard, d: string) => c.deck === d || c.sub === d;
+
 const HSK_CARDS: FlashCard[] = [
   ...buildCards(vocabulary, "hsk", "HSK 1"),
   ...buildCards(vocabulary2, "hsk2", "HSK 2"),
@@ -55,8 +61,8 @@ const HSK_CARDS: FlashCard[] = [
     { id: `stem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
   ]),
   ...chemLabWords.flatMap((w) => [
-    { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Special", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
-    { id: `chem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Special", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+    { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Special", sub: w.sub, hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+    { id: `chem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Special", sub: w.sub, hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
   ]),
 ];
 
@@ -114,6 +120,7 @@ export default function CardsPage() {
     const stemCount = allAcademicWords.filter((w) => !w.id.startsWith("cl")).length;
     decks.set("STEM", { total: stemCount * 2, custom: false });
     decks.set("Special", { total: chemLabWords.length * 2, custom: false });
+    for (const d of SPECIAL_SUBS) decks.set(d, { total: specialWords(d).length * 2, custom: false });
     for (const d of userDecks) {
       decks.set(d, { total: userCards.filter((c) => c.deck === d).length, custom: true });
     }
@@ -140,7 +147,7 @@ export default function CardsPage() {
     const stateMap = new Map(states.map((s) => [s.cardId, s]));
 
     let reviewable = reviewDeck
-      ? all.filter((c) => c.deck === reviewDeck)
+      ? all.filter((c) => inDeck(c, reviewDeck))
       : all;
 
     // For non-mixed modes, only use hanzi-meaning cards (one per word)
@@ -260,7 +267,7 @@ export default function CardsPage() {
       setHiddenIds(new Set());
       saveHidden(new Set());
     } else {
-      const deckCardIds = new Set(HSK_CARDS.filter((c) => c.deck === deck).map((c) => c.id));
+      const deckCardIds = new Set(HSK_CARDS.filter((c) => inDeck(c, deck)).map((c) => c.id));
       const next = new Set([...hiddenIds].filter((id) => !deckCardIds.has(id)));
       setHiddenIds(next);
       saveHidden(next);
@@ -268,7 +275,7 @@ export default function CardsPage() {
   };
 
   const hiddenCountForDeck = (deck: string) => {
-    const deckCardIds = HSK_CARDS.filter((c) => c.deck === deck).map((c) => c.id);
+    const deckCardIds = HSK_CARDS.filter((c) => inDeck(c, deck)).map((c) => c.id);
     return deckCardIds.filter((id) => hiddenIds.has(id)).length;
   };
 
@@ -686,11 +693,11 @@ export default function CardsPage() {
         {/* ── Decks ── */}
         {tab === "decks" && !openDeck && (
           <div className="space-y-3">
-            {(["HSK 1", "HSK 2", "STEM", "Special"] as const).map((deckName) => {
+            {(["HSK 1", "HSK 2", "STEM", "Special", ...SPECIAL_SUBS] as const).map((deckName) => {
               const hidden = hiddenCountForDeck(deckName);
               const total = deckName === "HSK 1" ? vocabulary.length * 2
                 : deckName === "HSK 2" ? vocabulary2.length * 2
-                : deckName === "Special" ? chemLabWords.length * 2
+                : deckName === "Special" || SPECIAL_SUBS.includes(deckName as never) ? specialWords(deckName).length * 2
                 : allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2;
               return (
                 <button
@@ -698,8 +705,8 @@ export default function CardsPage() {
                   onClick={() => setOpenDeck(deckName)}
                   className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
                 >
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${deckName === "STEM" || deckName === "Special" ? "bg-blue-light" : "bg-primary-light"}`}>
-                    <IconCards className={`w-5.5 h-5.5 ${deckName === "STEM" || deckName === "Special" ? "text-blue" : "text-primary"}`} />
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${deckName !== "HSK 1" && deckName !== "HSK 2" ? "bg-blue-light" : "bg-primary-light"}`}>
+                    <IconCards className={`w-5.5 h-5.5 ${deckName !== "HSK 1" && deckName !== "HSK 2" ? "text-blue" : "text-primary"}`} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[15px] font-semibold text-ink">{deckName === "STEM" ? "STEM / CSCA" : deckName}</div>
@@ -769,8 +776,8 @@ export default function CardsPage() {
                     ? `${vocabulary2.length * 2} cards`
                     : openDeck === "STEM"
                     ? `${allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2} cards`
-                    : openDeck === "Special"
-                    ? `${chemLabWords.length * 2} cards`
+                    : openDeck === "Special" || SPECIAL_SUBS.includes(openDeck as never)
+                    ? `${specialWords(openDeck).length * 2} cards`
                     : `${deckCards.length} card${deckCards.length !== 1 ? "s" : ""}`}
                 </div>
               </div>
@@ -782,15 +789,30 @@ export default function CardsPage() {
               </button>
             </div>
 
-            {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" || openDeck === "Special" ? (
+            {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" || openDeck === "Special" || SPECIAL_SUBS.includes(openDeck as never) ? (
               <div className="space-y-3">
                 <div className="text-[13px] text-ink-tertiary rounded-xl bg-bg-sunken p-4">
                   {openDeck === "STEM"
                     ? `Built-in STEM deck with ${allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2} flashcards — math, science & CS vocabulary for CSCA preparation.`
                     : openDeck === "Special"
                     ? `Special deck with ${chemLabWords.length * 2} flashcards — chemistry lab, math, geometry & science words from classroom photos.`
+                    : SPECIAL_SUBS.includes(openDeck as never)
+                    ? `${openDeck} — ${specialWords(openDeck).length * 2} flashcards, a part of the Special deck.`
                     : `Built-in ${openDeck} deck with ${openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all ${openDeck === "HSK 1" ? 300 : 197} words.`}
                 </div>
+                {(openDeck === "Special" || SPECIAL_SUBS.includes(openDeck as never)) && (
+                  <div className="space-y-1.5">
+                    {specialWords(openDeck).map((w) => (
+                      <div key={w.id} className="flex items-center gap-4 rounded-xl bg-bg-raised border border-border p-3.5">
+                        <div className="text-2xl font-bold text-ink w-28 shrink-0">{w.hanzi}</div>
+                        <div className="min-w-0">
+                          <div className="text-[14px] text-primary">{w.pinyin}</div>
+                          <div className="text-[13px] text-ink-secondary">{w.english}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 {hiddenCountForDeck(openDeck) > 0 && (
                   <div className="flex items-center justify-between rounded-xl border border-warning/20 bg-warning-light/50 p-3">
                     <span className="text-[13px] text-warning-text">

@@ -16,6 +16,7 @@ export interface AcademicCategory {
   id: string;
   name: string;
   nameEn: string;
+  sub?: string;
   words: AcademicWord[];
 }
 
@@ -373,6 +374,7 @@ export const categories: AcademicCategory[] = [
   },
   {
     id: "chem-lab-1",
+    sub: "Chemistry",
     name: "化学实验室 1",
     nameEn: "Chemistry Lab 1",
     words: [
@@ -394,6 +396,7 @@ export const categories: AcademicCategory[] = [
   },
   {
     id: "chem-lab-2",
+    sub: "Chemistry",
     name: "化学实验室 2",
     nameEn: "Chemistry Lab 2",
     words: [
@@ -417,6 +420,7 @@ export const categories: AcademicCategory[] = [
   },
   {
     id: "chem-lab-3",
+    sub: "Chemistry",
     name: "化学实验室 3",
     nameEn: "Chemistry Lab 3",
     words: [
@@ -436,6 +440,7 @@ export const categories: AcademicCategory[] = [
   },
   {
     id: "chem-lab-4",
+    sub: "Chemistry",
     name: "化学实验室 4",
     nameEn: "Chemistry Lab 4 – States & Measurement",
     words: [
@@ -457,6 +462,7 @@ export const categories: AcademicCategory[] = [
   },
   {
     id: "chem-lab-5",
+    sub: "Chemistry",
     name: "化学实验室 5",
     nameEn: "Chemistry Lab 5 – Equipment",
     words: [
@@ -478,6 +484,7 @@ export const categories: AcademicCategory[] = [
   },
   {
     id: "chem-lab-6",
+    sub: "Chemistry",
     name: "化学实验室 6",
     nameEn: "Chemistry Lab 6 – Processes & Concepts",
     words: [
@@ -501,13 +508,12 @@ export const categories: AcademicCategory[] = [
   },
   {
     id: "chem-lab-7",
-    name: "课堂词汇 7",
-    nameEn: "Classroom Words 7 – Math, Geometry & Earth",
+    name: "数学 1",
+    nameEn: "Math – Algebra, Fractions & Geometry",
+    sub: "Math",
     words: [
       { id: "cl87", hanzi: "曲线", pinyin: "qūxiàn", english: "curve" },
       { id: "cl88", hanzi: "端点", pinyin: "duāndiǎn", english: "endpoint; vertex" },
-      { id: "cl89", hanzi: "全等", pinyin: "quánděng", english: "congruent" },
-      { id: "cl90", hanzi: "相似", pinyin: "xiāngsì", english: "similar" },
       { id: "cl91", hanzi: "旋转", pinyin: "xuánzhuǎn", english: "rotation; to rotate" },
       { id: "cl92", hanzi: "逆时针", pinyin: "nìshízhēn", english: "counterclockwise" },
       { id: "cl93", hanzi: "顺时针", pinyin: "shùnshízhēn", english: "clockwise" },
@@ -522,15 +528,10 @@ export const categories: AcademicCategory[] = [
       { id: "cl102", hanzi: "圆心", pinyin: "yuánxīn", english: "center of a circle" },
       { id: "cl103", hanzi: "椭圆形", pinyin: "tuǒyuánxíng", english: "ellipse; oval" },
       { id: "cl104", hanzi: "边长", pinyin: "biāncháng", english: "side length" },
-      { id: "cl105", hanzi: "邻边", pinyin: "línbiān", english: "adjacent side" },
-      { id: "cl106", hanzi: "等边", pinyin: "děngbiān", english: "equilateral" },
       { id: "cl107", hanzi: "菱形", pinyin: "língxíng", english: "rhombus" },
       { id: "cl108", hanzi: "梯形", pinyin: "tīxíng", english: "trapezoid" },
       { id: "cl109", hanzi: "平行四边形", pinyin: "píngxíng sìbiānxíng", english: "parallelogram" },
-      { id: "cl110", hanzi: "外角", pinyin: "wàijiǎo", english: "exterior angle" },
       { id: "cl111", hanzi: "四边形", pinyin: "sìbiānxíng", english: "quadrilateral" },
-      { id: "cl112", hanzi: "内角", pinyin: "nèijiǎo", english: "interior angle" },
-      { id: "cl113", hanzi: "等腰", pinyin: "děngyāo", english: "isosceles" },
       { id: "cl114", hanzi: "起点", pinyin: "qǐdiǎn", english: "starting point" },
       { id: "cl115", hanzi: "终点", pinyin: "zhōngdiǎn", english: "end point" },
       { id: "cl116", hanzi: "中点", pinyin: "zhōngdiǎn", english: "midpoint" },
@@ -538,17 +539,10 @@ export const categories: AcademicCategory[] = [
       { id: "cl118", hanzi: "一元一次方程", pinyin: "yīyuán yīcì fāngchéng", english: "linear equation in one variable" },
       { id: "cl119", hanzi: "二元一次方程", pinyin: "èryuán yīcì fāngchéng", english: "linear equation in two variables" },
       { id: "cl120", hanzi: "次方", pinyin: "cìfāng", english: "power; degree" },
-      { id: "cl121", hanzi: "三角函数", pinyin: "sānjiǎo hánshù", english: "trigonometric function" },
       { id: "cl122", hanzi: "代数式", pinyin: "dàishùshì", english: "algebraic expression" },
       { id: "cl123", hanzi: "根号", pinyin: "gēnhào", english: "radical sign; square root symbol" },
       { id: "cl124", hanzi: "读法", pinyin: "dúfǎ", english: "reading; pronunciation" },
       { id: "cl125", hanzi: "例子", pinyin: "lìzi", english: "example" },
-      { id: "cl126", hanzi: "地理", pinyin: "dìlǐ", english: "geography" },
-      { id: "cl127", hanzi: "表面", pinyin: "biǎomiàn", english: "surface" },
-      { id: "cl128", hanzi: "月球", pinyin: "yuèqiú", english: "the Moon" },
-      { id: "cl129", hanzi: "汽油", pinyin: "qìyóu", english: "gasoline; petrol" },
-      { id: "cl130", hanzi: "陆地", pinyin: "lùdì", english: "land" },
-      { id: "cl131", hanzi: "海洋", pinyin: "hǎiyáng", english: "ocean" },
       { id: "cl132", hanzi: "实数", pinyin: "shíshù", english: "real number" },
       { id: "cl133", hanzi: "分母", pinyin: "fēnmǔ", english: "denominator" },
       { id: "cl134", hanzi: "百分之", pinyin: "bǎi fēn zhī", english: "percent" },
@@ -561,9 +555,38 @@ export const categories: AcademicCategory[] = [
       { id: "cl141", hanzi: "无穷", pinyin: "wúqióng", english: "infinity; infinite" },
     ],
   },
+  {
+    id: "chem-lab-8",
+    name: "三角 1",
+    nameEn: "Trigonometry – Triangles & Angles",
+    sub: "Trigonometry",
+    words: [
+      { id: "cl121", hanzi: "三角函数", pinyin: "sānjiǎo hánshù", english: "trigonometric function" },
+      { id: "cl112", hanzi: "内角", pinyin: "nèijiǎo", english: "interior angle" },
+      { id: "cl110", hanzi: "外角", pinyin: "wàijiǎo", english: "exterior angle" },
+      { id: "cl105", hanzi: "邻边", pinyin: "línbiān", english: "adjacent side" },
+      { id: "cl113", hanzi: "等腰", pinyin: "děngyāo", english: "isosceles" },
+      { id: "cl106", hanzi: "等边", pinyin: "děngbiān", english: "equilateral" },
+      { id: "cl89", hanzi: "全等", pinyin: "quánděng", english: "congruent" },
+      { id: "cl90", hanzi: "相似", pinyin: "xiāngsì", english: "similar" },
+    ],
+  },
+  {
+    id: "chem-lab-9",
+    name: "地理 1",
+    nameEn: "Earth & Science",
+    words: [
+      { id: "cl126", hanzi: "地理", pinyin: "dìlǐ", english: "geography" },
+      { id: "cl127", hanzi: "表面", pinyin: "biǎomiàn", english: "surface" },
+      { id: "cl128", hanzi: "月球", pinyin: "yuèqiú", english: "the Moon" },
+      { id: "cl129", hanzi: "汽油", pinyin: "qìyóu", english: "gasoline; petrol" },
+      { id: "cl130", hanzi: "陆地", pinyin: "lùdì", english: "land" },
+      { id: "cl131", hanzi: "海洋", pinyin: "hǎiyáng", english: "ocean" },
+    ],
+  },
 ];
 
 export const chemLabCategories = categories.filter((c) => c.id.startsWith("chem-lab-"));
 export const stemCategories = categories.filter((c) => !c.id.startsWith("chem-lab-"));
-export const chemLabWords = chemLabCategories.flatMap((c) => c.words);
+export const chemLabWords = chemLabCategories.flatMap((c) => c.words.map((w) => ({ ...w, sub: c.sub })));
 export const allAcademicWords = categories.flatMap((c) => c.words);

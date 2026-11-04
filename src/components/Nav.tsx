@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconHome, IconBook, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconPencil, IconGamepad, IconBookOpen, IconBeaker } from "./Icons";
+import { useEffect, useState } from "react";
+import { IconChevron, IconHome, IconBook, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconPencil, IconGamepad, IconBookOpen, IconBeaker } from "./Icons";
 import { useLang, type Lang } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 
@@ -13,6 +14,19 @@ export default function Nav() {
   const pathname = usePathname();
   const { t, lang, setLang } = useLang();
   const { user, signInWithGoogle, logout } = useAuth();
+
+  // Desktop sidebar can be hidden; it slides back in when the mouse touches the left edge.
+  const [collapsed, setCollapsed] = useState(false);
+  const [peek, setPeek] = useState(false);
+  useEffect(() => {
+    try { setCollapsed(localStorage.getItem("hsk-nav-collapsed") === "1"); } catch { /* noop */ }
+  }, []);
+  const toggleNav = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    setPeek(false);
+    try { localStorage.setItem("hsk-nav-collapsed", next ? "1" : "0"); } catch { /* noop */ }
+  };
 
   const nextLang = () => {
     const i = langCycle.indexOf(lang);
@@ -45,11 +59,40 @@ export default function Nav() {
   return (
     <>
       {/* Desktop sidebar */}
-      <nav className="hidden md:flex flex-col w-[220px] min-h-screen border-r border-border bg-bg-raised">
-        <Link href="/" className="flex items-center gap-2 px-5 py-5 border-b border-border">
-          <span className="text-xl font-bold text-primary">HSK</span>
-          <span className="text-lg font-semibold text-ink">Master</span>
-        </Link>
+      {collapsed && (
+        <>
+          <div className="hidden md:block fixed left-0 top-0 z-30 h-screen w-3" onMouseEnter={() => setPeek(true)} />
+          <button
+            onClick={toggleNav}
+            aria-label="Show sidebar"
+            className="hidden md:flex fixed left-3 top-3 z-30 w-9 h-9 items-center justify-center rounded-lg border border-border bg-bg-raised text-ink-secondary hover:text-ink shadow-sm transition-colors"
+          >
+            <IconChevron direction="right" className="w-4 h-4" />
+          </button>
+        </>
+      )}
+      <nav
+        onMouseLeave={() => setPeek(false)}
+        className={`hidden md:flex flex-col w-[220px] min-h-screen border-r border-border bg-bg-raised ${
+          collapsed
+            ? `fixed left-0 top-0 z-40 h-screen overflow-y-auto shadow-xl transition-transform duration-200 ${peek ? "translate-x-0" : "-translate-x-full"}`
+            : ""
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-border pr-3">
+          <Link href="/" className="flex items-center gap-2 px-5 py-5">
+            <span className="text-xl font-bold text-primary">HSK</span>
+            <span className="text-lg font-semibold text-ink">Master</span>
+          </Link>
+          <button
+            onClick={toggleNav}
+            aria-label={collapsed ? "Pin sidebar" : "Hide sidebar"}
+            title={collapsed ? "Pin sidebar" : "Hide sidebar"}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-ink-tertiary hover:text-ink hover:bg-bg-sunken transition-colors"
+          >
+            <IconChevron direction={collapsed ? "right" : "left"} className="w-4 h-4" />
+          </button>
+        </div>
 
         <div className="flex flex-col gap-0.5 px-3 py-3 flex-1">
           {allLinks.map(({ href, label, Icon }) => (
