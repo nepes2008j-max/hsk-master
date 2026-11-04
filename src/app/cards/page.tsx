@@ -189,7 +189,9 @@ export default function CardsPage() {
   const currentCard = dueCards[currentIdx];
 
   const generateMcqChoices = useCallback((card: FlashCard) => {
-    const pool = HSK_CARDS.filter((c) => c.type === "hanzi-meaning" && c.english && c.id !== card.id);
+    // Prefer wrong answers from same deck for relevance
+    let pool = HSK_CARDS.filter((c) => c.type === "hanzi-meaning" && c.english && c.id !== card.id && c.deck === card.deck);
+    if (pool.length < 3) pool = HSK_CARDS.filter((c) => c.type === "hanzi-meaning" && c.english && c.id !== card.id);
     const wrong: string[] = [];
     const used = new Set([card.english!.toLowerCase()]);
     while (wrong.length < 3 && pool.length > 0) {
