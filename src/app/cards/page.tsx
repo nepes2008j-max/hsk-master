@@ -55,8 +55,8 @@ const HSK_CARDS: FlashCard[] = [
     { id: `stem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
   ]),
   ...chemLabWords.flatMap((w) => [
-    { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Chemistry", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
-    { id: `chem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Chemistry", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+    { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Special", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+    { id: `chem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Special", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
   ]),
 ];
 
@@ -112,7 +112,7 @@ export default function CardsPage() {
     decks.set("HSK 2", { total: vocabulary2.length * 2, custom: false });
     const stemCount = allAcademicWords.filter((w) => !w.id.startsWith("cl")).length;
     decks.set("STEM", { total: stemCount * 2, custom: false });
-    decks.set("Chemistry", { total: chemLabWords.length * 2, custom: false });
+    decks.set("Special", { total: chemLabWords.length * 2, custom: false });
     for (const d of userDecks) {
       decks.set(d, { total: userCards.filter((c) => c.deck === d).length, custom: true });
     }
@@ -682,11 +682,11 @@ export default function CardsPage() {
         {/* ── Decks ── */}
         {tab === "decks" && !openDeck && (
           <div className="space-y-3">
-            {(["HSK 1", "HSK 2", "STEM", "Chemistry"] as const).map((deckName) => {
+            {(["HSK 1", "HSK 2", "STEM", "Special"] as const).map((deckName) => {
               const hidden = hiddenCountForDeck(deckName);
               const total = deckName === "HSK 1" ? vocabulary.length * 2
                 : deckName === "HSK 2" ? vocabulary2.length * 2
-                : deckName === "Chemistry" ? chemLabWords.length * 2
+                : deckName === "Special" ? chemLabWords.length * 2
                 : allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2;
               return (
                 <button
@@ -694,8 +694,8 @@ export default function CardsPage() {
                   onClick={() => setOpenDeck(deckName)}
                   className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
                 >
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${deckName === "STEM" || deckName === "Chemistry" ? "bg-blue-light" : "bg-primary-light"}`}>
-                    <IconCards className={`w-5.5 h-5.5 ${deckName === "STEM" || deckName === "Chemistry" ? "text-blue" : "text-primary"}`} />
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${deckName === "STEM" || deckName === "Special" ? "bg-blue-light" : "bg-primary-light"}`}>
+                    <IconCards className={`w-5.5 h-5.5 ${deckName === "STEM" || deckName === "Special" ? "text-blue" : "text-primary"}`} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[15px] font-semibold text-ink">{deckName === "STEM" ? "STEM / CSCA" : deckName}</div>
@@ -765,7 +765,7 @@ export default function CardsPage() {
                     ? `${vocabulary2.length * 2} cards`
                     : openDeck === "STEM"
                     ? `${allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2} cards`
-                    : openDeck === "Chemistry"
+                    : openDeck === "Special"
                     ? `${chemLabWords.length * 2} cards`
                     : `${deckCards.length} card${deckCards.length !== 1 ? "s" : ""}`}
                 </div>
@@ -778,13 +778,13 @@ export default function CardsPage() {
               </button>
             </div>
 
-            {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" || openDeck === "Chemistry" ? (
+            {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" || openDeck === "Special" ? (
               <div className="space-y-3">
                 <div className="text-[13px] text-ink-tertiary rounded-xl bg-bg-sunken p-4">
                   {openDeck === "STEM"
                     ? `Built-in STEM deck with ${allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2} flashcards — math, science & CS vocabulary for CSCA preparation.`
-                    : openDeck === "Chemistry"
-                    ? `Built-in Chemistry deck with ${chemLabWords.length * 2} flashcards — chemistry lab equipment & materials vocabulary.`
+                    : openDeck === "Special"
+                    ? `Special deck with ${chemLabWords.length * 2} flashcards — chemistry lab equipment & materials from classroom photos.`
                     : `Built-in ${openDeck} deck with ${openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all ${openDeck === "HSK 1" ? 300 : 197} words.`}
                 </div>
                 {hiddenCountForDeck(openDeck) > 0 && (
