@@ -170,8 +170,8 @@ export default function CardsPage() {
       return !state || isDue(state);
     });
 
-    // Special deck and its sub-decks keep lesson order; everything else is shuffled.
-    const ordered = reviewDeck === "Special" || SPECIAL_SUBS.includes(reviewDeck as never);
+    // Special deck and its sub-decks keep lesson order (except Quiz, which is always random); everything else is shuffled.
+    const ordered = (reviewDeck === "Special" || SPECIAL_SUBS.includes(reviewDeck as never)) && reviewMode !== "mcq";
     const shuffled = ordered ? due : due.sort(() => Math.random() - 0.5);
     setDueCards(cardLimit > 0 ? shuffled.slice(0, cardLimit) : shuffled);
     setCurrentIdx(0);
