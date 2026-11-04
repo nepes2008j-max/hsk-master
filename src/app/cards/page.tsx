@@ -100,6 +100,7 @@ export default function CardsPage() {
   const writingInputRef = useRef<HTMLInputElement>(null);
   const [mcqChoices, setMcqChoices] = useState<string[]>([]);
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
+  const [mcqShowPinyin, setMcqShowPinyin] = useState(false);
 
   const userDecks = useMemo(() => {
     const deckSet = new Set(userCards.map((c) => c.deck));
@@ -203,6 +204,7 @@ export default function CardsPage() {
     const choices = [card.english!, ...wrong].sort(() => Math.random() - 0.5);
     setMcqChoices(choices);
     setMcqSelected(null);
+    setMcqShowPinyin(false);
   }, []);
 
   useEffect(() => {
@@ -573,8 +575,10 @@ export default function CardsPage() {
                   ) : reviewMode === "mcq" ? (
                     <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-6 flex flex-col items-center justify-center gap-4">
                       <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
-                      <div className="text-3xl font-bold text-ink">{currentCard.hanzi}</div>
-                      <div className="text-[13px] text-ink-tertiary">{currentCard.pinyin}</div>
+                      <button type="button" onClick={() => setMcqShowPinyin(true)} className="text-3xl font-bold text-ink cursor-pointer">{currentCard.hanzi}</button>
+                      <div className="text-[13px] text-ink-tertiary min-h-[20px]">
+                        {mcqShowPinyin || mcqSelected ? currentCard.pinyin : t.cardsPage.tapPinyin}
+                      </div>
                       <div className="w-full max-w-xs grid grid-cols-1 gap-2 mt-2">
                         {mcqChoices.map((choice) => {
                           const isCorrect = choice === currentCard.english;
