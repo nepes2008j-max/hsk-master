@@ -784,7 +784,7 @@ export default function CardsPage() {
                   {openDeck === "STEM"
                     ? `Built-in STEM deck with ${allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2} flashcards — math, science & CS vocabulary for CSCA preparation.`
                     : openDeck === "Special"
-                    ? `Special deck with ${chemLabWords.length * 2} flashcards — chemistry lab equipment & materials from classroom photos.`
+                    ? `Special deck with ${chemLabWords.length * 2} flashcards — chemistry lab, math, geometry & science words from classroom photos.`
                     : `Built-in ${openDeck} deck with ${openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all ${openDeck === "HSK 1" ? 300 : 197} words.`}
                 </div>
                 {hiddenCountForDeck(openDeck) > 0 && (
