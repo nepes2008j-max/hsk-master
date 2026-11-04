@@ -32,6 +32,7 @@ interface FlashCard {
   type: CardType;
   deck: string;
   sub?: string;
+  cat?: string;
   hanzi?: string;
   pinyin?: string;
   english?: string;
@@ -63,8 +64,8 @@ const HSK_CARDS: FlashCard[] = [
   ...chemLabWords.flatMap((w) => {
     const meaning = w.ru ?? w.english; // newly added words carry a Russian meaning
     return [
-      { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${meaning}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Special", sub: w.sub, hanzi: w.hanzi, pinyin: w.pinyin, english: meaning },
-      { id: `chem-mh-${w.id}`, front: meaning, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Special", sub: w.sub, hanzi: w.hanzi, pinyin: w.pinyin, english: meaning },
+      { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${meaning}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Special", sub: w.sub, cat: w.cat, hanzi: w.hanzi, pinyin: w.pinyin, english: meaning },
+      { id: `chem-mh-${w.id}`, front: meaning, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Special", sub: w.sub, cat: w.cat, hanzi: w.hanzi, pinyin: w.pinyin, english: meaning },
     ];
   }),
 ];
@@ -205,10 +206,17 @@ export default function CardsPage() {
     // Prefer wrong answers from same deck for relevance
     let pool = HSK_CARDS.filter((c) => c.type === "hanzi-meaning" && c.english && c.id !== card.id && c.deck === card.deck);
     if (pool.length < 3) pool = HSK_CARDS.filter((c) => c.type === "hanzi-meaning" && c.english && c.id !== card.id);
+    // Words added later (cl85+) get hard distractors: same group first, then shared characters. Others stay random.
+    const hard = !!card.cat && Number(card.id.match(/cl(\d+)$/)?.[1]) >= 85;
+    if (hard) {
+      const near = (c: FlashCard) => (c.cat === card.cat ? 2 : c.sub === card.sub ? 1 : 0);
+      const shared = (c: FlashCard) => [...(c.hanzi || "")].filter((ch) => card.hanzi!.includes(ch)).length;
+      pool = pool.map((c) => ({ c, r: Math.random() })).sort((a, b) => near(b.c) - near(a.c) || shared(b.c) - shared(a.c) || a.r - b.r).map((x) => x.c);
+    }
     const wrong: string[] = [];
     const used = new Set([card.english!.toLowerCase()]);
     while (wrong.length < 3 && pool.length > 0) {
-      const idx = Math.floor(Math.random() * pool.length);
+      const idx = hard ? 0 : Math.floor(Math.random() * pool.length);
       const pick = pool[idx].english!;
       if (!used.has(pick.toLowerCase())) { wrong.push(pick); used.add(pick.toLowerCase()); }
       pool.splice(idx, 1);

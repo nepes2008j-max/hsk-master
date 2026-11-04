@@ -684,5 +684,5 @@ export const categories: AcademicCategory[] = [
 
 export const chemLabCategories = categories.filter((c) => c.id.startsWith("chem-lab-"));
 export const stemCategories = categories.filter((c) => !c.id.startsWith("chem-lab-"));
-export const chemLabWords = chemLabCategories.flatMap((c) => c.words.map((w) => ({ ...w, sub: c.sub })));
+export const chemLabWords = chemLabCategories.flatMap((c) => c.words.map((w) => ({ ...w, sub: c.sub, cat: c.id })));
 export const allAcademicWords = categories.flatMap((c) => c.words);
