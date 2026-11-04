@@ -60,10 +60,13 @@ const HSK_CARDS: FlashCard[] = [
     { id: `stem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
     { id: `stem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
   ]),
-  ...chemLabWords.flatMap((w) => [
-    { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Special", sub: w.sub, hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
-    { id: `chem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Special", sub: w.sub, hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
-  ]),
+  ...chemLabWords.flatMap((w) => {
+    const meaning = w.ru ?? w.english; // newly added words carry a Russian meaning
+    return [
+      { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${meaning}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Special", sub: w.sub, hanzi: w.hanzi, pinyin: w.pinyin, english: meaning },
+      { id: `chem-mh-${w.id}`, front: meaning, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Special", sub: w.sub, hanzi: w.hanzi, pinyin: w.pinyin, english: meaning },
+    ];
+  }),
 ];
 
 function getHidden(): Set<string> {
@@ -812,7 +815,7 @@ export default function CardsPage() {
                             <div className="text-2xl font-bold text-ink w-28 shrink-0">{w.hanzi}</div>
                             <div className="min-w-0">
                               <div className="text-[14px] text-primary">{w.pinyin}</div>
-                              <div className="text-[13px] text-ink-secondary">{w.english}</div>
+                              <div className="text-[13px] text-ink-secondary">{w.ru ?? w.english}</div>
                             </div>
                           </div>
                         ))}
