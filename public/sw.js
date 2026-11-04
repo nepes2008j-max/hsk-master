@@ -1,4 +1,4 @@
-const CACHE = "hsk-v1";
+const CACHE = "hsk-v2";
 
 self.addEventListener("install", () => self.skipWaiting());
 

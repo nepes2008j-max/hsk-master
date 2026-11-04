@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import AppShell from "@/components/AppShell";
 import { vocabulary } from "@/data/vocabulary";
 import { vocabulary2 } from "@/data/vocabulary2";
-import { allAcademicWords, chemLabWords, stemCategories as _stemCats } from "@/data/academic-vocab";
+import { allAcademicWords, chemLabCategories, chemLabWords, stemCategories as _stemCats } from "@/data/academic-vocab";
 import { speak } from "@/lib/tts";
 import {
   getSRSState,
@@ -167,7 +167,9 @@ export default function CardsPage() {
       return !state || isDue(state);
     });
 
-    const shuffled = due.sort(() => Math.random() - 0.5);
+    // Special deck and its sub-decks keep lesson order; everything else is shuffled.
+    const ordered = reviewDeck === "Special" || SPECIAL_SUBS.includes(reviewDeck as never);
+    const shuffled = ordered ? due : due.sort(() => Math.random() - 0.5);
     setDueCards(cardLimit > 0 ? shuffled.slice(0, cardLimit) : shuffled);
     setCurrentIdx(0);
     setFlipped(false);
@@ -801,14 +803,19 @@ export default function CardsPage() {
                     : `Built-in ${openDeck} deck with ${openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all ${openDeck === "HSK 1" ? 300 : 197} words.`}
                 </div>
                 {(openDeck === "Special" || SPECIAL_SUBS.includes(openDeck as never)) && (
-                  <div className="space-y-1.5">
-                    {specialWords(openDeck).map((w) => (
-                      <div key={w.id} className="flex items-center gap-4 rounded-xl bg-bg-raised border border-border p-3.5">
-                        <div className="text-2xl font-bold text-ink w-28 shrink-0">{w.hanzi}</div>
-                        <div className="min-w-0">
-                          <div className="text-[14px] text-primary">{w.pinyin}</div>
-                          <div className="text-[13px] text-ink-secondary">{w.english}</div>
-                        </div>
+                  <div className="space-y-4">
+                    {chemLabCategories.filter((c) => openDeck === "Special" || c.sub === openDeck).map((c) => (
+                      <div key={c.id} className="space-y-1.5">
+                        <div className="text-[12px] font-semibold uppercase tracking-wide text-ink-tertiary pt-1">{c.nameEn}</div>
+                        {c.words.map((w) => (
+                          <div key={w.id} className="flex items-center gap-4 rounded-xl bg-bg-raised border border-border p-3.5">
+                            <div className="text-2xl font-bold text-ink w-28 shrink-0">{w.hanzi}</div>
+                            <div className="min-w-0">
+                              <div className="text-[14px] text-primary">{w.pinyin}</div>
+                              <div className="text-[13px] text-ink-secondary">{w.english}</div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     ))}
                   </div>
