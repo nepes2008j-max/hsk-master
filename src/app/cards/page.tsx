@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import AppShell from "@/components/AppShell";
 import { vocabulary } from "@/data/vocabulary";
 import { vocabulary2 } from "@/data/vocabulary2";
-import { categories as stemCategories, allAcademicWords } from "@/data/academic-vocab";
+import { allAcademicWords, chemLabWords, stemCategories as _stemCats } from "@/data/academic-vocab";
 import { speak } from "@/lib/tts";
 import {
   getSRSState,
@@ -21,7 +21,7 @@ import { useLang } from "@/lib/i18n";
 import { useRef } from "react";
 
 type CardType = "hanzi-meaning" | "meaning-hanzi" | "audio-hanzi" | "hanzi-pinyin";
-type ReviewMode = "mixed" | "three-way" | "reading" | "recognition" | "writing";
+type ReviewMode = "mixed" | "three-way" | "reading" | "recognition" | "writing" | "mcq";
 type WritingTarget = "pinyin" | "hanzi";
 
 interface FlashCard {
@@ -50,9 +50,13 @@ function buildCards(
 const HSK_CARDS: FlashCard[] = [
   ...buildCards(vocabulary, "hsk", "HSK 1"),
   ...buildCards(vocabulary2, "hsk2", "HSK 2"),
-  ...allAcademicWords.flatMap((w) => [
+  ...allAcademicWords.filter((w) => !w.id.startsWith("cl")).flatMap((w) => [
     { id: `stem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
     { id: `stem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+  ]),
+  ...chemLabWords.flatMap((w) => [
+    { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Chemistry", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
+    { id: `chem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Chemistry", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
   ]),
 ];
 
@@ -94,6 +98,8 @@ export default function CardsPage() {
     try { const v = localStorage.getItem("hsk-card-limit"); return v !== null ? (parseInt(v) || 0) : 20; } catch { return 20; }
   });
   const writingInputRef = useRef<HTMLInputElement>(null);
+  const [mcqChoices, setMcqChoices] = useState<string[]>([]);
+  const [mcqSelected, setMcqSelected] = useState<string | null>(null);
 
   const userDecks = useMemo(() => {
     const deckSet = new Set(userCards.map((c) => c.deck));
@@ -104,7 +110,9 @@ export default function CardsPage() {
     const decks = new Map<string, { total: number; custom: boolean }>();
     decks.set("HSK 1", { total: vocabulary.length * 2, custom: false });
     decks.set("HSK 2", { total: vocabulary2.length * 2, custom: false });
-    decks.set("STEM", { total: allAcademicWords.length * 2, custom: false });
+    const stemCount = allAcademicWords.filter((w) => !w.id.startsWith("cl")).length;
+    decks.set("STEM", { total: stemCount * 2, custom: false });
+    decks.set("Chemistry", { total: chemLabWords.length * 2, custom: false });
     for (const d of userDecks) {
       decks.set(d, { total: userCards.filter((c) => c.deck === d).length, custom: true });
     }
@@ -135,10 +143,10 @@ export default function CardsPage() {
       : all;
 
     // For non-mixed modes, only use hanzi-meaning cards (one per word)
-    if (reviewMode !== "mixed" && reviewMode !== "writing") {
+    if (reviewMode !== "mixed" && reviewMode !== "writing" && reviewMode !== "mcq") {
       reviewable = reviewable.filter((c) => c.type === "hanzi-meaning");
     }
-    if (reviewMode === "writing") {
+    if (reviewMode === "writing" || reviewMode === "mcq") {
       reviewable = reviewable.filter((c) => c.type === "hanzi-meaning" && c.hanzi && c.pinyin);
     }
 
@@ -158,6 +166,7 @@ export default function CardsPage() {
     setFlipStage(0);
     setWritingInput("");
     setWritingResult(null);
+    setMcqSelected(null);
   }, [reviewDeck, reviewMode, cardLimit]);
 
   useEffect(() => {
@@ -168,6 +177,7 @@ export default function CardsPage() {
     setReviewMode(mode);
     setWritingInput("");
     setWritingResult(null);
+    setMcqSelected(null);
     try { localStorage.setItem("hsk-review-mode", mode); } catch { /* noop */ }
   };
 
@@ -177,6 +187,31 @@ export default function CardsPage() {
   };
 
   const currentCard = dueCards[currentIdx];
+
+  const generateMcqChoices = useCallback((card: FlashCard) => {
+    const pool = HSK_CARDS.filter((c) => c.type === "hanzi-meaning" && c.english && c.id !== card.id);
+    const wrong: string[] = [];
+    const used = new Set([card.english!.toLowerCase()]);
+    while (wrong.length < 3 && pool.length > 0) {
+      const idx = Math.floor(Math.random() * pool.length);
+      const pick = pool[idx].english!;
+      if (!used.has(pick.toLowerCase())) { wrong.push(pick); used.add(pick.toLowerCase()); }
+      pool.splice(idx, 1);
+    }
+    const choices = [card.english!, ...wrong].sort(() => Math.random() - 0.5);
+    setMcqChoices(choices);
+    setMcqSelected(null);
+  }, []);
+
+  useEffect(() => {
+    if (reviewMode === "mcq" && currentCard?.english) generateMcqChoices(currentCard);
+  }, [currentCard, reviewMode, generateMcqChoices]);
+
+  const handleMcqSelect = (choice: string) => {
+    if (mcqSelected) return;
+    setMcqSelected(choice);
+    setFlipped(true);
+  };
 
   const handleRate = async (quality: number) => {
     if (!currentCard) return;
@@ -193,6 +228,7 @@ export default function CardsPage() {
         setFlipStage(0);
         setWritingInput("");
         setWritingResult(null);
+        setMcqSelected(null);
       } else {
         setDueCards([]);
       }
@@ -315,7 +351,7 @@ export default function CardsPage() {
     }
   };
 
-  const isRevealed = reviewMode === "three-way" ? flipStage === 2 : reviewMode === "writing" ? writingResult !== null : flipped;
+  const isRevealed = reviewMode === "three-way" ? flipStage === 2 : reviewMode === "writing" ? writingResult !== null : reviewMode === "mcq" ? mcqSelected !== null : flipped;
   const showHint = reviewMode === "three-way" && flipStage === 0
     ? t.cardsPage.tapPinyin
     : reviewMode === "three-way" && flipStage === 1
@@ -365,6 +401,7 @@ export default function CardsPage() {
     { key: "reading", label: t.cardsPage.reading },
     { key: "recognition", label: t.cardsPage.recognition },
     { key: "writing", label: t.cardsPage.writing },
+    { key: "mcq", label: t.cardsPage.mcq },
   ];
 
   const deckCards = openDeck ? userCards.filter((c) => c.deck === openDeck) : [];
@@ -531,6 +568,37 @@ export default function CardsPage() {
                         </div>
                       )}
                     </div>
+                  ) : reviewMode === "mcq" ? (
+                    <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-6 flex flex-col items-center justify-center gap-4">
+                      <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                      <div className="text-3xl font-bold text-ink">{currentCard.hanzi}</div>
+                      <div className="text-[13px] text-ink-tertiary">{currentCard.pinyin}</div>
+                      <div className="w-full max-w-xs grid grid-cols-1 gap-2 mt-2">
+                        {mcqChoices.map((choice) => {
+                          const isCorrect = choice === currentCard.english;
+                          const isSelected = mcqSelected === choice;
+                          const showResult = mcqSelected !== null;
+                          return (
+                            <button
+                              key={choice}
+                              onClick={() => handleMcqSelect(choice)}
+                              disabled={showResult}
+                              className={`rounded-xl border px-4 py-2.5 text-[14px] font-medium transition-colors text-left ${
+                                showResult
+                                  ? isCorrect
+                                    ? "border-green-500 bg-green-50 text-green-700"
+                                    : isSelected
+                                    ? "border-warning bg-warning-light text-warning-text"
+                                    : "border-border bg-bg-raised text-ink-tertiary"
+                                  : "border-border bg-white text-ink hover:border-primary/50"
+                              }`}
+                            >
+                              {choice}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   ) : reviewMode === "three-way" ? (
                     <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:shadow-lg active:scale-[0.98] transition-all">
                       {isRevealed ? renderCardBack() : renderCardFront()}
@@ -612,19 +680,20 @@ export default function CardsPage() {
         {/* ── Decks ── */}
         {tab === "decks" && !openDeck && (
           <div className="space-y-3">
-            {(["HSK 1", "HSK 2", "STEM"] as const).map((deckName) => {
+            {(["HSK 1", "HSK 2", "STEM", "Chemistry"] as const).map((deckName) => {
               const hidden = hiddenCountForDeck(deckName);
               const total = deckName === "HSK 1" ? vocabulary.length * 2
                 : deckName === "HSK 2" ? vocabulary2.length * 2
-                : allAcademicWords.length * 2;
+                : deckName === "Chemistry" ? chemLabWords.length * 2
+                : allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2;
               return (
                 <button
                   key={deckName}
                   onClick={() => setOpenDeck(deckName)}
                   className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
                 >
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${deckName === "STEM" ? "bg-blue-light" : "bg-primary-light"}`}>
-                    <IconCards className={`w-5.5 h-5.5 ${deckName === "STEM" ? "text-blue" : "text-primary"}`} />
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${deckName === "STEM" || deckName === "Chemistry" ? "bg-blue-light" : "bg-primary-light"}`}>
+                    <IconCards className={`w-5.5 h-5.5 ${deckName === "STEM" || deckName === "Chemistry" ? "text-blue" : "text-primary"}`} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[15px] font-semibold text-ink">{deckName === "STEM" ? "STEM / CSCA" : deckName}</div>
@@ -693,7 +762,9 @@ export default function CardsPage() {
                     : openDeck === "HSK 2"
                     ? `${vocabulary2.length * 2} cards`
                     : openDeck === "STEM"
-                    ? `${allAcademicWords.length * 2} cards`
+                    ? `${allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2} cards`
+                    : openDeck === "Chemistry"
+                    ? `${chemLabWords.length * 2} cards`
                     : `${deckCards.length} card${deckCards.length !== 1 ? "s" : ""}`}
                 </div>
               </div>
@@ -705,11 +776,13 @@ export default function CardsPage() {
               </button>
             </div>
 
-            {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" ? (
+            {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" || openDeck === "Chemistry" ? (
               <div className="space-y-3">
                 <div className="text-[13px] text-ink-tertiary rounded-xl bg-bg-sunken p-4">
                   {openDeck === "STEM"
-                    ? `Built-in STEM deck with ${allAcademicWords.length * 2} flashcards — math, science & CS vocabulary for CSCA preparation.`
+                    ? `Built-in STEM deck with ${allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2} flashcards — math, science & CS vocabulary for CSCA preparation.`
+                    : openDeck === "Chemistry"
+                    ? `Built-in Chemistry deck with ${chemLabWords.length * 2} flashcards — chemistry lab equipment & materials vocabulary.`
                     : `Built-in ${openDeck} deck with ${openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all ${openDeck === "HSK 1" ? 300 : 197} words.`}
                 </div>
                 {hiddenCountForDeck(openDeck) > 0 && (
