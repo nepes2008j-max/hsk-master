@@ -477,7 +477,14 @@ export default function CardsPage() {
       case "recognition":
         return <div className="text-3xl font-bold text-ink">{c.hanzi}</div>;
       default:
-        return <div className="text-3xl font-bold text-ink">{c.back}</div>;
+        // full answer: hanzi + pinyin + meaning
+        return (
+          <div className="text-center">
+            <div className="text-3xl font-bold text-ink">{c.hanzi}</div>
+            <div className="text-lg text-primary mt-1">{c.pinyin}</div>
+            <div className="text-lg text-ink-secondary mt-1">{c.english}</div>
+          </div>
+        );
     }
   };
 
@@ -730,9 +737,19 @@ export default function CardsPage() {
                 <div
                   ref={cardRef}
                   key={cardKey}
-                  className={`w-full ${swipeClass || "card-enter"}`}
+                  className={`relative w-full ${swipeClass || "card-enter"}`}
                   onClick={reviewMode === "writing" ? undefined : handleFlip}
                 >
+                  {(currentCard.audio || currentCard.hanzi) && (
+                    <button
+                      type="button"
+                      aria-label="Play audio"
+                      onClick={(e) => { e.stopPropagation(); speak((currentCard.audio ?? currentCard.hanzi)!); }}
+                      className="absolute top-3 right-3 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-bg-sunken text-ink-secondary hover:text-ink transition-colors"
+                    >
+                      <IconVolume className="w-4 h-4" />
+                    </button>
+                  )}
                   {reviewMode === "writing" ? (
                     <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-6 flex flex-col items-center justify-center gap-3">
                       <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
