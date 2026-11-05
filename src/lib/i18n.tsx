@@ -81,7 +81,7 @@ const t = {
     dictPage: {
       title: "Dictionary",
       words: "words",
-      allTopics: "All topics",
+      allTopics: "All topics", example: "Example", noExample: "No example yet", howToWrite: "How to write", inDecks: "In decks",
       searchPlaceholder: "Search Chinese, pinyin, or English...",
     },
     cardsPage: {
@@ -427,7 +427,7 @@ const t = {
     dictPage: {
       title: "Словарь",
       words: "слов",
-      allTopics: "Все темы",
+      allTopics: "Все темы", example: "Пример", noExample: "Примера пока нет", howToWrite: "Как писать", inDecks: "В колодах",
       searchPlaceholder: "Поиск по китайскому, пиньинь или русскому...",
     },
     cardsPage: {
@@ -773,7 +773,7 @@ const t = {
     dictPage: {
       title: "Sözlük",
       words: "söz",
-      allTopics: "Ähli mowzuklar",
+      allTopics: "Ähli mowzuklar", example: "Mysal", noExample: "Heniz mysal ýok", howToWrite: "Nähili ýazmaly", inDecks: "Toplumlarda",
       searchPlaceholder: "Hytaýça, pinýin ýa-da türkmençe gözle...",
     },
     cardsPage: {
