@@ -16,7 +16,7 @@ import {
   type UserCard,
 } from "@/lib/storage";
 import { newCardState, review, isDue } from "@/lib/srs";
-import { IconVolume, IconStar, IconX, IconCheck, IconCards, IconChevron } from "@/components/Icons";
+import { IconVolume, IconStar, IconX, IconCheck, IconCards, IconChevron, IconCog } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 import { useRef } from "react";
 
@@ -96,6 +96,12 @@ export default function CardsPage() {
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
   const [showRating, setShowRating] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
+  const toggleSettings = () => {
+    const next = !showSettings;
+    setShowSettings(next);
+    try { localStorage.setItem("hsk-settings-open", next ? "1" : "0"); } catch { /* noop */ }
+  };
   const [orderMode, setOrderMode] = useState<"auto" | "random" | "ordered">(() => {
     try { const v = localStorage.getItem("hsk-order"); return v === "random" || v === "ordered" ? v : "auto"; } catch { return "auto"; }
   });
@@ -107,7 +113,10 @@ export default function CardsPage() {
   const poolRef = useRef<FlashCard[]>([]);
   const orderRef = useRef<(l: FlashCard[]) => FlashCard[]>((l) => l);
   useEffect(() => {
-    try { setShowRating(localStorage.getItem("hsk-show-rating") !== "0"); } catch { /* noop */ }
+    try {
+      setShowRating(localStorage.getItem("hsk-show-rating") !== "0");
+      setShowSettings(localStorage.getItem("hsk-settings-open") === "1");
+    } catch { /* noop */ }
   }, []);
   const toggleRating = () => {
     const next = !showRating;
@@ -508,6 +517,20 @@ export default function CardsPage() {
         {/* ── Review ── */}
         {tab === "review" && (
           <div className="space-y-4">
+            {/* Session summary — settings collapsed by default */}
+            <button
+              onClick={() => toggleSettings()}
+              className="w-full flex items-center gap-2 rounded-xl border border-border bg-bg-raised px-4 py-2.5 text-left min-h-[44px]"
+              aria-expanded={showSettings}
+            >
+              <IconCog className="w-4 h-4 text-ink-tertiary shrink-0" />
+              <span className="flex-1 min-w-0 truncate text-[13px] font-medium text-ink">
+                {modes.find((m) => m.key === reviewMode)?.label} · {cardLimit === 0 ? t.cardsPage.infinite : cardLimit === -1 ? t.cardsPage.allOnce : cardLimit} · {orderMode === "auto" ? t.cardsPage.orderAuto : orderMode === "random" ? t.cardsPage.orderRandom : t.cardsPage.orderInOrder} · {reviewDeck ?? t.cardsPage.allDecks}
+              </span>
+              <span className="text-ink-tertiary text-[12px]">{showSettings ? "▴" : "▾"}</span>
+            </button>
+            {showSettings && (
+              <div className="space-y-4">
             {/* Mode selector */}
             <div>
               <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold mb-1.5">{t.cardsPage.mode}</div>
@@ -593,6 +616,7 @@ export default function CardsPage() {
               {[...allDecks.keys()].map((d) => (
                 <button
                   key={d}
+                  ref={(el) => { if (el && reviewDeck === d) el.scrollIntoView({ inline: "center", block: "nearest" }); }}
                   onClick={() => setReviewDeck(d)}
                   className={`shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors ${
                     reviewDeck === d ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
@@ -602,6 +626,8 @@ export default function CardsPage() {
                 </button>
               ))}
             </div>
+              </div>
+            )}
 
             {currentCard ? (
               <>
