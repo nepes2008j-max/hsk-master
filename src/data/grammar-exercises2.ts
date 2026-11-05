@@ -10,6 +10,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"他___我高。","answer":"比","distractors":["很","更","最"],"difficulty":1},
     {"type":"translate","english":"She is older than me.","answer":"她比我大。","accept":["她比我大"],"difficulty":2},
+    {"type":"translate","english":"This apple is bigger than that apple.","answer":"这个苹果比那个苹果大。","accept":["这个苹果比那个苹果大。"],"difficulty":3},
+    {"type":"reorder","english":"This car is faster than that car.","words":["这","比","那","快","车","车"],"answer":["这","车","比","那","车","快"],"difficulty":2},
   ],
   // 61: Expressing 'the same as' with 一样
   61: [
@@ -20,6 +22,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"他和我___高。","answer":"一样","distractors":["比","更","最"],"difficulty":1},
     {"type":"reorder","english":"This and that are the same.","words":["一样","那个","和","这个"],"answer":["这个","和","那个","一样"],"difficulty":2},
     {"type":"translate","english":"My phone is the same as yours.","answer":"我的手机和你的一样。","accept":["我的手机和你的一样","我的手机跟你的一样。","我的手机跟你的一样"],"difficulty":2},
+    {"type":"translate","english":"This pen is the same as that one.","answer":"这支笔和那支一样。","accept":["这支笔和那支一样。"],"difficulty":3},
+    {"type":"mcq","prompt":"His shoes are the same as mine.","options":["他的鞋子和我的一样。","他的鞋子和我的不同。","他的鞋子比我的大。","他的鞋子和你的不一样。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"他的书包跟我的___。","options":["一样","一样地","一样吗","一样了"],"answer":0,"difficulty":3},
   ],
   // 62: Superlative with 最
   62: [
@@ -30,6 +35,7 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"他是___高的人。","answer":"最","distractors":["很","更","比"],"difficulty":1},
     {"type":"translate","english":"This is the most delicious.","answer":"这个最好吃。","accept":["这个最好吃"],"difficulty":2},
+    {"type":"translate","english":"This is the most expensive.","answer":"这个最贵。","accept":["这个最贵。"],"difficulty":3},
   ],
   // 63: Expressing 'even more' with 更
   63: [
@@ -40,6 +46,10 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"今天___冷了。","answer":"更","distractors":["很","最","比"],"difficulty":1},
     {"type":"reorder","english":"He is even taller.","words":["高","更","他"],"answer":["他","更","高"],"difficulty":1},
     {"type":"translate","english":"This one is even better.","answer":"这个更好。","accept":["这个更好"],"difficulty":2},
+    {"type":"translate","english":"He runs even faster than me.","answer":"他跑得比我更快。","accept":["他跑得比我更快。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence means 'She works even harder than before'?","options":["她工作得比以前更认真。","她工作得比以前更慢。","她工作得比以前更轻松。","她工作得比以前更少。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence means 'He works even harder than before'?","options":["他更努力了。","他更累了。","他更开心了。","他更年轻了。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"哪句话的意思是‘他跑得比昨天更快’？","options":["他更慢了。","他昨天跑得更快。","他今天跑得更慢。","他今天跑得更快。"],"answer":3,"difficulty":3},
   ],
   // 64: Expressing 'a bit more' with 一点
   64: [
@@ -50,6 +60,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"请说慢___。","answer":"一点","distractors":["一样","一些","一下"],"difficulty":1},
     {"type":"reorder","english":"A little cheaper please.","words":["一点","便宜","请"],"answer":["请","便宜","一点"],"difficulty":2},
     {"type":"translate","english":"Can you speak a bit louder?","answer":"你能大声一点吗？","accept":["你能大声一点吗","请大声一点。","请大声一点"],"difficulty":2},
+    {"type":"translate","english":"This book is a little more expensive than that one.","answer":"这本书比那本贵一点儿。","accept":["这本书比那本贵一点儿。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence means 'Can you speak a little louder?'","options":["你能说快一点吗？","你能说慢一点吗？","你能大声一点吗？","你能小声一点吗？"],"answer":2,"difficulty":3},
   ],
   // 65: Expressing 'not as... as' with 没有
   65: [
@@ -60,6 +72,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"他___我高。","answer":"没有","distractors":["不比","不是","不如"],"difficulty":1},
     {"type":"reorder","english":"Not as fast as him.","words":["快","没有","他"],"answer":["没有","他","快"],"difficulty":2},
     {"type":"translate","english":"Today is not as hot as yesterday.","answer":"今天没有昨天热。","accept":["今天没有昨天热","今天没有昨天那么热。","今天没有昨天那么热"],"difficulty":2},
+    {"type":"translate","english":"Because I am tired, I want to sleep.","answer":"我累了，所以想睡觉。","accept":["我累了，所以想睡觉。"],"difficulty":3},
+    {"type":"mcq","prompt":"Because it is raining, I didn't go to the park.","options":["因为下雨了，所以没去公园。","因为没下雨，所以去公园了。","因为下雨了，所以去了公园。","因为没下雨，所以没去公园。"],"answer":0,"difficulty":3},
+    {"type":"fill","sentence":"他___生病了，所以没去学校。","answer":"因为","distractors":["所以","但是","而且"],"difficulty":3},
   ],
   // 66: 虽然...但是 (although...but)
   66: [
@@ -70,6 +85,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"___很贵，___质量很好。","answer":"虽然","distractors":["因为","不但","如果"],"difficulty":1},
     {"type":"translate","english":"Although it's raining, I still go.","answer":"虽然下雨了，但是我还是去。","accept":["虽然下雨了，但是我还是去","虽然下雨，但是我还去。","虽然下雨，但是我还去"],"difficulty":2},
+    {"type":"translate","english":"Although it is cold, I still want to go out.","answer":"虽然很冷，但是我想出去。","accept":["虽然很冷但是我想出去。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly uses 虽然...但是 to express contrast?","options":["虽然他很忙，他去了。","虽然他很忙，但是他还去了。","他很忙，但是虽然去了。","虽然他很忙，他但是去了。"],"answer":1,"difficulty":3},
+    {"type":"fill","sentence":"虽然很累，___继续工作。","answer":"但是","distractors":["而且","所以","然后"],"difficulty":3},
   ],
   // 67: 因为...所以 (because...so)
   67: [
@@ -80,6 +98,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"___他努力学习，___考试考得很好。","answer":"因为","distractors":["虽然","如果","不但"],"difficulty":1},
     {"type":"reorder","english":"Because it's cold, I wear a coat.","words":["所以","穿","因为","外套","冷","我"],"answer":["因为","冷","所以","我","穿","外套"],"difficulty":2},
     {"type":"translate","english":"Because I'm busy, I can't go.","answer":"因为我很忙，所以不能去。","accept":["因为我很忙，所以不能去","因为忙，所以去不了。","因为忙，所以去不了"],"difficulty":2},
+    {"type":"translate","english":"Besides the teacher, everyone went to the party.","answer":"除了老师以外，大家都去参加聚会了。","accept":["除了老师以外，大家都去参加聚会了。"],"difficulty":3},
+    {"type":"mcq","prompt":"除了他以外，我们都去了学校。这句话的意思是：","options":["只有他没去学校。","他和我们都去了学校。","他去了学校，但我们都没去。","他和我们都没去学校。"],"answer":0,"difficulty":3},
+    {"type":"fill","sentence":"除了他以外，___人都来了。","answer":"其他","distractors":["也","都","还"],"difficulty":3},
   ],
   // 68: 不但...而且 (not only...but also)
   68: [
@@ -90,6 +111,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"他___会说中文，___会说日语。","answer":"不但","distractors":["虽然","因为","如果"],"difficulty":1},
     {"type":"reorder","english":"Not only pretty but also smart.","words":["而且","聪明","不但","漂亮"],"answer":["不但","漂亮","而且","聪明"],"difficulty":2},
     {"type":"translate","english":"He not only sings but also dances.","answer":"他不但会唱歌，而且会跳舞。","accept":["他不但会唱歌，而且会跳舞","他不但唱歌，而且跳舞。","他不但唱歌，而且跳舞"],"difficulty":2},
+    {"type":"translate","english":"Do you want tea or coffee?","answer":"你要喝茶还是咖啡？","accept":["你要喝茶还是咖啡？"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly uses '或者' to say 'Tomorrow or the day after is fine.'?","options":["明天或者后天都可以。","明天还是后天都可以。","明天和后天都可以。","明天或者后天都不可以。"],"answer":0,"difficulty":3},
+    {"type":"fill","sentence":"你要喝茶___咖啡？","answer":"还是","distractors":["或者","和","还是吗"],"difficulty":3},
   ],
   // 69: 如果...就 (if...then)
   69: [
@@ -100,6 +124,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"___你来，我___去接你。","answer":"如果","distractors":["虽然","因为","不但"],"difficulty":1},
     {"type":"reorder","english":"If free, then go.","words":["就","有空","去","如果"],"answer":["如果","有空","就","去"],"difficulty":2},
     {"type":"translate","english":"If it rains, we won't go.","answer":"如果下雨，我们就不去了。","accept":["如果下雨，我们就不去了","如果下雨就不去了。","如果下雨就不去了"],"difficulty":2},
+    {"type":"translate","english":"She not only sings, but also dances very well.","answer":"她不但唱歌，而且跳舞跳得很好。","accept":["她不但唱歌，而且跳舞跳得很好。"],"difficulty":3},
+    {"type":"mcq","prompt":"He not only studies Chinese, but also speaks it very well. Which sentence is correct?","options":["他不但学习中文，而且说得好。","他不但说中文，而且学习得好。","他不但学习中文，而且说得不好。","他不但说中文，而且学习中文。"],"answer":0,"difficulty":3},
   ],
   // 70: 一边...一边 (doing two things at once)
   70: [
@@ -120,6 +146,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"天气___冷了。","answer":"越来越","distractors":["更","最","很"],"difficulty":1},
     {"type":"translate","english":"He is getting better and better.","answer":"他越来越好了。","accept":["他越来越好了","他越来越好。","他越来越好"],"difficulty":2},
+    {"type":"translate","english":"He just called me.","answer":"他刚才给我打电话了。","accept":["他刚才给我打电话了。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence means 'He just called me'?","options":["他刚才给我打电话了。","他现在给我打电话了。","他昨天给我打电话了。","他明天给我打电话了。"],"answer":0,"difficulty":3},
   ],
   // 72: 又...又 (both...and)
   72: [
@@ -130,6 +158,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"这个菜___好看___好吃。","answer":"又","distractors":["也","都","还"],"difficulty":1},
     {"type":"reorder","english":"Both cheap and good.","words":["又","好","又","便宜"],"answer":["又","便宜","又","好"],"difficulty":2},
     {"type":"translate","english":"She is both tall and beautiful.","answer":"她又高又漂亮。","accept":["她又高又漂亮"],"difficulty":2},
+    {"type":"translate","english":"The boy finally found his toy.","answer":"男孩终于找到了他的玩具。","accept":["男孩终于找到了他的玩具。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly uses 终于 to express 'finally'?","options":["他终于吃晚饭了。","他吃晚饭终于了。","他终于晚饭吃。","他晚饭终于吃。"],"answer":0,"difficulty":3},
   ],
   // 73: 除了...以外 (besides / except)
   73: [
@@ -140,6 +170,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"___他以外，我们都去了。","answer":"除了","distractors":["因为","虽然","不但"],"difficulty":1},
     {"type":"reorder","english":"Besides Chinese, he speaks English.","words":["以外","除了","还会","英语","中文","说"],"answer":["除了","中文","以外","还会","说","英语"],"difficulty":3},
     {"type":"translate","english":"Besides me, everyone went.","answer":"除了我以外，大家都去了。","accept":["除了我以外，大家都去了","除了我，大家都去了。","除了我，大家都去了"],"difficulty":2},
+    {"type":"translate","english":"He often plays basketball.","answer":"他经常打篮球。","accept":["他常常打篮球。"],"difficulty":3},
+    {"type":"reorder","english":"They often eat noodles.","words":["他们","吃","面","经常"],"answer":["他们","经常","吃","面"],"difficulty":2},
   ],
   // 74: 对...感兴趣 (interested in)
   74: [
@@ -150,6 +182,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我对中国文化___。","answer":"感兴趣","distractors":["有兴趣","喜欢","爱好"],"difficulty":1},
     {"type":"reorder","english":"She is interested in music.","words":["感兴趣","音乐","对","她"],"answer":["她","对","音乐","感兴趣"],"difficulty":2},
     {"type":"translate","english":"Are you interested in history?","answer":"你对历史感兴趣吗？","accept":["你对历史感兴趣吗"],"difficulty":2},
+    {"type":"translate","english":"He has always lived in Shanghai.","answer":"他一直住在上海。","accept":["他一直住在上海。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence means 'She has always eaten vegetables'?","options":["她一直吃蔬菜。","她吃一直蔬菜。","她一直吃肉。","她吃蔬菜一直。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence means 'He has always drunk water'?","options":["他一直喝水。","他喝水。","他一直吃水。","他喝一直水。"],"answer":0,"difficulty":3},
   ],
   // 75: 先...然后 (first...then)
   75: [
@@ -160,6 +195,7 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"___洗手，___吃饭。","answer":"先","distractors":["就","才","再"],"difficulty":1},
     {"type":"reorder","english":"First study, then play.","words":["然后","玩","学习","先"],"answer":["先","学习","然后","玩"],"difficulty":2},
     {"type":"translate","english":"First eat, then go.","answer":"先吃饭，然后去。","accept":["先吃饭，然后去","先吃饭然后去。","先吃饭然后去"],"difficulty":2},
+    {"type":"translate","english":"It suddenly started snowing.","answer":"突然下雪了。","accept":["突然下雪了"],"difficulty":3},
   ],
   // 76: 一...就 (as soon as)
   76: [
@@ -170,6 +206,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"他___回家___做作业。","answer":"一","distractors":["先","才","又"],"difficulty":2},
     {"type":"translate","english":"As soon as I arrived, it started raining.","answer":"我一到就下雨了。","accept":["我一到就下雨了"],"difficulty":2},
+    {"type":"translate","english":"He will come immediately.","answer":"他马上来。","accept":["他马上来"],"difficulty":3},
+    {"type":"reorder","english":"She drinks water immediately.","words":["她","水","喝","马上"],"answer":["她","马上","喝","水"],"difficulty":2},
+    {"type":"fill","sentence":"我___吃饭。","answer":"马上","distractors":["马上地","马上了","马上着"],"difficulty":3},
   ],
   // 77: 才 (only then / not until)
   77: [
@@ -180,6 +219,7 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"他十点___来。","answer":"才","distractors":["就","再","又"],"difficulty":1},
     {"type":"mcq","prompt":"才 emphasizes that something happened:","options":["later than expected","earlier than expected","as expected","never"],"answer":0,"difficulty":1},
     {"type":"translate","english":"He didn't arrive until 10 o'clock.","answer":"他十点才到。","accept":["他十点才到","他十点才来。","他十点才来"],"difficulty":2},
+    {"type":"fill","sentence":"我___书。","answer":"看到","distractors":["喝到","听到","吃到"],"difficulty":3},
   ],
   // 78: 再 vs 又 (again - future vs past)
   78: [
@@ -190,6 +230,7 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"明天我___去一次。","answer":"再","distractors":["又","还","才"],"difficulty":1},
     {"type":"mcq","prompt":"又 is used for repetition in the:","options":["past","future","both","neither"],"answer":0,"difficulty":1},
+    {"type":"translate","english":"The cake is ready.","answer":"蛋糕做好了。","accept":["蛋糕做好了"],"difficulty":3},
   ],
   // 79: 还是 vs 或者 (or - question vs statement)
   79: [
@@ -210,6 +251,7 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"请___门关上。","answer":"把","distractors":["被","让","给"],"difficulty":1},
     {"type":"translate","english":"Please put the book on the table.","answer":"请把书放在桌子上。","accept":["请把书放在桌子上"],"difficulty":2},
+    {"type":"translate","english":"Can you lift this box?","answer":"你能抬得动这个箱子吗？","accept":["你能抬得动这个箱子吗？"],"difficulty":3},
   ],
   // 81: 被 (passive construction)
   81: [
@@ -220,6 +262,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"杯子___他打破了。","answer":"被","distractors":["把","让","给"],"difficulty":1},
     {"type":"translate","english":"The cake was eaten by him.","answer":"蛋糕被他吃了。","accept":["蛋糕被他吃了"],"difficulty":2},
+    {"type":"translate","english":"He sings badly.","answer":"他唱得不好。","accept":["他唱得不好。"],"difficulty":3},
+    {"type":"mcq","prompt":"He writes very quickly.","options":["他写得很快。","他写得慢。","他写得不好。","他写得漂亮。"],"answer":0,"difficulty":3},
   ],
   // 82: 让/叫 (to make/let someone do)
   82: [
@@ -230,6 +274,7 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"妈妈___我去买菜。","answer":"让","distractors":["把","被","给"],"difficulty":1},
     {"type":"reorder","english":"Teacher told us to read.","words":["我们","看书","老师","让"],"answer":["老师","让","我们","看书"],"difficulty":2},
     {"type":"translate","english":"Don't let him go.","answer":"别让他走。","accept":["别让他走","不要让他走。","不要让他走"],"difficulty":2},
+    {"type":"translate","english":"He puts the pen on the desk.","answer":"他把笔放在桌子上。","accept":["他把笔放在桌子上。"],"difficulty":3},
   ],
   // 83: 是...的 (emphasis on time/place/manner)
   83: [
@@ -240,6 +285,7 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"他___昨天来___。","answer":"是","distractors":["在","被","把"],"difficulty":1},
     {"type":"translate","english":"I came by bus.","answer":"我是坐公交车来的。","accept":["我是坐公交车来的","我是坐公共汽车来的。","我是坐公共汽车来的"],"difficulty":2},
+    {"type":"translate","english":"The book was taken by him.","answer":"那本书被他拿走了。","accept":["那本书被他拿走了"],"difficulty":3},
   ],
   // 84: Resultative complement 到
   84: [
@@ -250,6 +296,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我找___了我的钥匙。","answer":"到","distractors":["完","好","了"],"difficulty":1},
     {"type":"reorder","english":"I heard it.","words":["了","到","听","我"],"answer":["我","听","到","了"],"difficulty":2},
     {"type":"translate","english":"I can't see it.","answer":"我看不到。","accept":["我看不到"],"difficulty":2},
+    {"type":"translate","english":"The teacher lets the students go outside.","answer":"老师让学生出去。","accept":["老师让学生出去。"],"difficulty":3},
+    {"type":"reorder","english":"He lets me drink water.","words":["他","我","喝","水","让"],"answer":["他","让","我","喝","水"],"difficulty":2},
+    {"type":"mcq","prompt":"Which sentence is correct? The teacher makes the students clean the classroom.","options":["老师让学生打扫教室。","老师让教室打扫学生。","老师学生让打扫教室。","老师打扫让学生教室。"],"answer":0,"difficulty":3},
   ],
   // 85: Resultative complement 完
   85: [
@@ -260,6 +309,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我吃___了。","answer":"完","distractors":["到","好","了"],"difficulty":1},
     {"type":"reorder","english":"Have you finished reading?","words":["了","吗","看","完","你"],"answer":["你","看","完","了","吗"],"difficulty":2},
     {"type":"translate","english":"I've finished writing.","answer":"我写完了。","accept":["我写完了"],"difficulty":2},
+    {"type":"translate","english":"From Monday to Friday, I go to school.","answer":"从星期一到星期五，我上学。","accept":["从星期一到星期五，我上学。"],"difficulty":3},
+    {"type":"fill","sentence":"从早上___晚上，我都在工作。","answer":"到","distractors":["从","去","在"],"difficulty":3},
   ],
   // 86: Resultative complement 好
   86: [
@@ -270,6 +321,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"饭做___了。","answer":"好","distractors":["完","到","了"],"difficulty":1},
     {"type":"mcq","prompt":"Verb + 好 indicates:","options":["properly completed/ready","done to completion","reached a target","in progress"],"answer":0,"difficulty":1},
     {"type":"translate","english":"I've packed my bags.","answer":"我收拾好了行李。","accept":["我收拾好了行李","我行李收拾好了。","我行李收拾好了","行李收拾好了。","行李收拾好了"],"difficulty":2},
+    {"type":"translate","english":"He walks toward the school.","answer":"他向学校走。","accept":["他向学校走。"],"difficulty":3},
+    {"type":"reorder","english":"She walks toward the park.","words":["她","公园","往","走"],"answer":["她","往","公园","走"],"difficulty":2},
   ],
   // 87: Potential complement 得/不 + resultative
   87: [
@@ -280,6 +333,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"太远了，我走___。","answer":"不到","distractors":["不了","不完","得到"],"difficulty":2},
     {"type":"translate","english":"I can understand.","answer":"我听得懂。","accept":["我听得懂"],"difficulty":2},
+    {"type":"translate","english":"He has been working here for six months.","answer":"他在这家公司工作了六个月了。","accept":["他在这家公司工作了六个月了。"],"difficulty":3},
+    {"type":"fill","sentence":"他___了三年英语了。","answer":"学","distractors":["吃","看","走"],"difficulty":3},
+    {"type":"fill","sentence":"我___了五年中文了。","answer":"学","distractors":["看","吃","住"],"difficulty":3},
   ],
   // 88: Direction complements 来/去
   88: [
@@ -290,6 +346,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"他走___了。","answer":"出去","distractors":["进来","上去","下来"],"difficulty":1},
     {"type":"reorder","english":"Please come in.","words":["来","请","进"],"answer":["请","进","来"],"difficulty":1},
     {"type":"translate","english":"He ran out.","answer":"他跑出去了。","accept":["他跑出去了"],"difficulty":2},
+    {"type":"translate","english":"He watches TV for two hours every day.","answer":"他每天看两个小时电视。","accept":["他每天看两个小时电视"],"difficulty":3},
+    {"type":"mcq","prompt":"小明看了两个小时的书。小红看了两个小时的电影。谁看了两个小时的书？","options":["小明","小红","小明和小红","没有人"],"answer":0,"difficulty":3},
+    {"type":"fill","sentence":"他___了两个小时的电视。","answer":"看","distractors":["吃","喝","玩"],"difficulty":3},
   ],
   // 89: 着 (continuous state)
   89: [
@@ -300,6 +359,9 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"门开___。","answer":"着","distractors":["了","过","在"],"difficulty":1},
     {"type":"translate","english":"He is standing there.","answer":"他站着呢。","accept":["他站着呢","他站着。","他站着"],"difficulty":2},
+    {"type":"translate","english":"He goes to school every day.","answer":"他每天都去学校。","accept":["他每天都去学校。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence is correct? She goes to the park every day.","options":["她每天去公园。","她每天公园去。","她去每天公园。","她每天公园都去。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"他每个星期都___。他每个星期都去学校。","options":["去学校","去公园","去商店","去图书馆"],"answer":0,"difficulty":3},
   ],
   // 90: 地 (adverbial particle)
   90: [
@@ -310,6 +372,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"他高兴___说。","answer":"地","distractors":["的","得","了"],"difficulty":1},
     {"type":"mcq","prompt":"地 is placed:","options":["between adverb and verb","after the verb","before the noun","at sentence end"],"answer":0,"difficulty":1},
     {"type":"translate","english":"She happily sang.","answer":"她高兴地唱歌。","accept":["她高兴地唱歌","她开心地唱歌。","她开心地唱歌"],"difficulty":2},
+    {"type":"translate","english":"He listens to music while eating.","answer":"他一边吃饭一边听音乐。","accept":["他一边吃饭一边听音乐。"],"difficulty":3},
+    {"type":"reorder","english":"She cooks while talking on the phone.","words":["她","打电话","一边","一边","做饭"],"answer":["她","一边","做饭","一边","打电话"],"difficulty":2},
   ],
   // 91: 得 (degree complement)
   91: [
@@ -320,6 +384,7 @@ export const grammarExercises2: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"他说___很好。","answer":"得","distractors":["的","地","了"],"difficulty":1},
     {"type":"translate","english":"She dances very well.","answer":"她跳舞跳得很好。","accept":["她跳舞跳得很好","她舞跳得很好。","她舞跳得很好"],"difficulty":2},
+    {"type":"translate","english":"In order to go to school, he gets up early.","answer":"为了上学，他起得很早。","accept":["为了上学，他起得很早。"],"difficulty":3},
   ],
   // 92: 多/少 + verb (do more/less)
   92: [
@@ -330,6 +395,8 @@ export const grammarExercises2: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"你应该___运动。","answer":"多","distractors":["少","很","最"],"difficulty":1},
     {"type":"reorder","english":"Drink less coffee.","words":["咖啡","少","喝"],"answer":["少","喝","咖啡"],"difficulty":1},
     {"type":"translate","english":"You should eat more vegetables.","answer":"你应该多吃蔬菜。","accept":["你应该多吃蔬菜","你要多吃蔬菜。","你要多吃蔬菜"],"difficulty":2},
+    {"type":"translate","english":"It depends on how much money you have.","answer":"看你有多少钱。","accept":["看你有多少钱"],"difficulty":3},
+    {"type":"mcq","prompt":"How do you say 'It depends on whether you like it'?","options":["看你是否喜欢它。","你喜欢看它。","看它是否喜欢你。","你是否看它喜欢。"],"answer":0,"difficulty":3},
   ],
   // 93: 连...都/也 (even)
   93: [
