@@ -13,6 +13,13 @@ export function newCardState(cardId: string): CardState {
 // quality: 0 (fail) to 5 (perfect). Simplified SM-2.
 export function review(state: CardState, quality: number): CardState {
   const s = { ...state };
+  if (quality === 3) {
+    // Hard: no progress, due again in 10 minutes so it shows up much more often.
+    s.interval = 0;
+    s.ease = Math.max(1.3, s.ease - 0.15);
+    s.due = Date.now() + 10 * 60000;
+    return s;
+  }
   if (quality < 3) {
     s.reps = 0;
     s.interval = 0;

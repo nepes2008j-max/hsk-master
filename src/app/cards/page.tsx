@@ -95,6 +95,18 @@ export default function CardsPage() {
   const [openDeck, setOpenDeck] = useState<string | null>(null);
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
+  const [showRating, setShowRating] = useState(true);
+  const [deckSearch, setDeckSearch] = useState("");
+  const poolRef = useRef<FlashCard[]>([]);
+  const orderRef = useRef<(l: FlashCard[]) => FlashCard[]>((l) => l);
+  useEffect(() => {
+    try { setShowRating(localStorage.getItem("hsk-show-rating") !== "0"); } catch { /* noop */ }
+  }, []);
+  const toggleRating = () => {
+    const next = !showRating;
+    setShowRating(next);
+    try { localStorage.setItem("hsk-show-rating", next ? "1" : "0"); } catch { /* noop */ }
+  };
   const [reviewMode, setReviewMode] = useState<ReviewMode>(() => {
     try { return (localStorage.getItem("hsk-review-mode") as ReviewMode) || "mixed"; } catch { return "mixed"; }
   });
@@ -130,6 +142,15 @@ export default function CardsPage() {
     }
     return decks;
   }, [userDecks, userCards]);
+
+  const searchHits = useMemo(() => {
+    const norm = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const q = norm(deckSearch.trim());
+    if (!q) return [];
+    return allCards
+      .filter((c) => c.type === "hanzi-meaning" && (!openDeck || inDeck(c, openDeck)) && norm(`${c.hanzi ?? c.front} ${c.pinyin ?? ""} ${c.english ?? c.back}`).includes(q))
+      .slice(0, 60);
+  }, [deckSearch, openDeck, allCards]);
 
   const loadCards = useCallback(async () => {
     const hskCards = HSK_CARDS;
@@ -174,6 +195,8 @@ export default function CardsPage() {
     // Special deck and its sub-decks keep lesson order (except Quiz, which is always random); everything else is shuffled.
     const ordered = (reviewDeck === "Special" || SPECIAL_SUBS.includes(reviewDeck as never)) && reviewMode !== "mcq";
     const shuffled = ordered ? due : due.sort(() => Math.random() - 0.5);
+    poolRef.current = reviewable; // used by the endless (∞) mode to keep cycling
+    orderRef.current = (l) => (ordered ? [...l] : [...l].sort(() => Math.random() - 0.5));
     setDueCards(cardLimit > 0 ? shuffled.slice(0, cardLimit) : shuffled);
     setCurrentIdx(0);
     setFlipped(false);
@@ -242,17 +265,33 @@ export default function CardsPage() {
     const existing = (await getSRSState(currentCard.id)) ?? newCardState(currentCard.id);
     await saveSRSState(review(existing, quality));
 
+    // Again / Hard come back later in this session (Again sooner than Hard).
+    let queue = dueCards;
+    if (quality < 4) {
+      queue = [...dueCards];
+      queue.splice(Math.min(currentIdx + 1 + (quality < 3 ? 3 : 8), queue.length), 0, currentCard);
+      setDueCards(queue);
+    }
+
     setSwipeClass(quality >= 3 ? "card-swipe-right" : "card-swipe-left");
     setTimeout(() => {
       setSwipeClass("");
       setCardKey((k) => k + 1);
-      if (currentIdx + 1 < dueCards.length) {
-        setCurrentIdx(currentIdx + 1);
+      const resetFace = () => {
         setFlipped(false);
         setFlipStage(0);
         setWritingInput("");
         setWritingResult(null);
         setMcqSelected(null);
+      };
+      if (currentIdx + 1 < queue.length) {
+        setCurrentIdx(currentIdx + 1);
+        resetFace();
+      } else if (cardLimit === 0 && poolRef.current.length > 0) {
+        // ∞ mode: never run out, start another round
+        setDueCards(orderRef.current(poolRef.current));
+        setCurrentIdx(0);
+        resetFace();
       } else {
         setDueCards([]);
       }
@@ -285,6 +324,13 @@ export default function CardsPage() {
       setHiddenIds(next);
       saveHidden(next);
     }
+  };
+
+  const toggleHidden = (id: string) => {
+    const next = new Set(hiddenIds);
+    if (!next.delete(id)) next.add(id);
+    setHiddenIds(next);
+    saveHidden(next);
   };
 
   const hiddenCountForDeck = (deck: string) => {
@@ -486,6 +532,14 @@ export default function CardsPage() {
                   {n === 0 ? t.cardsPage.infinite : n}
                 </button>
               ))}
+              <button
+                onClick={toggleRating}
+                className={`ml-auto rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
+                  showRating ? "bg-primary-light text-primary-text" : "bg-bg-sunken text-ink-tertiary"
+                }`}
+              >
+                {t.cardsPage.ratingButtons}: {showRating ? "✓" : "✗"}
+              </button>
             </div>
 
             {/* Writing target toggle */}
@@ -650,6 +704,7 @@ export default function CardsPage() {
 
                 {isRevealed && (
                   <div className="space-y-2">
+                    {showRating ? (
                     <div className="grid grid-cols-4 gap-2">
                       <button
                         onClick={() => handleRate(1)}
@@ -676,6 +731,14 @@ export default function CardsPage() {
                         {t.cardsPage.easy}
                       </button>
                     </div>
+                    ) : (
+                      <button
+                        onClick={() => handleRate(4)}
+                        className="w-full rounded-xl bg-primary hover:bg-primary-hover py-3 text-[14px] font-medium text-white transition-colors"
+                      >
+                        {t.cardsPage.next}
+                      </button>
+                    )}
                     <button
                       onClick={handleHide}
                       className="w-full rounded-xl border border-border py-2 text-[13px] font-medium text-ink-tertiary hover:text-warning hover:border-warning/30 transition-colors"
@@ -704,7 +767,40 @@ export default function CardsPage() {
         )}
 
         {/* ── Decks ── */}
-        {tab === "decks" && !openDeck && (
+        {tab === "decks" && (
+          <input
+            value={deckSearch}
+            onChange={(e) => setDeckSearch(e.target.value)}
+            placeholder={t.cardsPage.searchPlaceholder}
+            className="w-full mb-3 rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary"
+          />
+        )}
+        {tab === "decks" && deckSearch.trim() && (
+          <div className="space-y-1.5">
+            <div className="text-[12px] text-ink-tertiary">{searchHits.length >= 60 ? "60+" : searchHits.length}{openDeck ? ` · ${openDeck}` : ""}</div>
+            {searchHits.length === 0 && <div className="text-center py-8 text-[13px] text-ink-tertiary">{t.cardsPage.noResults}</div>}
+            {searchHits.map((c) => {
+              const hid = hiddenIds.has(c.id);
+              return (
+                <div key={c.id} className={`flex items-center gap-3 rounded-xl border border-border bg-bg-raised p-3.5 ${hid ? "opacity-50" : ""}`}>
+                  <div className="text-xl font-bold text-ink w-20 shrink-0 break-all">{c.hanzi ?? c.front}</div>
+                  <div className="flex-1 min-w-0">
+                    {c.pinyin && <div className="text-[13px] text-primary">{c.pinyin}</div>}
+                    <div className="text-[13px] text-ink-secondary">{c.english ?? c.back}</div>
+                    <div className="text-[11px] text-ink-tertiary/60">{c.deck}</div>
+                  </div>
+                  <button
+                    onClick={() => toggleHidden(c.id)}
+                    className="shrink-0 rounded-lg border border-border px-2.5 py-1 text-[12px] font-medium text-ink-secondary hover:text-ink transition-colors"
+                  >
+                    {hid ? t.cardsPage.unhide : t.cardsPage.hideCard}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {tab === "decks" && !openDeck && !deckSearch.trim() && (
           <div className="space-y-3">
             {(["HSK 1", "HSK 2", "STEM", "Special", ...SPECIAL_SUBS] as const).map((deckName) => {
               const hidden = hiddenCountForDeck(deckName);
@@ -769,7 +865,7 @@ export default function CardsPage() {
         )}
 
         {/* ── Deck detail view ── */}
-        {tab === "decks" && openDeck && (
+        {tab === "decks" && openDeck && !deckSearch.trim() && (
           <div className="space-y-3">
             <button
               onClick={() => setOpenDeck(null)}
