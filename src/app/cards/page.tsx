@@ -6,6 +6,8 @@ import { vocabulary } from "@/data/vocabulary";
 import { vocabulary2 } from "@/data/vocabulary2";
 import { allAcademicWords, chemLabCategories, chemLabWords, stemCategories as _stemCats } from "@/data/academic-vocab";
 import { speak } from "@/lib/tts";
+import { ru as ruMap } from "@/data/translations-ru";
+import { tk as tkMap } from "@/data/translations-tk";
 import {
   getSRSState,
   saveSRSState,
@@ -38,15 +40,20 @@ interface FlashCard {
   english?: string;
 }
 
-function buildCards(
-  words: { id: number; hanzi: string; pinyin: string; english: string }[],
-  prefix: string,
-  deck: string,
-): FlashCard[] {
-  return words.flatMap((w) => [
-    { id: `${prefix}-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck, hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
-    { id: `${prefix}-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck, hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
-  ]);
+type MeaningLang = "default" | "en" | "ru" | "tk";
+// default = today's behaviour: Special deck shows its Russian meanings, everything else English.
+function meaningOf(lang: MeaningLang, hanzi: string, english: string, ruField?: string): string {
+  if (lang === "en") return english;
+  if (lang === "ru") return ruField ?? ruMap[hanzi]?.meaning ?? english;
+  if (lang === "tk") return tkMap[hanzi]?.meaning ?? english;
+  return ruField ?? english;
+}
+
+function mk(id: string, hanzi: string, pinyin: string, meaning: string, deck: string, extra: Partial<FlashCard> = {}): FlashCard[] {
+  return [
+    { id: `${id}`.replace("@", "hm"), front: hanzi, back: `${pinyin} — ${meaning}`, audio: hanzi, type: "hanzi-meaning", deck, hanzi, pinyin, english: meaning, ...extra },
+    { id: `${id}`.replace("@", "mh"), front: meaning, back: `${hanzi} (${pinyin})`, type: "meaning-hanzi", deck, hanzi, pinyin, english: meaning, ...extra },
+  ];
 }
 
 // Sub-decks are views of the Special deck (same cards, shared progress).
@@ -54,21 +61,19 @@ const SPECIAL_SUBS = ["Chemistry", "Math", "Trigonometry"] as const;
 const specialWords = (d: string) => (d === "Special" ? chemLabWords : chemLabWords.filter((w) => w.sub === d));
 const inDeck = (c: FlashCard, d: string) => c.deck === d || c.sub === d;
 
-const HSK_CARDS: FlashCard[] = [
-  ...buildCards(vocabulary, "hsk", "HSK 1"),
-  ...buildCards(vocabulary2, "hsk2", "HSK 2"),
-  ...allAcademicWords.filter((w) => !w.id.startsWith("cl")).flatMap((w) => [
-    { id: `stem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${w.english}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
-    { id: `stem-mh-${w.id}`, front: w.english, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "STEM", hanzi: w.hanzi, pinyin: w.pinyin, english: w.english },
-  ]),
-  ...chemLabWords.flatMap((w) => {
-    const meaning = w.ru ?? w.english; // newly added words carry a Russian meaning
-    return [
-      { id: `chem-hm-${w.id}`, front: w.hanzi, back: `${w.pinyin} — ${meaning}`, audio: w.hanzi, type: "hanzi-meaning" as const, deck: "Special", sub: w.sub, cat: w.cat, hanzi: w.hanzi, pinyin: w.pinyin, english: meaning },
-      { id: `chem-mh-${w.id}`, front: meaning, back: `${w.hanzi} (${w.pinyin})`, type: "meaning-hanzi" as const, deck: "Special", sub: w.sub, cat: w.cat, hanzi: w.hanzi, pinyin: w.pinyin, english: meaning },
-    ];
-  }),
-];
+const cardCache = new Map<MeaningLang, FlashCard[]>();
+function cardsFor(lang: MeaningLang): FlashCard[] {
+  const hit = cardCache.get(lang);
+  if (hit) return hit;
+  const cards = [
+    ...vocabulary.flatMap((w) => mk(`hsk-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "HSK 1")),
+    ...vocabulary2.flatMap((w) => mk(`hsk2-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "HSK 2")),
+    ...allAcademicWords.filter((w) => !w.id.startsWith("cl")).flatMap((w) => mk(`stem-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "STEM")),
+    ...chemLabWords.flatMap((w) => mk(`chem-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english, w.ru), "Special", { sub: w.sub, cat: w.cat })),
+  ];
+  cardCache.set(lang, cards);
+  return cards;
+}
 
 function getHidden(): Set<string> {
   try { return new Set(JSON.parse(localStorage.getItem("hsk-hidden-cards") || "[]")); } catch { return new Set(); }
@@ -96,6 +101,14 @@ export default function CardsPage() {
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
   const [showRating, setShowRating] = useState(true);
+  const [meaningLang, setMeaningLang] = useState<MeaningLang>(() => {
+    try { const v = localStorage.getItem("hsk-meaning-lang"); return v === "en" || v === "ru" || v === "tk" ? v : "default"; } catch { return "default"; }
+  });
+  const HSK_CARDS = cardsFor(meaningLang);
+  const changeMeaningLang = (l: MeaningLang) => {
+    setMeaningLang(l);
+    try { localStorage.setItem("hsk-meaning-lang", l); } catch { /* noop */ }
+  };
   const [weakOnly, setWeakOnly] = useState(false);
   const [session, setSession] = useState<Record<number, number>>({ 1: 0, 3: 0, 4: 0, 5: 0 });
   const [curSrs, setCurSrs] = useState<CardState | undefined>(undefined);
@@ -190,7 +203,7 @@ export default function CardsPage() {
       }
     }
     setDeckStats(out);
-  }, []);
+  }, [HSK_CARDS]);
   useEffect(() => { if (tab === "decks") refreshStats(); }, [tab, refreshStats]);
 
   const loadCards = useCallback(async () => {
@@ -252,7 +265,7 @@ export default function CardsPage() {
     setWritingInput("");
     setWritingResult(null);
     setMcqSelected(null);
-  }, [reviewDeck, reviewMode, cardLimit, orderMode, weakOnly]);
+  }, [reviewDeck, reviewMode, cardLimit, orderMode, weakOnly, HSK_CARDS]);
 
   useEffect(() => {
     loadCards();
@@ -296,7 +309,7 @@ export default function CardsPage() {
     setMcqChoices(choices);
     setMcqSelected(null);
     setMcqShowPinyin(false);
-  }, []);
+  }, [HSK_CARDS]);
 
   useEffect(() => {
     if (reviewMode === "mcq" && currentCard?.english) generateMcqChoices(currentCard);
@@ -671,6 +684,18 @@ export default function CardsPage() {
               ))}
             </div>
 
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold">{t.cardsPage.meaningLang}</div>
+              {([["default", t.cardsPage.langDefault], ["en", "English"], ["ru", "Русский"], ["tk", "Türkmen"]] as const).map(([l, label]) => (
+                <button
+                  key={l}
+                  onClick={() => changeMeaningLang(l)}
+                  className={`rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${meaningLang === l ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
             <button
               onClick={() => setWeakOnly(!weakOnly)}
               className={`rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${weakOnly ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"}`}
