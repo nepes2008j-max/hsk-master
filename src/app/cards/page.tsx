@@ -96,6 +96,8 @@ export default function CardsPage() {
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
   const [showRating, setShowRating] = useState(true);
+  const [weakOnly, setWeakOnly] = useState(false);
+  const [session, setSession] = useState<Record<number, number>>({ 1: 0, 3: 0, 4: 0, 5: 0 });
   const [curSrs, setCurSrs] = useState<CardState | undefined>(undefined);
   const [canUndo, setCanUndo] = useState(false);
   const undoRef = useRef<{ prev: CardState; queue: FlashCard[]; idx: number } | null>(null);
@@ -226,10 +228,13 @@ export default function CardsPage() {
     const hidden = getHidden();
     reviewable = reviewable.filter((c) => !hidden.has(c.id));
 
-    const due = reviewable.filter((card) => {
-      const state = stateMap.get(card.id);
-      return !state || isDue(state);
-    });
+    // "Hard cards only": cards last rated Again/Hard (interval 0), whether or not they are due yet
+    const due = weakOnly
+      ? reviewable.filter((c) => { const st = stateMap.get(c.id); return !!st && st.interval === 0 && st.due > 0; })
+      : reviewable.filter((card) => {
+          const state = stateMap.get(card.id);
+          return !state || isDue(state);
+        });
 
     // Special deck and its sub-decks keep lesson order (except Quiz, which is always random); everything else is shuffled.
     // Order: "auto" = Special decks in lesson order (Quiz random), others shuffled; or the user forces random / in order.
@@ -240,13 +245,14 @@ export default function CardsPage() {
     setDueCards(cardLimit > 0 ? shuffled.slice(0, cardLimit) : shuffled);
     undoRef.current = null;
     setCanUndo(false);
+    setSession({ 1: 0, 3: 0, 4: 0, 5: 0 });
     setCurrentIdx(0);
     setFlipped(false);
     setFlipStage(0);
     setWritingInput("");
     setWritingResult(null);
     setMcqSelected(null);
-  }, [reviewDeck, reviewMode, cardLimit, orderMode]);
+  }, [reviewDeck, reviewMode, cardLimit, orderMode, weakOnly]);
 
   useEffect(() => {
     loadCards();
@@ -307,6 +313,7 @@ export default function CardsPage() {
     const existing = (await getSRSState(currentCard.id)) ?? newCardState(currentCard.id);
     undoRef.current = { prev: existing, queue: dueCards, idx: currentIdx };
     setCanUndo(true);
+    setSession((s) => ({ ...s, [quality]: (s[quality] ?? 0) + 1 }));
     await saveSRSState(review(existing, quality));
 
     // Again / Hard come back later in this session (Again sooner than Hard).
@@ -664,6 +671,13 @@ export default function CardsPage() {
               ))}
             </div>
 
+            <button
+              onClick={() => setWeakOnly(!weakOnly)}
+              className={`rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${weakOnly ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"}`}
+            >
+              {t.cardsPage.weakOnly}
+            </button>
+
             {/* Writing target toggle */}
             {reviewMode === "writing" && (
               <div className="flex gap-1.5">
@@ -913,6 +927,19 @@ export default function CardsPage() {
                 </div>
                 <div className="text-[15px] font-semibold text-ink">{t.cardsPage.allCaughtUp}</div>
                 <div className="text-[13px] text-ink-tertiary mt-1">{t.cardsPage.noCards}</div>
+                {session[1] + session[3] + session[4] + session[5] > 0 && (
+                  <div className="mt-3 text-[13px] text-ink-secondary">
+                    {t.cardsPage.reviewed} {session[1] + session[3] + session[4] + session[5]} · {t.cardsPage.again} {session[1]} · {t.cardsPage.hard} {session[3]} · {t.cardsPage.good} {session[4]} · {t.cardsPage.easy} {session[5]}
+                  </div>
+                )}
+                {!weakOnly && session[1] + session[3] > 0 && (
+                  <button
+                    onClick={() => setWeakOnly(true)}
+                    className="mt-4 rounded-xl border border-border px-5 py-2.5 text-[14px] font-medium text-ink hover:border-primary/50 transition-colors"
+                  >
+                    {t.cardsPage.weakOnly}
+                  </button>
+                )}
                 <button
                   onClick={loadCards}
                   className="mt-5 rounded-xl bg-primary hover:bg-primary-hover text-white px-5 py-2.5 text-[14px] font-medium transition-colors"
