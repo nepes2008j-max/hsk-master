@@ -1,6 +1,6 @@
 // Append translated detailedExplanation/tips/comparisons to src/data/grammar-translations-ru.ts. Usage: node scripts/merge-grammar-ru.mjs <results.json>
 import fs from "node:fs";
-const data = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const data = Object.assign({}, ...process.argv.slice(2).map((f) => JSON.parse(fs.readFileSync(f, "utf8"))));
 const p = "src/data/grammar-translations-ru.ts";
 let s = fs.readFileSync(p, "utf8"), n = 0;
 for (const [id, g] of Object.entries(data)) {

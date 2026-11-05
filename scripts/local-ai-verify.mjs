@@ -1,6 +1,7 @@
 // Second-opinion pass over generated exercises with a (stronger) local model.
 // Usage: node scripts/local-ai-verify.mjs <model> <in.json> <out.json>   (writes kept exercises + prints drops)
 import fs from "node:fs";
+import { generate } from "./ollama.mjs";
 const [model, inp, out] = process.argv.slice(2);
 const data = JSON.parse(fs.readFileSync(inp, "utf8"));
 const { grammar } = await import("../src/data/grammar.ts");
@@ -8,8 +9,7 @@ const { grammar2 } = await import("../src/data/grammar2.ts");
 const title = Object.fromEntries([...grammar, ...grammar2].map((p) => [p.id, `${p.title} (${p.pattern})`]));
 const result = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, "utf8")) : {};
 async function ask(prompt) {
-  const r = await fetch("http://localhost:11434/api/generate", { method: "POST", body: JSON.stringify({ model, prompt, stream: false, think: false, format: "json", options: { temperature: 0 } }) });
-  try { return JSON.parse((await r.json()).response); } catch { return null; }
+  try { return JSON.parse((await generate({ model, prompt, stream: false, think: false, format: "json", options: { temperature: 0 } })).response); } catch { return null; }
 }
 let kept = 0, dropped = 0;
 for (const [id, list] of Object.entries(data)) {

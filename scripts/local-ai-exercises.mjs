@@ -1,6 +1,7 @@
 // Generate + validate + self-check extra grammar exercises with local Ollama.
 // Usage: node --no-warnings --experimental-strip-types scripts/local-ai-exercises.mjs <model> <out.json> [pointIds...]
 import fs from "node:fs";
+import { generate } from "./ollama.mjs";
 const [model, out, ...ids] = process.argv.slice(2);
 const { grammar } = await import("../src/data/grammar.ts");
 const { grammar2 } = await import("../src/data/grammar2.ts");
@@ -23,8 +24,7 @@ function valid(e) {
   return false;
 }
 async function ask(prompt) {
-  const r = await fetch("http://localhost:11434/api/generate", { method: "POST", body: JSON.stringify({ model, prompt, stream: false, think: false, format: "json", options: { temperature: 0.5 } }) });
-  try { return JSON.parse((await r.json()).response); } catch { return null; }
+  try { return JSON.parse((await generate({ model, prompt, stream: false, think: false, format: "json", options: { temperature: 0.5 } })).response); } catch { return null; }
 }
 const SHAPES = `mcq: {"type":"mcq","prompt":"<English question>","options":["..","..","..",".."],"answer":<0-3>,"difficulty":<1-3>}
 fill: {"type":"fill","sentence":"他___水。","answer":"喝","distractors":["..","..",".."],"difficulty":<1-3>}   (exactly one ___ blank)

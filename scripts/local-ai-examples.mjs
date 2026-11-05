@@ -1,6 +1,7 @@
 // Example sentences (zh + pinyin + en + ru) for STEM/Special words via local Ollama; pinyin comes from pinyin-pro, not the model.
 // Usage: node --no-warnings --experimental-strip-types scripts/local-ai-examples.mjs <model> <out.json> [limit]
 import fs from "node:fs";
+import { generate } from "./ollama.mjs";
 import { createRequire } from "node:module";
 const { pinyin } = createRequire(import.meta.url)("pinyin-pro");
 const [model, out, limitArg] = process.argv.slice(2);
@@ -12,15 +13,17 @@ const seen = new Set();
 const targets = [...allAcademicWords.filter((w) => !w.id.startsWith("cl")), ...chemLabCategories.flatMap((c) => c.words)]
   .filter((w) => !have.has(w.hanzi) && !seen.has(w.hanzi) && seen.add(w.hanzi))
   .slice(0, limitArg ? +limitArg : undefined);
+const [SI, SN] = (process.env.SHARD ?? "0/1").split("/").map(Number); // SHARD=i/n splits the work over n workers
+const skip = process.env.SKIP && fs.existsSync(process.env.SKIP) ? JSON.parse(fs.readFileSync(process.env.SKIP, "utf8")) : {};
 const result = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, "utf8")) : {};
 const seg = new Intl.Segmenter("zh", { granularity: "word" });
 const py = (zh) => [...seg.segment(zh)].map((s) => pinyin(s.segment, { toneType: "symbol", type: "array" }).join("")).join(" ").replace(/\s*，\s*/g, ", ").replace(/\s*、\s*/g, ", ").replace(/\s*。/g, ".").replace(/\s*？/g, "?").replace(/\s*！/g, "!").replace(/^./, (c) => c.toUpperCase());
 async function ask(prompt, t = 0.4) {
-  const r = await fetch("http://localhost:11434/api/generate", { method: "POST", body: JSON.stringify({ model, prompt, stream: false, think: false, format: "json", options: { temperature: t } }) });
-  try { return JSON.parse((await r.json()).response); } catch { return null; }
+  try { return JSON.parse((await generate({ model, prompt, stream: false, think: false, format: "json", options: { temperature: t } })).response); } catch { return null; }
 }
-console.log(`${targets.length} target words, ${Object.keys(result).length} done`);
-for (const w of targets) {
+const mine = targets.filter((w, i) => i % SN === SI && !skip[w.hanzi]);
+console.log(`${mine.length} of ${targets.length} target words, ${Object.keys(result).length} done`);
+for (const w of mine) {
   if (result[w.hanzi]) continue;
   const meaning = w.english;
   let done = false;
@@ -40,4 +43,4 @@ Is the Chinese grammatical and natural, does it use the word with that meaning, 
     done = true;
   }
 }
-console.log(`finished: ${Object.keys(result).length}/${targets.length}`);
+console.log(`finished: ${Object.keys(result).length}/${mine.length}`);
