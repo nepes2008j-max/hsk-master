@@ -96,6 +96,7 @@ export default function CardsPage() {
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
   const [showRating, setShowRating] = useState(true);
+  const [deckStats, setDeckStats] = useState<Record<string, { due: number; total: number; learned: number }>>({});
   const [showSettings, setShowSettings] = useState(false);
   const toggleSettings = () => {
     const next = !showSettings;
@@ -167,6 +168,25 @@ export default function CardsPage() {
       .filter((c) => c.type === "hanzi-meaning" && (!openDeck || inDeck(c, openDeck)) && norm(`${c.hanzi ?? c.front} ${c.pinyin ?? ""} ${c.english ?? c.back}`).includes(q))
       .slice(0, 60);
   }, [deckSearch, openDeck, allCards]);
+
+  const refreshStats = useCallback(async () => {
+    const states = new Map((await getAllSRSStates()).map((s) => [s.cardId, s]));
+    const hidden = getHidden();
+    const out: Record<string, { due: number; total: number; learned: number }> = {};
+    for (const c of HSK_CARDS) {
+      if (hidden.has(c.id)) continue;
+      const st = states.get(c.id);
+      for (const d of [c.deck, c.sub]) {
+        if (!d) continue;
+        const o = (out[d] ??= { due: 0, total: 0, learned: 0 });
+        o.total++;
+        if (!st || isDue(st)) o.due++;
+        if (st && st.reps >= 3) o.learned++;
+      }
+    }
+    setDeckStats(out);
+  }, []);
+  useEffect(() => { if (tab === "decks") refreshStats(); }, [tab, refreshStats]);
 
   const loadCards = useCallback(async () => {
     const hskCards = HSK_CARDS;
@@ -872,7 +892,7 @@ export default function CardsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="text-[15px] font-semibold text-ink">{deckName === "STEM" ? "STEM / CSCA" : deckName}</div>
                     <div className="text-[13px] text-ink-tertiary">
-                      {total} {t.cardsPage.cardsDue} &middot; {t.cardsPage.builtIn}
+                      {deckStats[deckName] ? deckStats[deckName].due : total} {t.cardsPage.dueWord} &middot; {deckStats[deckName]?.total ?? total} {t.cardsPage.cardsWord} &middot; {deckStats[deckName]?.learned ?? 0} {t.cardsPage.learnedWord}
                       {hidden > 0 && <span className="ml-1 text-warning">({hidden} {t.cardsPage.hiddenCount})</span>}
                     </div>
                   </div>
