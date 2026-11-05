@@ -96,6 +96,13 @@ export default function CardsPage() {
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
   const [showRating, setShowRating] = useState(true);
+  const [orderMode, setOrderMode] = useState<"auto" | "random" | "ordered">(() => {
+    try { const v = localStorage.getItem("hsk-order"); return v === "random" || v === "ordered" ? v : "auto"; } catch { return "auto"; }
+  });
+  const changeOrder = (m: "auto" | "random" | "ordered") => {
+    setOrderMode(m);
+    try { localStorage.setItem("hsk-order", m); } catch { /* noop */ }
+  };
   const [deckSearch, setDeckSearch] = useState("");
   const poolRef = useRef<FlashCard[]>([]);
   const orderRef = useRef<(l: FlashCard[]) => FlashCard[]>((l) => l);
@@ -193,7 +200,8 @@ export default function CardsPage() {
     });
 
     // Special deck and its sub-decks keep lesson order (except Quiz, which is always random); everything else is shuffled.
-    const ordered = (reviewDeck === "Special" || SPECIAL_SUBS.includes(reviewDeck as never)) && reviewMode !== "mcq";
+    // Order: "auto" = Special decks in lesson order (Quiz random), others shuffled; or the user forces random / in order.
+    const ordered = orderMode === "ordered" || (orderMode === "auto" && (reviewDeck === "Special" || SPECIAL_SUBS.includes(reviewDeck as never)) && reviewMode !== "mcq");
     const shuffled = ordered ? due : due.sort(() => Math.random() - 0.5);
     poolRef.current = reviewable; // used by the endless (∞) mode to keep cycling
     orderRef.current = (l) => (ordered ? [...l] : [...l].sort(() => Math.random() - 0.5));
@@ -204,7 +212,7 @@ export default function CardsPage() {
     setWritingInput("");
     setWritingResult(null);
     setMcqSelected(null);
-  }, [reviewDeck, reviewMode, cardLimit]);
+  }, [reviewDeck, reviewMode, cardLimit, orderMode]);
 
   useEffect(() => {
     loadCards();
@@ -521,7 +529,7 @@ export default function CardsPage() {
             {/* Card count */}
             <div className="flex items-center gap-2">
               <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold">{t.cardsPage.cardCount}</div>
-              {[10, 20, 50, 0].map((n) => (
+              {[10, 20, 50, -1, 0].map((n) => (
                 <button
                   key={n}
                   onClick={() => changeCardLimit(n)}
@@ -529,17 +537,25 @@ export default function CardsPage() {
                     cardLimit === n ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
-                  {n === 0 ? t.cardsPage.infinite : n}
+                  {n === 0 ? t.cardsPage.infinite : n === -1 ? t.cardsPage.allOnce : n}
                 </button>
               ))}
-              <button
-                onClick={toggleRating}
-                className={`ml-auto rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
-                  showRating ? "bg-primary-light text-primary-text" : "bg-bg-sunken text-ink-tertiary"
-                }`}
-              >
-                {t.cardsPage.ratingButtons}: {showRating ? "✓" : "✗"}
-              </button>
+            </div>
+
+            {/* Order */}
+            <div className="flex items-center gap-2">
+              <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold">{t.cardsPage.order}</div>
+              {([["auto", t.cardsPage.orderAuto], ["random", t.cardsPage.orderRandom], ["ordered", t.cardsPage.orderInOrder]] as const).map(([m, label]) => (
+                <button
+                  key={m}
+                  onClick={() => changeOrder(m)}
+                  className={`rounded-lg px-2.5 py-1 text-[13px] font-medium transition-colors ${
+                    orderMode === m ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
 
             {/* Writing target toggle */}
@@ -589,9 +605,19 @@ export default function CardsPage() {
 
             {currentCard ? (
               <>
-                <div className="text-[13px] text-ink-tertiary text-center">
-                  {currentIdx + 1} / {dueCards.length} {t.cardsPage.cardsDue}
-                  {reviewDeck && <span className="ml-1">in {reviewDeck}</span>}
+                <div className="flex items-center justify-between gap-2 text-[13px] text-ink-tertiary">
+                  <span className="min-w-0 truncate">
+                    {currentIdx + 1} / {dueCards.length} {t.cardsPage.cardsDue}
+                    {reviewDeck && <span className="ml-1">in {reviewDeck}</span>}
+                  </span>
+                  <button
+                    onClick={toggleRating}
+                    className={`shrink-0 whitespace-nowrap rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
+                      showRating ? "bg-primary-light text-primary-text" : "bg-bg-sunken text-ink-tertiary"
+                    }`}
+                  >
+                    {t.cardsPage.ratingButtons} {showRating ? "✓" : "✗"}
+                  </button>
                 </div>
 
                 <div
