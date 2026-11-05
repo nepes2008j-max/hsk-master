@@ -35,6 +35,7 @@ interface FlashCard {
   deck: string;
   sub?: string;
   cat?: string;
+  group?: string;
   hanzi?: string;
   pinyin?: string;
   english?: string;
@@ -61,15 +62,17 @@ const SPECIAL_SUBS = ["Chemistry", "Math", "Trigonometry"] as const;
 const specialWords = (d: string) => (d === "Special" ? chemLabWords : chemLabWords.filter((w) => w.sub === d));
 const inDeck = (c: FlashCard, d: string) => c.deck === d || c.sub === d;
 
+const stemCats = _stemCats;
+const catName = new Map(chemLabCategories.map((c) => [c.id, c.nameEn]));
 const cardCache = new Map<MeaningLang, FlashCard[]>();
 function cardsFor(lang: MeaningLang): FlashCard[] {
   const hit = cardCache.get(lang);
   if (hit) return hit;
   const cards = [
-    ...vocabulary.flatMap((w) => mk(`hsk-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "HSK 1")),
-    ...vocabulary2.flatMap((w) => mk(`hsk2-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "HSK 2")),
-    ...allAcademicWords.filter((w) => !w.id.startsWith("cl")).flatMap((w) => mk(`stem-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "STEM")),
-    ...chemLabWords.flatMap((w) => mk(`chem-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english, w.ru), "Special", { sub: w.sub, cat: w.cat })),
+    ...vocabulary.flatMap((w) => mk(`hsk-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "HSK 1", { group: w.category })),
+    ...vocabulary2.flatMap((w) => mk(`hsk2-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "HSK 2", { group: w.category })),
+    ...stemCats.flatMap((c) => c.words.flatMap((w) => mk(`stem-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english), "STEM", { group: c.nameEn }))),
+    ...chemLabWords.flatMap((w) => mk(`chem-@-${w.id}`, w.hanzi, w.pinyin, meaningOf(lang, w.hanzi, w.english, w.ru), "Special", { sub: w.sub, cat: w.cat, group: catName.get(w.cat) })),
   ];
   cardCache.set(lang, cards);
   return cards;
@@ -101,6 +104,8 @@ export default function CardsPage() {
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
   const [showRating, setShowRating] = useState(true);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [confirmReset, setConfirmReset] = useState(false);
   const [meaningLang, setMeaningLang] = useState<MeaningLang>(() => {
     try { const v = localStorage.getItem("hsk-meaning-lang"); return v === "en" || v === "ru" || v === "tk" ? v : "default"; } catch { return "default"; }
   });
@@ -408,7 +413,8 @@ export default function CardsPage() {
 
   const toggleHidden = (id: string) => {
     const next = new Set(hiddenIds);
-    if (!next.delete(id)) next.add(id);
+    const ids = id.includes("-hm-") ? [id, id.replace("-hm-", "-mh-")] : [id]; // hide/show both directions of a word
+    if (next.has(id)) ids.forEach((x) => next.delete(x)); else ids.forEach((x) => next.add(x));
     setHiddenIds(next);
     saveHidden(next);
   };
@@ -592,6 +598,36 @@ export default function CardsPage() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
+
+  const isBuiltIn = (d: string | null) => d === "HSK 1" || d === "HSK 2" || d === "STEM" || d === "Special" || SPECIAL_SUBS.includes(d as never);
+  const deckGroups = useMemo(() => {
+    if (!openDeck || !isBuiltIn(openDeck)) return [] as [string, FlashCard[]][];
+    const map = new Map<string, FlashCard[]>();
+    for (const c of HSK_CARDS) {
+      if (c.type !== "hanzi-meaning" || !inDeck(c, openDeck)) continue;
+      const g = c.group ?? "—";
+      if (!map.has(g)) map.set(g, []);
+      map.get(g)!.push(c);
+    }
+    return [...map.entries()];
+  }, [openDeck, HSK_CARDS]);
+  useEffect(() => {
+    setConfirmReset(false);
+    setExpanded(new Set(deckGroups[0] ? [`${openDeck}|${deckGroups[0][0]}`] : []));
+  }, [openDeck]); // eslint-disable-line react-hooks/exhaustive-deps
+  const studyDeck = (opts: { order?: "random" | "ordered"; weak?: boolean }) => {
+    if (opts.order) changeOrder(opts.order);
+    setWeakOnly(!!opts.weak);
+    setReviewDeck(openDeck);
+    setTab("review");
+  };
+  const resetProgress = async () => {
+    if (!openDeck) return;
+    if (!confirmReset) { setConfirmReset(true); setTimeout(() => setConfirmReset(false), 4000); return; }
+    for (const c of HSK_CARDS) if (inDeck(c, openDeck)) await saveSRSState(newCardState(c.id));
+    setConfirmReset(false);
+    refreshStats();
+  };
 
   const deckCards = openDeck ? userCards.filter((c) => c.deck === openDeck) : [];
 
@@ -984,17 +1020,28 @@ export default function CardsPage() {
 
         {/* ── Decks ── */}
         {tab === "decks" && (
-          <input
-            value={deckSearch}
-            aria-label={t.cardsPage.searchPlaceholder}
-            onChange={(e) => setDeckSearch(e.target.value)}
-            placeholder={t.cardsPage.searchPlaceholder}
-            className="w-full mb-3 rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-secondary focus:outline-none focus:border-primary"
-          />
+          <div className="relative mb-3">
+            <input
+              value={deckSearch}
+              aria-label={t.cardsPage.searchPlaceholder}
+              onChange={(e) => setDeckSearch(e.target.value)}
+              placeholder={t.cardsPage.searchPlaceholder}
+              className="w-full rounded-xl border border-border bg-white pl-4 pr-11 py-3 text-[14px] text-ink placeholder:text-ink-secondary focus:outline-none focus:border-primary"
+            />
+            {deckSearch && (
+              <button
+                onClick={() => setDeckSearch("")}
+                aria-label="Clear search"
+                className="absolute right-1 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-ink-secondary hover:text-ink"
+              >
+                <IconX className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         )}
         {tab === "decks" && deckSearch.trim() && (
           <div className="space-y-1.5">
-            <div className="text-[12px] text-ink-secondary">{searchHits.length >= 60 ? "60+" : searchHits.length}{openDeck ? ` · ${openDeck}` : ""}</div>
+            <div className="text-[12px] text-ink-secondary">{searchHits.length >= 60 ? "60+" : searchHits.length} {t.cardsPage.results}{openDeck ? ` · ${openDeck}` : ""}</div>
             {searchHits.length === 0 && <div className="text-center py-8 text-[13px] text-ink-secondary">{t.cardsPage.noResults}</div>}
             {searchHits.map((c) => {
               const hid = hiddenIds.has(c.id);
@@ -1029,7 +1076,7 @@ export default function CardsPage() {
                 <button
                   key={deckName}
                   onClick={() => setOpenDeck(deckName)}
-                  className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors"
+                  className={`flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-4 text-left hover:border-border-strong transition-colors ${SPECIAL_SUBS.includes(deckName as never) ? "ml-6 w-[calc(100%-1.5rem)]" : "w-full"}`}
                 >
                   <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${deckName !== "HSK 1" && deckName !== "HSK 2" ? "bg-blue-light" : "bg-primary-light"}`}>
                     <IconCards className={`w-5.5 h-5.5 ${deckName !== "HSK 1" && deckName !== "HSK 2" ? "text-blue" : "text-primary"}`} />
@@ -1039,6 +1086,9 @@ export default function CardsPage() {
                     <div className="text-[13px] text-ink-secondary">
                       {deckStats[deckName] ? deckStats[deckName].due : total} {t.cardsPage.dueWord} &middot; {deckStats[deckName]?.total ?? total} {t.cardsPage.cardsWord} &middot; {deckStats[deckName]?.learned ?? 0} {t.cardsPage.learnedWord}
                       {hidden > 0 && <span className="ml-1 text-warning">({hidden} {t.cardsPage.hiddenCount})</span>}
+                    </div>
+                    <div className="mt-2 h-1.5 rounded-full bg-bg-sunken overflow-hidden">
+                      <div className="h-full bg-primary rounded-full" style={{ width: `${Math.round(((deckStats[deckName]?.learned ?? 0) / (deckStats[deckName]?.total ?? total)) * 100)}%` }} />
                     </div>
                   </div>
                   <IconChevron direction="right" className="w-4 h-4 text-ink-secondary" />
@@ -1115,6 +1165,17 @@ export default function CardsPage() {
               </button>
             </div>
 
+            {isBuiltIn(openDeck) && (
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={() => studyDeck({ order: "ordered" })} className="rounded-xl border border-border bg-bg-raised px-3 py-3 text-[13px] font-medium text-ink hover:border-primary/50 transition-colors">{t.cardsPage.orderInOrder}</button>
+                <button onClick={() => studyDeck({ order: "random" })} className="rounded-xl border border-border bg-bg-raised px-3 py-3 text-[13px] font-medium text-ink hover:border-primary/50 transition-colors">{t.cardsPage.orderRandom}</button>
+                <button onClick={() => studyDeck({ weak: true })} className="rounded-xl border border-border bg-bg-raised px-3 py-3 text-[13px] font-medium text-ink hover:border-primary/50 transition-colors">{t.cardsPage.weakOnly}</button>
+                <button onClick={resetProgress} className={`rounded-xl border px-3 py-3 text-[13px] font-medium transition-colors ${confirmReset ? "border-warning bg-warning-light text-warning-text" : "border-border bg-bg-raised text-ink-secondary hover:text-ink"}`}>
+                  {confirmReset ? t.cardsPage.tapAgain : t.cardsPage.resetProgress}
+                </button>
+              </div>
+            )}
+
             {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" || openDeck === "Special" || SPECIAL_SUBS.includes(openDeck as never) ? (
               <div className="space-y-3">
                 <div className="text-[13px] text-ink-secondary rounded-xl bg-bg-sunken p-4">
@@ -1126,24 +1187,52 @@ export default function CardsPage() {
                     ? `${openDeck} — ${specialWords(openDeck).length * 2} flashcards, a part of the Special deck.`
                     : `Built-in ${openDeck} deck with ${openDeck === "HSK 1" ? vocabulary.length * 2 : vocabulary2.length * 2} flashcards — hanzi-to-meaning and meaning-to-hanzi for all ${openDeck === "HSK 1" ? 300 : 197} words.`}
                 </div>
-                {(openDeck === "Special" || SPECIAL_SUBS.includes(openDeck as never)) && (
-                  <div className="space-y-4">
-                    {chemLabCategories.filter((c) => openDeck === "Special" || c.sub === openDeck).map((c) => (
-                      <div key={c.id} className="space-y-1.5">
-                        <div className="text-[12px] font-semibold uppercase tracking-wide text-ink-secondary pt-1">{c.nameEn}</div>
-                        {c.words.map((w) => (
-                          <div key={w.id} className="flex items-center gap-4 rounded-xl bg-bg-raised border border-border p-3.5">
-                            <div className="text-2xl font-bold text-ink w-28 shrink-0">{w.hanzi}</div>
-                            <div className="min-w-0">
-                              <div className="text-[14px] text-primary">{w.pinyin}</div>
-                              <div className="text-[13px] text-ink-secondary">{w.ru ?? w.english}</div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setExpanded(expanded.size >= deckGroups.length ? new Set() : new Set(deckGroups.map(([g]) => `${openDeck}|${g}`)))}
+                    className="text-[13px] font-medium text-primary hover:underline py-2"
+                  >
+                    {expanded.size >= deckGroups.length ? t.cardsPage.collapseAll : t.cardsPage.expandAll}
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {deckGroups.map(([g, cards]) => {
+                    const key = `${openDeck}|${g}`;
+                    const open = expanded.has(key);
+                    const hid = cards.filter((c) => hiddenIds.has(c.id)).length;
+                    return (
+                      <div key={key} className="space-y-1.5">
+                        <button
+                          onClick={() => setExpanded((prev) => { const n = new Set(prev); if (!n.delete(key)) n.add(key); return n; })}
+                          aria-expanded={open}
+                          className="w-full flex items-center gap-2 rounded-xl bg-bg-sunken px-4 py-3 text-left min-h-[44px]"
+                        >
+                          <span className="flex-1 min-w-0 truncate text-[13px] font-semibold text-ink capitalize">{g.replace(/-/g, " ")}</span>
+                          <span className="text-[12px] text-ink-secondary">{cards.length}{hid > 0 ? ` · ${hid} ${t.cardsPage.hiddenCount}` : ""}</span>
+                          <IconChevron direction={open ? "up" : "down"} className="w-4 h-4 text-ink-secondary" />
+                        </button>
+                        {open && cards.map((c) => {
+                          const isHid = hiddenIds.has(c.id);
+                          return (
+                            <div key={c.id} className={`flex items-center gap-3 rounded-xl bg-bg-raised border border-border p-3 ${isHid ? "opacity-50" : ""}`}>
+                              <div className="text-2xl font-bold text-ink w-24 shrink-0 break-all">{c.hanzi}</div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[14px] text-primary">{c.pinyin}</div>
+                                <div className="text-[13px] text-ink-secondary">{c.english}</div>
+                              </div>
+                              <button
+                                onClick={() => toggleHidden(c.id)}
+                                className="shrink-0 rounded-lg border border-border px-3 py-2.5 text-[12px] font-medium text-ink-secondary hover:text-ink transition-colors"
+                              >
+                                {isHid ? t.cardsPage.unhide : t.cardsPage.hideCard}
+                              </button>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    );
+                  })}
+                </div>
                 {hiddenCountForDeck(openDeck) > 0 && (
                   <div className="flex items-center justify-between rounded-xl border border-warning/20 bg-warning-light/50 p-3">
                     <span className="text-[13px] text-warning-text">
