@@ -608,7 +608,7 @@ export default function CardsPage() {
               className={`flex-1 rounded-lg px-3 py-2 text-[14px] font-medium transition-colors ${
                 tab === t.key
                   ? "bg-bg-raised text-ink shadow-sm"
-                  : "text-ink-tertiary hover:text-ink-secondary"
+                  : "text-ink-secondary hover:text-ink-secondary"
               }`}
             >
               {t.label}
@@ -625,23 +625,23 @@ export default function CardsPage() {
               className="w-full flex items-center gap-2 rounded-xl border border-border bg-bg-raised px-4 py-2.5 text-left min-h-[44px]"
               aria-expanded={showSettings}
             >
-              <IconCog className="w-4 h-4 text-ink-tertiary shrink-0" />
+              <IconCog className="w-4 h-4 text-ink-secondary shrink-0" />
               <span className="flex-1 min-w-0 truncate text-[13px] font-medium text-ink">
                 {modes.find((m) => m.key === reviewMode)?.label} · {cardLimit === 0 ? t.cardsPage.infinite : cardLimit === -1 ? t.cardsPage.allOnce : cardLimit} · {orderMode === "auto" ? t.cardsPage.orderAuto : orderMode === "random" ? t.cardsPage.orderRandom : t.cardsPage.orderInOrder} · {reviewDeck ?? t.cardsPage.allDecks}
               </span>
-              <span className="text-ink-tertiary text-[12px]">{showSettings ? "▴" : "▾"}</span>
+              <span className="text-ink-secondary text-[12px]">{showSettings ? "▴" : "▾"}</span>
             </button>
             {showSettings && (
               <div className="space-y-4">
             {/* Mode selector */}
             <div>
-              <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold mb-1.5">{t.cardsPage.mode}</div>
+              <div className="text-[11px] text-ink-secondary uppercase tracking-wide font-semibold mb-1.5">{t.cardsPage.mode}</div>
               <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
                 {modes.map((m) => (
                   <button
                     key={m.key}
                     onClick={() => changeMode(m.key)}
-                    className={`shrink-0 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                    className={`shrink-0 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors ${
                       reviewMode === m.key ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                     }`}
                   >
@@ -649,17 +649,17 @@ export default function CardsPage() {
                   </button>
                 ))}
               </div>
-              <div className="text-[12px] text-ink-tertiary mt-1.5">{t.cardsPage.modeDesc[reviewMode]}</div>
+              <div className="text-[12px] text-ink-secondary mt-1.5">{t.cardsPage.modeDesc[reviewMode]}</div>
             </div>
 
             {/* Card count */}
             <div className="flex items-center gap-2">
-              <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold">{t.cardsPage.cardCount}</div>
+              <div className="text-[11px] text-ink-secondary uppercase tracking-wide font-semibold">{t.cardsPage.cardCount}</div>
               {[10, 20, 50, -1, 0].map((n) => (
                 <button
                   key={n}
                   onClick={() => changeCardLimit(n)}
-                  className={`rounded-lg px-2.5 py-1 text-[13px] font-medium transition-colors ${
+                  className={`rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors ${
                     cardLimit === n ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
@@ -670,12 +670,12 @@ export default function CardsPage() {
 
             {/* Order */}
             <div className="flex items-center gap-2">
-              <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold">{t.cardsPage.order}</div>
+              <div className="text-[11px] text-ink-secondary uppercase tracking-wide font-semibold">{t.cardsPage.order}</div>
               {([["auto", t.cardsPage.orderAuto], ["random", t.cardsPage.orderRandom], ["ordered", t.cardsPage.orderInOrder]] as const).map(([m, label]) => (
                 <button
                   key={m}
                   onClick={() => changeOrder(m)}
-                  className={`rounded-lg px-2.5 py-1 text-[13px] font-medium transition-colors ${
+                  className={`rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors ${
                     orderMode === m ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
@@ -685,7 +685,7 @@ export default function CardsPage() {
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="text-[11px] text-ink-tertiary uppercase tracking-wide font-semibold">{t.cardsPage.meaningLang}</div>
+              <div className="text-[11px] text-ink-secondary uppercase tracking-wide font-semibold">{t.cardsPage.meaningLang}</div>
               {([["default", t.cardsPage.langDefault], ["en", "English"], ["ru", "Русский"], ["tk", "Türkmen"]] as const).map(([l, label]) => (
                 <button
                   key={l}
@@ -708,7 +708,7 @@ export default function CardsPage() {
               <div className="flex gap-1.5">
                 <button
                   onClick={() => setWritingTarget("pinyin")}
-                  className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                  className={`rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors ${
                     writingTarget === "pinyin" ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
@@ -716,7 +716,7 @@ export default function CardsPage() {
                 </button>
                 <button
                   onClick={() => setWritingTarget("hanzi")}
-                  className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                  className={`rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors ${
                     writingTarget === "hanzi" ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
@@ -729,7 +729,7 @@ export default function CardsPage() {
             <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
               <button
                 onClick={() => setReviewDeck(null)}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                className={`shrink-0 rounded-full px-3 py-2.5 text-[13px] font-medium transition-colors ${
                   !reviewDeck ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                 }`}
               >
@@ -740,7 +740,7 @@ export default function CardsPage() {
                   key={d}
                   ref={(el) => { if (el && reviewDeck === d) el.scrollIntoView({ inline: "center", block: "nearest" }); }}
                   onClick={() => setReviewDeck(d)}
-                  className={`shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                  className={`shrink-0 rounded-full px-3 py-2.5 text-[13px] font-medium transition-colors ${
                     reviewDeck === d ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
                   }`}
                 >
@@ -753,20 +753,21 @@ export default function CardsPage() {
 
             {currentCard ? (
               <>
-                <div className="flex items-center justify-between gap-2 text-[13px] text-ink-tertiary">
+                <div className="flex items-center justify-between gap-2 text-[13px] text-ink-secondary">
                   <span className="min-w-0 truncate">
                     {currentIdx + 1} / {dueCards.length} {t.cardsPage.cardsDue}
                     {reviewDeck && <span className="ml-1">in {reviewDeck}</span>}
                   </span>
                   {canUndo && (
-                    <button onClick={handleUndo} className="shrink-0 whitespace-nowrap rounded-lg bg-bg-sunken px-2.5 py-1 text-[12px] font-medium text-ink-secondary hover:text-ink">
+                    <button onClick={handleUndo} className="shrink-0 whitespace-nowrap rounded-lg bg-bg-sunken px-3 py-2.5 text-[12px] font-medium text-ink-secondary hover:text-ink">
                       ↶ {t.cardsPage.undo}
                     </button>
                   )}
                   <button
                     onClick={toggleRating}
-                    className={`shrink-0 whitespace-nowrap rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
-                      showRating ? "bg-primary-light text-primary-text" : "bg-bg-sunken text-ink-tertiary"
+                    aria-pressed={showRating}
+                    className={`shrink-0 whitespace-nowrap rounded-lg px-3 py-2.5 text-[12px] font-medium transition-colors ${
+                      showRating ? "bg-primary-light text-primary-text" : "bg-bg-sunken text-ink-secondary"
                     }`}
                   >
                     {t.cardsPage.ratingButtons} {showRating ? "✓" : "✗"}
@@ -791,7 +792,7 @@ export default function CardsPage() {
                   )}
                   {reviewMode === "writing" ? (
                     <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-6 flex flex-col items-center justify-center gap-3">
-                      <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                      <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                       {writingTarget === "pinyin" ? (
                         <div className="text-3xl font-bold text-ink">{currentCard.hanzi}</div>
                       ) : (
@@ -808,7 +809,7 @@ export default function CardsPage() {
                             onChange={(e) => setWritingInput(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && handleWritingCheck()}
                             placeholder={writingTarget === "pinyin" ? t.cardsPage.typePinyin : t.cardsPage.typeHanzi}
-                            className="flex-1 rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-ink text-center placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+                            className="flex-1 rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-ink text-center placeholder:text-ink-secondary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                             autoFocus
                           />
                           <button
@@ -829,7 +830,7 @@ export default function CardsPage() {
                               {t.cardsPage.expected}: <span className="font-bold text-ink">{writingTarget === "pinyin" ? currentCard.pinyin : currentCard.hanzi}</span>
                             </div>
                           )}
-                          <div className="text-[13px] text-ink-tertiary mt-1">
+                          <div className="text-[13px] text-ink-secondary mt-1">
                             {currentCard.hanzi} · {currentCard.pinyin} · {currentCard.english}
                           </div>
                         </div>
@@ -837,9 +838,9 @@ export default function CardsPage() {
                     </div>
                   ) : reviewMode === "mcq" ? (
                     <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-6 flex flex-col items-center justify-center gap-4">
-                      <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                      <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                       <button type="button" onClick={() => setMcqShowPinyin(true)} className="text-3xl font-bold text-ink cursor-pointer">{currentCard.hanzi}</button>
-                      <div className="text-[13px] text-ink-tertiary min-h-[20px]">
+                      <div className="text-[13px] text-ink-secondary min-h-[20px]">
                         {mcqShowPinyin || mcqSelected ? currentCard.pinyin : t.cardsPage.tapPinyin}
                       </div>
                       <div className="w-full max-w-xs grid grid-cols-1 gap-2 mt-2">
@@ -858,7 +859,7 @@ export default function CardsPage() {
                                     ? "border-green-500 bg-green-50 text-green-700"
                                     : isSelected
                                     ? "border-warning bg-warning-light text-warning-text"
-                                    : "border-border bg-bg-raised text-ink-tertiary"
+                                    : "border-border bg-bg-raised text-ink-secondary"
                                   : "border-border bg-white text-ink hover:border-primary/50"
                               }`}
                             >
@@ -871,20 +872,20 @@ export default function CardsPage() {
                   ) : reviewMode === "three-way" ? (
                     <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:shadow-lg active:scale-[0.98] transition-all">
                       {isRevealed ? renderCardBack() : renderCardFront()}
-                      {!isRevealed && <div className="text-[13px] text-ink-tertiary">{showHint}</div>}
-                      <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                      {!isRevealed && <div className="text-[13px] text-ink-secondary">{showHint}</div>}
+                      <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                     </div>
                   ) : (
                     <div className="card-perspective">
                       <div className={`card-inner w-full h-[220px] rounded-2xl border-2 border-border cursor-pointer hover:border-primary/50 hover:shadow-lg ${flipped ? "flipped" : ""}`}>
                         <div className="card-face w-full h-full rounded-2xl bg-bg-raised p-8 flex flex-col items-center justify-center gap-4">
                           {renderCardFront()}
-                          <div className="text-[13px] text-ink-tertiary">{showHint}</div>
-                          <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                          <div className="text-[13px] text-ink-secondary">{showHint}</div>
+                          <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                         </div>
                         <div className="card-face card-back w-full h-full rounded-2xl bg-bg-raised p-8 flex flex-col items-center justify-center gap-4">
                           {renderCardBack()}
-                          <div className="text-[11px] text-ink-tertiary/60">{currentCard.deck}</div>
+                          <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                         </div>
                       </div>
                     </div>
@@ -938,7 +939,7 @@ export default function CardsPage() {
                     )}
                     <button
                       onClick={handleHide}
-                      className="w-full rounded-xl border border-border py-2 text-[13px] font-medium text-ink-tertiary hover:text-warning hover:border-warning/30 transition-colors"
+                      className="w-full rounded-xl border border-border py-3 text-[13px] font-medium text-ink-secondary hover:text-warning hover:border-warning/30 transition-colors"
                     >
                       {t.cardsPage.hideCard}
                     </button>
@@ -951,7 +952,7 @@ export default function CardsPage() {
                   <IconStar className="w-7 h-7 text-primary" />
                 </div>
                 <div className="text-[15px] font-semibold text-ink">{t.cardsPage.allCaughtUp}</div>
-                <div className="text-[13px] text-ink-tertiary mt-1">{t.cardsPage.noCards}</div>
+                <div className="text-[13px] text-ink-secondary mt-1">{t.cardsPage.noCards}</div>
                 {session[1] + session[3] + session[4] + session[5] > 0 && (
                   <div className="mt-3 text-[13px] text-ink-secondary">
                     {t.cardsPage.reviewed} {session[1] + session[3] + session[4] + session[5]} · {t.cardsPage.again} {session[1]} · {t.cardsPage.hard} {session[3]} · {t.cardsPage.good} {session[4]} · {t.cardsPage.easy} {session[5]}
@@ -985,15 +986,16 @@ export default function CardsPage() {
         {tab === "decks" && (
           <input
             value={deckSearch}
+            aria-label={t.cardsPage.searchPlaceholder}
             onChange={(e) => setDeckSearch(e.target.value)}
             placeholder={t.cardsPage.searchPlaceholder}
-            className="w-full mb-3 rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary"
+            className="w-full mb-3 rounded-xl border border-border bg-white px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-secondary focus:outline-none focus:border-primary"
           />
         )}
         {tab === "decks" && deckSearch.trim() && (
           <div className="space-y-1.5">
-            <div className="text-[12px] text-ink-tertiary">{searchHits.length >= 60 ? "60+" : searchHits.length}{openDeck ? ` · ${openDeck}` : ""}</div>
-            {searchHits.length === 0 && <div className="text-center py-8 text-[13px] text-ink-tertiary">{t.cardsPage.noResults}</div>}
+            <div className="text-[12px] text-ink-secondary">{searchHits.length >= 60 ? "60+" : searchHits.length}{openDeck ? ` · ${openDeck}` : ""}</div>
+            {searchHits.length === 0 && <div className="text-center py-8 text-[13px] text-ink-secondary">{t.cardsPage.noResults}</div>}
             {searchHits.map((c) => {
               const hid = hiddenIds.has(c.id);
               return (
@@ -1002,11 +1004,11 @@ export default function CardsPage() {
                   <div className="flex-1 min-w-0">
                     {c.pinyin && <div className="text-[13px] text-primary">{c.pinyin}</div>}
                     <div className="text-[13px] text-ink-secondary">{c.english ?? c.back}</div>
-                    <div className="text-[11px] text-ink-tertiary/60">{c.deck}</div>
+                    <div className="text-[11px] text-ink-secondary">{c.deck}</div>
                   </div>
                   <button
                     onClick={() => toggleHidden(c.id)}
-                    className="shrink-0 rounded-lg border border-border px-2.5 py-1 text-[12px] font-medium text-ink-secondary hover:text-ink transition-colors"
+                    className="shrink-0 rounded-lg border border-border px-3 py-2.5 text-[12px] font-medium text-ink-secondary hover:text-ink transition-colors"
                   >
                     {hid ? t.cardsPage.unhide : t.cardsPage.hideCard}
                   </button>
@@ -1034,12 +1036,12 @@ export default function CardsPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[15px] font-semibold text-ink">{deckName === "STEM" ? "STEM / CSCA" : deckName}</div>
-                    <div className="text-[13px] text-ink-tertiary">
+                    <div className="text-[13px] text-ink-secondary">
                       {deckStats[deckName] ? deckStats[deckName].due : total} {t.cardsPage.dueWord} &middot; {deckStats[deckName]?.total ?? total} {t.cardsPage.cardsWord} &middot; {deckStats[deckName]?.learned ?? 0} {t.cardsPage.learnedWord}
                       {hidden > 0 && <span className="ml-1 text-warning">({hidden} {t.cardsPage.hiddenCount})</span>}
                     </div>
                   </div>
-                  <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
+                  <IconChevron direction="right" className="w-4 h-4 text-ink-secondary" />
                 </button>
               );
             })}
@@ -1058,16 +1060,16 @@ export default function CardsPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-[15px] font-semibold text-ink">{deck}</div>
-                    <div className="text-[13px] text-ink-tertiary">{count} card{count !== 1 ? "s" : ""}</div>
+                    <div className="text-[13px] text-ink-secondary">{count} card{count !== 1 ? "s" : ""}</div>
                   </div>
-                  <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary" />
+                  <IconChevron direction="right" className="w-4 h-4 text-ink-secondary" />
                 </button>
               );
             })}
 
             {userDecks.length === 0 && (
               <div className="text-center py-10">
-                <div className="text-[13px] text-ink-tertiary">{t.cardsPage.noCustomDecks}</div>
+                <div className="text-[13px] text-ink-secondary">{t.cardsPage.noCustomDecks}</div>
                 <button
                   onClick={() => setTab("create")}
                   className="mt-3 rounded-xl bg-primary hover:bg-primary-hover text-white px-5 py-2.5 text-[14px] font-medium transition-colors"
@@ -1093,7 +1095,7 @@ export default function CardsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-lg font-bold text-ink">{openDeck === "STEM" ? "STEM / CSCA" : openDeck}</div>
-                <div className="text-[13px] text-ink-tertiary">
+                <div className="text-[13px] text-ink-secondary">
                   {openDeck === "HSK 1"
                     ? `${vocabulary.length * 2} cards`
                     : openDeck === "HSK 2"
@@ -1115,7 +1117,7 @@ export default function CardsPage() {
 
             {openDeck === "HSK 1" || openDeck === "HSK 2" || openDeck === "STEM" || openDeck === "Special" || SPECIAL_SUBS.includes(openDeck as never) ? (
               <div className="space-y-3">
-                <div className="text-[13px] text-ink-tertiary rounded-xl bg-bg-sunken p-4">
+                <div className="text-[13px] text-ink-secondary rounded-xl bg-bg-sunken p-4">
                   {openDeck === "STEM"
                     ? `Built-in STEM deck with ${allAcademicWords.filter((w) => !w.id.startsWith("cl")).length * 2} flashcards — math, science & CS vocabulary for CSCA preparation.`
                     : openDeck === "Special"
@@ -1128,7 +1130,7 @@ export default function CardsPage() {
                   <div className="space-y-4">
                     {chemLabCategories.filter((c) => openDeck === "Special" || c.sub === openDeck).map((c) => (
                       <div key={c.id} className="space-y-1.5">
-                        <div className="text-[12px] font-semibold uppercase tracking-wide text-ink-tertiary pt-1">{c.nameEn}</div>
+                        <div className="text-[12px] font-semibold uppercase tracking-wide text-ink-secondary pt-1">{c.nameEn}</div>
                         {c.words.map((w) => (
                           <div key={w.id} className="flex items-center gap-4 rounded-xl bg-bg-raised border border-border p-3.5">
                             <div className="text-2xl font-bold text-ink w-28 shrink-0">{w.hanzi}</div>
@@ -1167,14 +1169,14 @@ export default function CardsPage() {
                     </div>
                     <button
                       onClick={() => handleDeleteCard(card.id)}
-                      className="p-1.5 rounded-lg text-ink-tertiary hover:text-warning hover:bg-warning-light transition-colors shrink-0"
+                      className="p-1.5 rounded-lg text-ink-secondary hover:text-warning hover:bg-warning-light transition-colors shrink-0"
                     >
                       <IconX className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
                 {deckCards.length === 0 && (
-                  <div className="text-center py-8 text-[13px] text-ink-tertiary">
+                  <div className="text-center py-8 text-[13px] text-ink-secondary">
                     {t.cardsPage.deckEmpty}
                   </div>
                 )}
@@ -1196,7 +1198,7 @@ export default function CardsPage() {
                   <button
                     key={d}
                     onClick={() => { setNewDeck(d); setShowNewDeckInput(false); }}
-                    className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                    className={`rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors ${
                       newDeck === d && !showNewDeckInput
                         ? "bg-primary text-white"
                         : "bg-bg-sunken text-ink-secondary hover:text-ink"
@@ -1207,7 +1209,7 @@ export default function CardsPage() {
                 ))}
                 <button
                   onClick={() => { setShowNewDeckInput(true); setNewDeck(""); }}
-                  className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
+                  className={`rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors ${
                     showNewDeckInput
                       ? "bg-primary text-white"
                       : "bg-bg-sunken text-ink-secondary hover:text-ink"
@@ -1224,7 +1226,7 @@ export default function CardsPage() {
                     onChange={(e) => setNewDeckName(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleCreateDeck()}
                     placeholder={t.cardsPage.deckPlaceholder}
-                    className="flex-1 rounded-xl border border-border bg-bg-raised px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+                    className="flex-1 rounded-xl border border-border bg-bg-raised px-4 py-2.5 text-[14px] text-ink placeholder:text-ink-secondary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
                     autoFocus
                   />
                   <button
@@ -1238,12 +1240,12 @@ export default function CardsPage() {
               )}
 
               {!showNewDeckInput && !newDeck && userDecks.length === 0 && (
-                <div className="text-[12px] text-ink-tertiary">
+                <div className="text-[12px] text-ink-secondary">
                   {t.cardsPage.cardsWithoutDeck} &ldquo;{t.cardsPage.myCards}&rdquo;
                 </div>
               )}
               {newDeck && !showNewDeckInput && (
-                <div className="text-[12px] text-ink-tertiary">
+                <div className="text-[12px] text-ink-secondary">
                   Adding to <span className="font-medium text-ink-secondary">{newDeck}</span>
                 </div>
               )}
@@ -1258,19 +1260,19 @@ export default function CardsPage() {
                 value={newFront}
                 onChange={(e) => setNewFront(e.target.value)}
                 placeholder={t.cardsPage.front}
-                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-secondary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
               />
               <input
                 value={newPinyin}
                 onChange={(e) => setNewPinyin(e.target.value)}
                 placeholder={t.cardsPage.pinyin}
-                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-secondary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
               />
               <input
                 value={newBack}
                 onChange={(e) => setNewBack(e.target.value)}
                 placeholder={t.cardsPage.back}
-                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3 text-[14px] text-ink placeholder:text-ink-secondary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
               />
               <button
                 onClick={handleCreateCard}
