@@ -15,7 +15,7 @@ import {
   deleteUserCard,
   type UserCard,
 } from "@/lib/storage";
-import { newCardState, review, isDue } from "@/lib/srs";
+import { newCardState, review, isDue, type CardState } from "@/lib/srs";
 import { IconVolume, IconStar, IconX, IconCheck, IconCards, IconChevron, IconCog } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 import { useRef } from "react";
@@ -96,6 +96,9 @@ export default function CardsPage() {
   const [reviewDeck, setReviewDeck] = useState<string | null>(null);
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(getHidden);
   const [showRating, setShowRating] = useState(true);
+  const [curSrs, setCurSrs] = useState<CardState | undefined>(undefined);
+  const [canUndo, setCanUndo] = useState(false);
+  const undoRef = useRef<{ prev: CardState; queue: FlashCard[]; idx: number } | null>(null);
   const [deckStats, setDeckStats] = useState<Record<string, { due: number; total: number; learned: number }>>({});
   const [showSettings, setShowSettings] = useState(false);
   const toggleSettings = () => {
@@ -235,6 +238,8 @@ export default function CardsPage() {
     poolRef.current = reviewable; // used by the endless (∞) mode to keep cycling
     orderRef.current = (l) => (ordered ? [...l] : [...l].sort(() => Math.random() - 0.5));
     setDueCards(cardLimit > 0 ? shuffled.slice(0, cardLimit) : shuffled);
+    undoRef.current = null;
+    setCanUndo(false);
     setCurrentIdx(0);
     setFlipped(false);
     setFlipStage(0);
@@ -300,6 +305,8 @@ export default function CardsPage() {
   const handleRate = async (quality: number) => {
     if (!currentCard) return;
     const existing = (await getSRSState(currentCard.id)) ?? newCardState(currentCard.id);
+    undoRef.current = { prev: existing, queue: dueCards, idx: currentIdx };
+    setCanUndo(true);
     await saveSRSState(review(existing, quality));
 
     // Again / Hard come back later in this session (Again sooner than Hard).
@@ -333,6 +340,22 @@ export default function CardsPage() {
         setDueCards([]);
       }
     }, 300);
+  };
+
+  const handleUndo = async () => {
+    const u = undoRef.current;
+    if (!u) return;
+    await saveSRSState(u.prev);
+    setDueCards(u.queue);
+    setCurrentIdx(u.idx);
+    setCardKey((k) => k + 1);
+    setFlipped(false);
+    setFlipStage(0);
+    setWritingInput("");
+    setWritingResult(null);
+    setMcqSelected(null);
+    undoRef.current = null;
+    setCanUndo(false);
   };
 
   const handleHide = () => {
@@ -511,6 +534,38 @@ export default function CardsPage() {
     { key: "mcq", label: t.cardsPage.mcq },
   ];
 
+  // Load the current card's SRS state so the rating buttons can show the next interval.
+  useEffect(() => {
+    setCurSrs(undefined);
+    if (currentCard) getSRSState(currentCard.id).then(setCurSrs);
+  }, [currentCard]);
+  const intervalHint = (q: number) => {
+    if (!currentCard) return "";
+    const st = review(curSrs ?? newCardState(currentCard.id), q);
+    if (st.interval > 0) return `${st.interval}d`;
+    const m = Math.round((st.due - Date.now()) / 60000);
+    return m <= 0 ? "<1m" : `${m}m`;
+  };
+
+  // Keyboard: space/enter = show answer, 1-4 = rate (or pick a Quiz option)
+  useEffect(() => {
+    if (tab !== "review") return;
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement;
+      if (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || e.metaKey || e.ctrlKey || e.altKey || !currentCard) return;
+      const digit = /^[1-4]$/.test(e.key) ? Number(e.key) : 0;
+      if (reviewMode === "mcq" && !mcqSelected && digit) { const c = mcqChoices[digit - 1]; if (c) handleMcqSelect(c); return; }
+      if (!isRevealed) {
+        if ((e.key === " " || e.key === "Enter") && reviewMode !== "mcq" && reviewMode !== "writing") { e.preventDefault(); handleFlip(); }
+        return;
+      }
+      if (showRating && digit) handleRate([1, 3, 4, 5][digit - 1]);
+      else if (!showRating && (e.key === " " || e.key === "Enter")) { e.preventDefault(); handleRate(4); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
   const deckCards = openDeck ? userCards.filter((c) => c.deck === openDeck) : [];
 
   return (
@@ -567,6 +622,7 @@ export default function CardsPage() {
                   </button>
                 ))}
               </div>
+              <div className="text-[12px] text-ink-tertiary mt-1.5">{t.cardsPage.modeDesc[reviewMode]}</div>
             </div>
 
             {/* Card count */}
@@ -656,6 +712,11 @@ export default function CardsPage() {
                     {currentIdx + 1} / {dueCards.length} {t.cardsPage.cardsDue}
                     {reviewDeck && <span className="ml-1">in {reviewDeck}</span>}
                   </span>
+                  {canUndo && (
+                    <button onClick={handleUndo} className="shrink-0 whitespace-nowrap rounded-lg bg-bg-sunken px-2.5 py-1 text-[12px] font-medium text-ink-secondary hover:text-ink">
+                      ↶ {t.cardsPage.undo}
+                    </button>
+                  )}
                   <button
                     onClick={toggleRating}
                     className={`shrink-0 whitespace-nowrap rounded-lg px-2.5 py-1 text-[12px] font-medium transition-colors ${
@@ -774,6 +835,14 @@ export default function CardsPage() {
                   )}
                 </div>
 
+                {!isRevealed && reviewMode !== "mcq" && reviewMode !== "writing" && (
+                  <button
+                    onClick={handleFlip}
+                    className="w-full rounded-xl bg-primary hover:bg-primary-hover py-3 text-[14px] font-medium text-white transition-colors"
+                  >
+                    {showHint}
+                  </button>
+                )}
                 {isRevealed && (
                   <div className="space-y-2">
                     {showRating ? (
@@ -782,25 +851,25 @@ export default function CardsPage() {
                         onClick={() => handleRate(1)}
                         className="rounded-xl bg-warning-light py-2.5 text-[13px] font-medium text-warning-text transition-colors hover:bg-warning/10"
                       >
-                        {t.cardsPage.again}
+                        {t.cardsPage.again}<div className="text-[10px] opacity-70">{intervalHint(1)}</div>
                       </button>
                       <button
                         onClick={() => handleRate(3)}
                         className="rounded-xl bg-accent-light py-2.5 text-[13px] font-medium text-accent-text transition-colors hover:bg-accent/10"
                       >
-                        {t.cardsPage.hard}
+                        {t.cardsPage.hard}<div className="text-[10px] opacity-70">{intervalHint(3)}</div>
                       </button>
                       <button
                         onClick={() => handleRate(4)}
                         className="rounded-xl bg-primary-light py-2.5 text-[13px] font-medium text-primary-text transition-colors hover:bg-primary/10"
                       >
-                        {t.cardsPage.good}
+                        {t.cardsPage.good}<div className="text-[10px] opacity-70">{intervalHint(4)}</div>
                       </button>
                       <button
                         onClick={() => handleRate(5)}
                         className="rounded-xl bg-blue-light py-2.5 text-[13px] font-medium text-blue transition-colors hover:bg-blue/10"
                       >
-                        {t.cardsPage.easy}
+                        {t.cardsPage.easy}<div className="text-[10px] opacity-70">{intervalHint(5)}</div>
                       </button>
                     </div>
                     ) : (
@@ -833,6 +902,11 @@ export default function CardsPage() {
                 >
                   {t.cardsPage.refresh}
                 </button>
+                {canUndo && (
+                  <button onClick={handleUndo} className="mt-3 block mx-auto text-[13px] font-medium text-ink-secondary hover:text-ink">
+                    ↶ {t.cardsPage.undo}
+                  </button>
+                )}
               </div>
             )}
           </div>

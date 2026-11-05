@@ -27,6 +27,7 @@ export function review(state: CardState, quality: number): CardState {
     if (s.reps === 0) s.interval = 1;
     else if (s.reps === 1) s.interval = 3;
     else s.interval = Math.round(s.interval * s.ease);
+    if (quality === 5) s.interval = Math.max(s.interval + 1, Math.round(s.interval * 1.3)); // Easy beats Good
     s.reps++;
   }
   s.ease = Math.max(1.3, s.ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
