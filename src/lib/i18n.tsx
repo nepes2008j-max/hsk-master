@@ -81,7 +81,7 @@ const t = {
     dictPage: {
       title: "Dictionary",
       words: "words",
-      allTopics: "All topics", moreWords: "More words (CC-CEDICT)", loadingMore: "Loading more words…", offlineMore: "More words need an internet connection.", example: "Example", noExample: "No example yet", howToWrite: "How to write", inDecks: "In decks",
+      allTopics: "All topics", strokes: "strokes", moreWords: "More words (CC-CEDICT)", loadingMore: "Loading more words…", offlineMore: "More words need an internet connection.", example: "Example", noExample: "No example yet", howToWrite: "How to write", inDecks: "In decks",
       searchPlaceholder: "Search Chinese, pinyin, or English...",
     },
     cardsPage: {
@@ -427,7 +427,7 @@ const t = {
     dictPage: {
       title: "Словарь",
       words: "слов",
-      allTopics: "Все темы", moreWords: "Ещё слова (CC-CEDICT)", loadingMore: "Загрузка слов…", offlineMore: "Для дополнительных слов нужен интернет.", example: "Пример", noExample: "Примера пока нет", howToWrite: "Как писать", inDecks: "В колодах",
+      allTopics: "Все темы", strokes: "черт", moreWords: "Ещё слова (CC-CEDICT)", loadingMore: "Загрузка слов…", offlineMore: "Для дополнительных слов нужен интернет.", example: "Пример", noExample: "Примера пока нет", howToWrite: "Как писать", inDecks: "В колодах",
       searchPlaceholder: "Поиск по китайскому, пиньинь или русскому...",
     },
     cardsPage: {
@@ -773,7 +773,7 @@ const t = {
     dictPage: {
       title: "Sözlük",
       words: "söz",
-      allTopics: "Ähli mowzuklar", moreWords: "Köp söz (CC-CEDICT)", loadingMore: "Sözler ýüklenýär…", offlineMore: "Goşmaça sözler üçin internet gerek.", example: "Mysal", noExample: "Heniz mysal ýok", howToWrite: "Nähili ýazmaly", inDecks: "Toplumlarda",
+      allTopics: "Ähli mowzuklar", strokes: "çyzyk", moreWords: "Köp söz (CC-CEDICT)", loadingMore: "Sözler ýüklenýär…", offlineMore: "Goşmaça sözler üçin internet gerek.", example: "Mysal", noExample: "Heniz mysal ýok", howToWrite: "Nähili ýazmaly", inDecks: "Toplumlarda",
       searchPlaceholder: "Hytaýça, pinýin ýa-da türkmençe gözle...",
     },
     cardsPage: {

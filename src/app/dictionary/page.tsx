@@ -134,7 +134,7 @@ export default function DictionaryPage() {
                       {chars.length > 0 && (
                         <div>
                           <div className="text-[11px] uppercase tracking-wide font-semibold text-ink-secondary mb-1.5">{t.dictPage.howToWrite}</div>
-                          <div className="flex flex-wrap gap-3">
+                          <div className="flex flex-col gap-4">
                             {chars.map((c) => <StrokeChar key={c} ch={c} />)}
                           </div>
                         </div>
