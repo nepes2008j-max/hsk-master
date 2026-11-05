@@ -125,7 +125,7 @@ export default function DictionaryPage() {
                               <button onClick={() => speak(word.example!.hanzi)} aria-label="Play example" className="w-10 h-10 -mt-2 flex items-center justify-center rounded-lg text-ink-secondary hover:text-primary shrink-0"><IconVolume className="w-4 h-4" /></button>
                             </div>
                             <div className="text-[13px] text-primary">{word.example.pinyin}</div>
-                            <div className="text-[13px] text-ink-secondary">{exTr ?? word.example.english}</div>
+                            <div className="text-[13px] text-ink-secondary">{exTr ?? (lang === "ru" ? word.example.ru : undefined) ?? word.example.english}</div>
                           </div>
                         ) : (
                           <div className="text-[13px] text-ink-secondary">{t.dictPage.noExample}</div>

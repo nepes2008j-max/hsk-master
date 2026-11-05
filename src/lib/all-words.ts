@@ -2,6 +2,7 @@ import { dictionary } from "@/data/dictionary";
 import { vocabulary } from "@/data/vocabulary";
 import { vocabulary2 } from "@/data/vocabulary2";
 import { allAcademicWords, chemLabCategories } from "@/data/academic-vocab";
+import { examplesExtra } from "@/data/examples-extra";
 
 export interface DWord {
   hanzi: string;
@@ -11,7 +12,7 @@ export interface DWord {
   topic?: string;
   hsk?: number;
   decks: string[];
-  example?: { hanzi: string; pinyin: string; english: string };
+  example?: { hanzi: string; pinyin: string; english: string; ru?: string };
 }
 
 // One merged word list: the hand-written dictionary + every flashcard deck word (deduped by hanzi).
@@ -31,6 +32,7 @@ vocabulary2.forEach((w) => add(w, "HSK 2"));
 allAcademicWords.filter((w) => !w.id.startsWith("cl")).forEach((w) => add(w, "STEM"));
 chemLabCategories.forEach((c) => c.words.forEach((w) => add(w, "Special")));
 for (const e of map.values()) {
+  e.example ??= examplesExtra[e.hanzi];
   e.topic ??= e.decks.includes("Special") ? "special" : e.decks.includes("STEM") ? "stem" : "hsk";
 }
 export const allWords: DWord[] = [...map.values()];
