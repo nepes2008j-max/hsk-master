@@ -8,7 +8,8 @@ const { grammar2 } = await import("../src/data/grammar2.ts");
 const { grammarExercises } = await import("../src/data/grammar-exercises.ts");
 const { grammarExercises2 } = await import("../src/data/grammar-exercises2.ts");
 const TARGET = 10, TYPES = ["mcq", "fill", "translate", "reorder"], DIFF = [3, 3, 3, 2];
-const points = [...grammar, ...grammar2].filter((p) => !ids.length || ids.includes(String(p.id)));
+const [SI, SN] = (process.env.SHARD ?? "0/1").split("/").map(Number); // SHARD=i/n splits the points over n workers
+const points = [...grammar, ...grammar2].filter((p, i) => i % SN === SI && (!ids.length || ids.includes(String(p.id))));
 const existing = (id) => grammarExercises[id] ?? grammarExercises2[id] ?? [];
 const result = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, "utf8")) : {};
 const cjk = (s) => /[一-鿿]/.test(s);

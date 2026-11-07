@@ -1,0 +1,32 @@
+// Russian glosses for every dictionary/HSK/STEM word that has none yet (local Ollama). Output: { hanzi: "русский перевод" }
+// Usage: OLLAMA_URL=... SHARD=i/n node --no-warnings --experimental-strip-types scripts/local-ai-words-ru.mjs <model> <out.json>
+import fs from "node:fs";
+import { generate } from "./ollama.mjs";
+const [model, out] = process.argv.slice(2);
+const { dictionary } = await import("../src/data/dictionary.ts");
+const { vocabulary } = await import("../src/data/vocabulary.ts");
+const { vocabulary2 } = await import("../src/data/vocabulary2.ts");
+const { allAcademicWords } = await import("../src/data/academic-vocab.ts");
+const { ru } = await import("../src/data/translations-ru.ts");
+const [SI, SN] = (process.env.SHARD ?? "0/1").split("/").map(Number);
+const seen = new Map();
+for (const w of [...vocabulary, ...vocabulary2, ...allAcademicWords.filter((w) => !w.id.startsWith("cl")), ...dictionary]) if (!seen.has(w.hanzi)) seen.set(w.hanzi, w);
+const all = [...seen.values()].filter((w) => !ru[w.hanzi]);
+const mine = all.filter((_, i) => i % SN === SI);
+const result = fs.existsSync(out) ? JSON.parse(fs.readFileSync(out, "utf8")) : {};
+const todo = mine.filter((w) => !result[w.hanzi]);
+console.log(`${todo.length} to translate (${all.length} words without Russian)`);
+for (let i = 0; i < todo.length; i += 12) {
+  const batch = todo.slice(i, i + 12);
+  const obj = Object.fromEntries(batch.map((w, j) => [String(j), `${w.hanzi} (${w.pinyin}) = ${w.english}`]));
+  let g = null;
+  try { g = JSON.parse((await generate({ model, stream: false, think: false, format: "json", options: { temperature: 0.1 }, prompt: `You write a Chinese-Russian dictionary. For each entry give a short, accurate Russian gloss (like a dictionary: 1-3 senses separated by "; ", no explanations, no Chinese characters).
+Reply ONLY JSON with the same keys: ${JSON.stringify(obj)}` })).response); } catch { /* next loop */ }
+  for (const [j, w] of batch.entries()) {
+    const r = g?.[String(j)];
+    if (typeof r === "string" && /[а-яё]/i.test(r) && r.length <= 90 && !/[一-鿿]/.test(r)) result[w.hanzi] = r.trim();
+  }
+  fs.writeFileSync(out, JSON.stringify(result, null, 1));
+  console.log(`${Object.keys(result).length}/${mine.length}`);
+}
+console.log("finished");
