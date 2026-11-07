@@ -8,6 +8,7 @@ import { allAcademicWords, chemLabCategories, chemLabWords, stemCategories as _s
 import { speak } from "@/lib/tts";
 import { ru as ruMap } from "@/data/translations-ru";
 import { tk as tkMap } from "@/data/translations-tk";
+import { wordsRuExtra } from "@/data/words-ru-extra";
 import {
   getSRSState,
   saveSRSState,
@@ -45,7 +46,7 @@ type MeaningLang = "default" | "en" | "ru" | "tk";
 // default = today's behaviour: Special deck shows its Russian meanings, everything else English.
 function meaningOf(lang: MeaningLang, hanzi: string, english: string, ruField?: string): string {
   if (lang === "en") return english;
-  if (lang === "ru") return ruField ?? ruMap[hanzi]?.meaning ?? english;
+  if (lang === "ru") return ruField ?? ruMap[hanzi]?.meaning ?? wordsRuExtra[hanzi] ?? english;
   if (lang === "tk") return tkMap[hanzi]?.meaning ?? english;
   return ruField ?? english;
 }

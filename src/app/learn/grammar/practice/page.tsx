@@ -9,6 +9,7 @@ import { grammar2 } from "@/data/grammar2";
 import { grammarExercises } from "@/data/grammar-exercises";
 import { grammarExercises2 } from "@/data/grammar-exercises2";
 import { useLang } from "@/lib/i18n";
+import { exerciseRu } from "@/data/exercise-ru";
 import { useProgress } from "@/hooks/useProgress";
 import { getSRSState, saveSRSState } from "@/lib/storage";
 import { newCardState, review } from "@/lib/srs";
@@ -34,7 +35,8 @@ interface SessionExercise {
 
 export default function GrammarPracticePage() {
   const params = useSearchParams();
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const tx = (s: string) => (lang === "ru" ? exerciseRu[s] ?? s : s); // Russian text for the English parts of exercises
   const { progress, markGrammarCompleted, refresh } = useProgress();
 
   const level = (parseInt(params.get("level") ?? "1") as 1 | 2) || 1;
@@ -227,7 +229,7 @@ export default function GrammarPracticePage() {
         <div className="rounded-xl border border-border bg-bg-raised p-5 space-y-5">
           {ex?.type === "mcq" && (
             <>
-              <p className="text-[16px] font-semibold text-ink leading-relaxed">{ex.prompt}</p>
+              <p className="text-[16px] font-semibold text-ink leading-relaxed">{tx(ex.prompt)}</p>
               <div className="space-y-2">
                 {ex.options.map((opt, i) => {
                   let cls = "border-border bg-bg-sunken text-ink hover:border-border-strong";
@@ -288,7 +290,7 @@ export default function GrammarPracticePage() {
             <>
               <div>
                 <div className="text-[13px] text-ink-tertiary mb-2">{t.practicePage.reorder}</div>
-                <p className="text-[16px] font-semibold text-ink">{ex.english}</p>
+                <p className="text-[16px] font-semibold text-ink">{tx(ex.english)}</p>
               </div>
               <div className="min-h-[52px] rounded-xl border-2 border-dashed border-border p-3 flex flex-wrap gap-2">
                 {reorderPicked.map((word, i) => (
@@ -333,7 +335,7 @@ export default function GrammarPracticePage() {
             <>
               <div>
                 <div className="text-[13px] text-ink-tertiary mb-2">{t.practicePage.translate}</div>
-                <p className="text-[16px] font-semibold text-ink">{ex.english}</p>
+                <p className="text-[16px] font-semibold text-ink">{tx(ex.english)}</p>
               </div>
               <input
                 type="text"

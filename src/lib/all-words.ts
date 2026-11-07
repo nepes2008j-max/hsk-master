@@ -3,6 +3,7 @@ import { vocabulary } from "@/data/vocabulary";
 import { vocabulary2 } from "@/data/vocabulary2";
 import { allAcademicWords, chemLabCategories } from "@/data/academic-vocab";
 import { examplesExtra } from "@/data/examples-extra";
+import { wordsRuExtra } from "@/data/words-ru-extra";
 
 export interface DWord {
   hanzi: string;
@@ -33,6 +34,7 @@ allAcademicWords.filter((w) => !w.id.startsWith("cl")).forEach((w) => add(w, "ST
 chemLabCategories.forEach((c) => c.words.forEach((w) => add(w, "Special")));
 for (const e of map.values()) {
   e.example ??= examplesExtra[e.hanzi];
+  e.ru ??= wordsRuExtra[e.hanzi];
   e.topic ??= e.decks.includes("Special") ? "special" : e.decks.includes("STEM") ? "stem" : "hsk";
 }
 export const allWords: DWord[] = [...map.values()];
