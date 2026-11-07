@@ -12,6 +12,7 @@ export interface Subscription {
 }
 
 const TRIAL_DAYS = 5;
+const FREE_FOR_NOW = true; // every premium feature is open until paid plans launch
 
 export function useSubscription() {
   const { user } = useAuth();
@@ -49,11 +50,11 @@ export function useSubscription() {
     })();
   }, [user]);
 
-  const isPremium = sub.plan !== "free";
+  const isPremium = FREE_FOR_NOW || sub.plan !== "free";
 
   const trialDaysLeft = sub.plan === "trial" && sub.trialStart
     ? Math.max(0, Math.ceil((sub.trialStart + TRIAL_DAYS * 86400000 - Date.now()) / 86400000))
     : 0;
 
-  return { subscription: sub, isPremium, trialDaysLeft, loading };
+  return { subscription: sub, isPremium, trialDaysLeft, loading: FREE_FOR_NOW ? false : loading };
 }
