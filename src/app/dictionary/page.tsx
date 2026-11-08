@@ -7,7 +7,7 @@ import { allWords, DECK_FILTERS, type DWord } from "@/lib/all-words";
 import StrokeChar from "@/components/StrokeChar";
 import { loadCedict, searchCedict } from "@/lib/cedict";
 import { speak } from "@/lib/tts";
-import { IconSearch, IconVolume, IconChevron } from "@/components/Icons";
+import { IconSearch, IconVolume, IconChevron, IconX } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -71,17 +71,55 @@ export default function DictionaryPage() {
 
   const meaningOf = (w: DWord) => tr(w.hanzi)?.meaning ?? (lang === "ru" ? w.ru : undefined) ?? w.english;
 
+  const sheetWord = openWord ? [...filtered, ...cedictHits].find((w) => `${w.hanzi}|${w.pinyin}` === openWord) ?? null : null;
+  useEffect(() => {
+    if (!openWord) return;
+    const k = (e: KeyboardEvent) => { if (e.key === "Escape") setOpenWord(null); };
+    window.addEventListener("keydown", k);
+    return () => window.removeEventListener("keydown", k);
+  }, [openWord]);
+
+  const renderDetail = (word: DWord) => {
+    const chars = [...new Set([...word.hanzi].filter((c) => /[\u4e00-\u9fff]/.test(c)))].slice(0, 6);
+    const exTr = tr(word.hanzi)?.example;
+    return (
+      <div className="space-y-5">
+                      <div>
+                        <div className="text-[11px] uppercase tracking-wide font-semibold text-ink-secondary mb-1.5">{t.dictPage.example}</div>
+                        {word.example ? (
+                          <div className="space-y-0.5">
+                            <div className="flex items-start gap-2">
+                              <div className="text-[16px] text-ink flex-1">{word.example.hanzi}</div>
+                              <button onClick={() => speak(word.example!.hanzi)} aria-label="Play example" className="w-10 h-10 -mt-2 flex items-center justify-center rounded-lg text-ink-secondary hover:text-primary shrink-0"><IconVolume className="w-4 h-4" /></button>
+                            </div>
+                            <div className="text-[13px] text-primary">{word.example.pinyin}</div>
+                            <div className="text-[13px] text-ink-secondary">{exTr ?? (lang === "ru" ? word.example.ru : undefined) ?? word.example.english}</div>
+                          </div>
+                        ) : (
+                          <div className="text-[13px] text-ink-secondary">{t.dictPage.noExample}</div>
+                        )}
+                      </div>
+                      {chars.length > 0 && (
+                        <div>
+                          <div className="text-[11px] uppercase tracking-wide font-semibold text-ink-secondary mb-1.5">{t.dictPage.howToWrite}</div>
+                          <div className="flex flex-col gap-4">
+                            {chars.map((c) => <StrokeChar key={c} ch={c} />)}
+                          </div>
+                        </div>
+                      )}
+      </div>
+    );
+  };
+
   const renderWord = (word: DWord, i: number) => {
               const id = `${word.hanzi}|${word.pinyin}`;
               const open = openWord === id;
-              const chars = [...new Set([...word.hanzi].filter((c) => /[\u4e00-\u9fff]/.test(c)))].slice(0, 6);
-              const exTr = tr(word.hanzi)?.example;
               return (
                 <div key={`${word.hanzi}-${i}`}>
                   <div
                     role="button"
                     tabIndex={0}
-                    aria-expanded={open}
+                    aria-haspopup="dialog"
                     onClick={() => setOpenWord(open ? null : id)}
                     onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpenWord(open ? null : id); } }}
                     className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 cursor-pointer hover:bg-bg-raised active:bg-bg-sunken transition-colors ${open ? "bg-bg-raised" : ""}`}
@@ -107,44 +145,6 @@ export default function DictionaryPage() {
                       <IconVolume className="w-4 h-4" />
                     </button>
                   </div>
-                  {open && (
-                    <div className="mx-1 mb-2 rounded-xl border border-border bg-bg-raised p-4 space-y-4">
-                      <div>
-                        <div className="text-3xl font-bold text-ink">{word.hanzi}</div>
-                        <div className="text-[15px] text-primary">{word.pinyin}</div>
-                        <div className="text-[14px] text-ink mt-1">{meaningOf(word)}</div>
-                        {meaningOf(word) !== word.english && <div className="text-[13px] text-ink-secondary">{word.english}</div>}
-                        <div className="flex flex-wrap gap-1.5 mt-2">
-                          {word.decks.map((d) => (
-                            <span key={d} className="text-[11px] font-medium text-ink-secondary bg-bg-sunken rounded px-2 py-0.5">{d}</span>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-[11px] uppercase tracking-wide font-semibold text-ink-secondary mb-1.5">{t.dictPage.example}</div>
-                        {word.example ? (
-                          <div className="space-y-0.5">
-                            <div className="flex items-start gap-2">
-                              <div className="text-[16px] text-ink flex-1">{word.example.hanzi}</div>
-                              <button onClick={() => speak(word.example!.hanzi)} aria-label="Play example" className="w-10 h-10 -mt-2 flex items-center justify-center rounded-lg text-ink-secondary hover:text-primary shrink-0"><IconVolume className="w-4 h-4" /></button>
-                            </div>
-                            <div className="text-[13px] text-primary">{word.example.pinyin}</div>
-                            <div className="text-[13px] text-ink-secondary">{exTr ?? (lang === "ru" ? word.example.ru : undefined) ?? word.example.english}</div>
-                          </div>
-                        ) : (
-                          <div className="text-[13px] text-ink-secondary">{t.dictPage.noExample}</div>
-                        )}
-                      </div>
-                      {chars.length > 0 && (
-                        <div>
-                          <div className="text-[11px] uppercase tracking-wide font-semibold text-ink-secondary mb-1.5">{t.dictPage.howToWrite}</div>
-                          <div className="flex flex-col gap-4">
-                            {chars.map((c) => <StrokeChar key={c} ch={c} />)}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
               );
             };
@@ -261,6 +261,34 @@ export default function DictionaryPage() {
           Extra words: CC-CEDICT (CC BY-SA 4.0). Stroke order: Hanzi Writer / Make Me a Hanzi.
         </p>
       </div>
+      {sheetWord && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={() => setOpenWord(null)}>
+          <div
+            role="dialog"
+            aria-label={sheetWord.hanzi}
+            onClick={(e) => e.stopPropagation()}
+            className="sheet-up w-full sm:max-w-md max-h-[88dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-bg border border-border shadow-2xl px-5 pt-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+          >
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border-strong sm:hidden" />
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-[56px] leading-none font-extrabold text-ink">{sheetWord.hanzi}</div>
+                <div className="mt-2 text-[20px] font-semibold text-primary">{sheetWord.pinyin}</div>
+                <div className="mt-1 text-[17px] text-ink">{meaningOf(sheetWord)}</div>
+                {meaningOf(sheetWord) !== sheetWord.english && <div className="text-[13px] text-ink-secondary">{sheetWord.english}</div>}
+              </div>
+              <button onClick={() => setOpenWord(null)} aria-label="Close" className="p-2 -mr-2 text-ink-tertiary hover:text-ink"><IconX className="w-4 h-4" /></button>
+            </div>
+            <div className="flex flex-wrap gap-1.5 mt-3">
+              {sheetWord.decks.map((d) => (
+                <span key={d} className="text-[11px] font-medium text-ink-secondary bg-bg-sunken rounded px-2 py-0.5">{d}{d === "Book" && sheetWord.lesson ? ` · L${sheetWord.lesson}` : ""}</span>
+              ))}
+            </div>
+            <button onClick={() => speak(sheetWord.hanzi)} className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl bg-bg-sunken py-3 text-[14px] font-semibold text-ink active:scale-[0.98] transition-transform"><IconVolume className="w-4 h-4" /> {t.dictPage.listen}</button>
+            <div className="mt-5">{renderDetail(sheetWord)}</div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }

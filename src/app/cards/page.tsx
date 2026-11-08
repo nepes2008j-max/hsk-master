@@ -828,7 +828,7 @@ export default function CardsPage() {
                     </button>
                   )}
                   {reviewMode === "writing" ? (
-                    <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-6 flex flex-col items-center justify-center gap-3">
+                    <div className="w-full min-h-[300px] sm:min-h-[260px] rounded-[26px] border border-border shadow-[0_8px_26px_rgba(0,0,0,0.06)] bg-bg-raised p-6 flex flex-col items-center justify-center gap-3">
                       <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                       {writingTarget === "pinyin" ? (
                         <div className="text-3xl font-bold text-ink">{currentCard.hanzi}</div>
@@ -874,7 +874,7 @@ export default function CardsPage() {
                       )}
                     </div>
                   ) : reviewMode === "mcq" ? (
-                    <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-6 flex flex-col items-center justify-center gap-4">
+                    <div className="w-full min-h-[300px] sm:min-h-[260px] rounded-[26px] border border-border shadow-[0_8px_26px_rgba(0,0,0,0.06)] bg-bg-raised p-6 flex flex-col items-center justify-center gap-4">
                       <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                       <button type="button" onClick={() => setMcqShowPinyin(true)} className="text-3xl font-bold text-ink cursor-pointer">{currentCard.hanzi}</button>
                       <div className="text-[13px] text-ink-secondary min-h-[20px]">
@@ -907,20 +907,20 @@ export default function CardsPage() {
                       </div>
                     </div>
                   ) : reviewMode === "three-way" ? (
-                    <div className="w-full min-h-[220px] rounded-2xl border-2 border-border bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:shadow-lg active:scale-[0.98] transition-all">
+                    <div className="w-full min-h-[300px] sm:min-h-[260px] rounded-[26px] border border-border shadow-[0_8px_26px_rgba(0,0,0,0.06)] bg-bg-raised p-8 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/50 hover:shadow-lg active:scale-[0.98] transition-all">
                       {isRevealed ? renderCardBack() : renderCardFront()}
                       {!isRevealed && <div className="text-[13px] text-ink-secondary">{showHint}</div>}
                       <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                     </div>
                   ) : (
                     <div className="card-perspective">
-                      <div className={`card-inner w-full h-[220px] rounded-2xl border-2 border-border cursor-pointer hover:border-primary/50 hover:shadow-lg ${flipped ? "flipped" : ""}`}>
-                        <div className="card-face w-full h-full rounded-2xl bg-bg-raised p-8 flex flex-col items-center justify-center gap-4">
+                      <div className={`card-inner w-full h-[300px] sm:h-[260px] rounded-[26px] border border-border shadow-[0_8px_26px_rgba(0,0,0,0.06)] cursor-pointer hover:border-primary/50 hover:shadow-lg ${flipped ? "flipped" : ""}`}>
+                        <div className="card-face w-full h-full rounded-[26px] bg-bg-raised p-8 flex flex-col items-center justify-center gap-4">
                           {renderCardFront()}
                           <div className="text-[13px] text-ink-secondary">{showHint}</div>
                           <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                         </div>
-                        <div className="card-face card-back w-full h-full rounded-2xl bg-bg-raised p-8 flex flex-col items-center justify-center gap-4">
+                        <div className="card-face card-back w-full h-full rounded-[26px] bg-bg-raised p-8 flex flex-col items-center justify-center gap-4">
                           {renderCardBack()}
                           <div className="text-[11px] text-ink-secondary">{currentCard.deck}</div>
                         </div>
@@ -932,7 +932,7 @@ export default function CardsPage() {
                 {!isRevealed && reviewMode !== "mcq" && reviewMode !== "writing" && (
                   <button
                     onClick={handleFlip}
-                    className="w-full rounded-xl bg-primary hover:bg-primary-hover py-3 text-[14px] font-medium text-white transition-colors"
+                    className="w-full rounded-2xl bg-primary hover:bg-primary-hover py-3.5 text-[14px] font-bold text-white shadow-sm active:scale-[0.98] transition-all"
                   >
                     {showHint}
                   </button>
@@ -943,25 +943,25 @@ export default function CardsPage() {
                     <div className="grid grid-cols-4 gap-2">
                       <button
                         onClick={() => handleRate(1)}
-                        className="rounded-xl bg-warning-light py-2.5 text-[13px] font-medium text-warning-text transition-colors hover:bg-warning/10"
+                        className="rounded-2xl bg-[#dc2626] py-3 text-[13px] font-bold text-white shadow-sm active:scale-[0.97] transition-transform"
                       >
                         {t.cardsPage.again}<div className="text-[10px] opacity-70">{intervalHint(1)}</div>
                       </button>
                       <button
                         onClick={() => handleRate(3)}
-                        className="rounded-xl bg-accent-light py-2.5 text-[13px] font-medium text-accent-text transition-colors hover:bg-accent/10"
+                        className="rounded-2xl bg-[#d97706] py-3 text-[13px] font-bold text-white shadow-sm active:scale-[0.97] transition-transform"
                       >
                         {t.cardsPage.hard}<div className="text-[10px] opacity-70">{intervalHint(3)}</div>
                       </button>
                       <button
                         onClick={() => handleRate(4)}
-                        className="rounded-xl bg-primary-light py-2.5 text-[13px] font-medium text-primary-text transition-colors hover:bg-primary/10"
+                        className="rounded-2xl bg-[#16a34a] py-3 text-[13px] font-bold text-white shadow-sm active:scale-[0.97] transition-transform"
                       >
                         {t.cardsPage.good}<div className="text-[10px] opacity-70">{intervalHint(4)}</div>
                       </button>
                       <button
                         onClick={() => handleRate(5)}
-                        className="rounded-xl bg-blue-light py-2.5 text-[13px] font-medium text-blue transition-colors hover:bg-blue/10"
+                        className="rounded-2xl bg-[#2563eb] py-3 text-[13px] font-bold text-white shadow-sm active:scale-[0.97] transition-transform"
                       >
                         {t.cardsPage.easy}<div className="text-[10px] opacity-70">{intervalHint(5)}</div>
                       </button>
@@ -969,7 +969,7 @@ export default function CardsPage() {
                     ) : (
                       <button
                         onClick={() => handleRate(4)}
-                        className="w-full rounded-xl bg-primary hover:bg-primary-hover py-3 text-[14px] font-medium text-white transition-colors"
+                        className="w-full rounded-2xl bg-primary hover:bg-primary-hover py-3.5 text-[14px] font-bold text-white shadow-sm active:scale-[0.98] transition-all"
                       >
                         {t.cardsPage.next}
                       </button>

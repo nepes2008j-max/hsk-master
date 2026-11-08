@@ -49,7 +49,9 @@
 * { box-sizing: border-box; }
 
 body {
-  background: var(--bg);
+  /* warm red -> orange glow at the top that fades into cream */
+  background: linear-gradient(180deg, rgba(239,68,68,0.26) 0%, rgba(251,146,60,0.20) 200px, rgba(253,186,116,0.08) 420px, rgba(251,247,238,0) 640px) no-repeat, var(--bg);
+  background-attachment: scroll;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -110,3 +112,6 @@ input::placeholder, textarea::placeholder {
 .card-enter { animation: cardEnter 0.3s ease-out; }
 .card-swipe-left { animation: swipeLeft 0.35s ease-in forwards; }
 .card-swipe-right { animation: swipeRight 0.35s ease-in forwards; }
+
+@keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet-up { animation: sheet-up .28s cubic-bezier(.2,.8,.2,1); }

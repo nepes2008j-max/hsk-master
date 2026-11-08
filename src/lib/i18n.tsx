@@ -11,6 +11,7 @@ const t = {
     continue: "Continue",
     home: "Home",
     more: "More",
+    lessons: "Lessons",
     vocab: "Vocab",
     grammar: "Grammar",
     hanzi: "Hanzi",
@@ -82,7 +83,7 @@ const t = {
     dictPage: {
       title: "Dictionary",
       words: "words",
-      allTopics: "All topics", strokes: "strokes", moreWords: "More words (CC-CEDICT)", searchAll: "Search all 124,000+ dictionary words — type Chinese, pinyin or English", loadingMore: "Loading more words…", offlineMore: "More words need an internet connection.", example: "Example", noExample: "No example yet", howToWrite: "How to write", inDecks: "In decks",
+      allTopics: "All topics", strokes: "strokes", moreWords: "More words (CC-CEDICT)", listen: "Listen", searchAll: "Search all 124,000+ dictionary words — type Chinese, pinyin or English", loadingMore: "Loading more words…", offlineMore: "More words need an internet connection.", example: "Example", noExample: "No example yet", howToWrite: "How to write", inDecks: "In decks",
       searchPlaceholder: "Search Chinese, pinyin, or English...",
     },
     cardsPage: {
@@ -358,6 +359,7 @@ const t = {
     continue: "Продолжить",
     home: "Главная",
     more: "Ещё",
+    lessons: "Уроки",
     vocab: "Слова",
     grammar: "Грамм.",
     hanzi: "Иероглифы",
@@ -429,7 +431,7 @@ const t = {
     dictPage: {
       title: "Словарь",
       words: "слов",
-      allTopics: "Все темы", strokes: "черт", moreWords: "Ещё слова (CC-CEDICT)", searchAll: "Поиск по всем 124 000+ словам словаря — введите иероглифы, пиньинь или английский", loadingMore: "Загрузка слов…", offlineMore: "Для дополнительных слов нужен интернет.", example: "Пример", noExample: "Примера пока нет", howToWrite: "Как писать", inDecks: "В колодах",
+      allTopics: "Все темы", strokes: "черт", moreWords: "Ещё слова (CC-CEDICT)", listen: "Слушать", searchAll: "Поиск по всем 124 000+ словам словаря — введите иероглифы, пиньинь или английский", loadingMore: "Загрузка слов…", offlineMore: "Для дополнительных слов нужен интернет.", example: "Пример", noExample: "Примера пока нет", howToWrite: "Как писать", inDecks: "В колодах",
       searchPlaceholder: "Поиск по китайскому, пиньинь или русскому...",
     },
     cardsPage: {
@@ -705,6 +707,7 @@ const t = {
     continue: "Dowam et",
     home: "Baş sahypa",
     more: "Köpräk",
+    lessons: "Sapaklar",
     vocab: "Sözler",
     grammar: "Gramm.",
     hanzi: "Ieroglifler",
@@ -776,7 +779,7 @@ const t = {
     dictPage: {
       title: "Sözlük",
       words: "söz",
-      allTopics: "Ähli mowzuklar", strokes: "çyzyk", moreWords: "Köp söz (CC-CEDICT)", searchAll: "124 000+ sözlük sözleriniň hemmesinden gözläň — hytaýça, pinýin ýa-da iňlisçe ýazyň", loadingMore: "Sözler ýüklenýär…", offlineMore: "Goşmaça sözler üçin internet gerek.", example: "Mysal", noExample: "Heniz mysal ýok", howToWrite: "Nähili ýazmaly", inDecks: "Toplumlarda",
+      allTopics: "Ähli mowzuklar", strokes: "çyzyk", moreWords: "Köp söz (CC-CEDICT)", listen: "Diňle", searchAll: "124 000+ sözlük sözleriniň hemmesinden gözläň — hytaýça, pinýin ýa-da iňlisçe ýazyň", loadingMore: "Sözler ýüklenýär…", offlineMore: "Goşmaça sözler üçin internet gerek.", example: "Mysal", noExample: "Heniz mysal ýok", howToWrite: "Nähili ýazmaly", inDecks: "Toplumlarda",
       searchPlaceholder: "Hytaýça, pinýin ýa-da türkmençe gözle...",
     },
     cardsPage: {

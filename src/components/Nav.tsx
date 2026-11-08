@@ -37,6 +37,7 @@ export default function Nav() {
 
   const allLinks = [
     { href: "/dashboard", label: t.home, Icon: IconHome },
+    { href: "/learn/lessons", label: t.lessons, Icon: IconBookOpen },
     { href: "/learn/vocabulary", label: t.vocab, Icon: IconBook },
     { href: "/learn/grammar", label: t.grammar, Icon: IconPencil },
     { href: "/learn/characters", label: t.hanzi, Icon: IconBrush },
@@ -54,7 +55,7 @@ export default function Nav() {
   const mobileLinks = [
     { href: "/dashboard", label: t.home, Icon: IconHome },
     { href: "/dictionary", label: t.dict, Icon: IconSearch },
-    { href: "/learn/vocabulary", label: t.vocab, Icon: IconBook },
+    { href: "/learn/lessons", label: t.lessons, Icon: IconBookOpen },
     { href: "/cards", label: t.cards, Icon: IconCards },
   ] as const;
   const moreLinks = allLinks.filter((l) => !mobileLinks.some((m) => m.href === l.href));
@@ -160,8 +161,8 @@ export default function Nav() {
       </nav>
 
       {/* Mobile bottom bar — 5 key items only */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-bg-raised/95 backdrop-blur-md pb-[env(safe-area-inset-bottom)]">
-        <div className="flex justify-around items-center h-14 max-w-lg mx-auto px-2">
+      <nav className="md:hidden fixed left-3 right-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 mx-auto max-w-md rounded-[26px] border border-white/70 bg-[rgba(255,253,248,0.55)] backdrop-blur-2xl backdrop-saturate-150 shadow-[0_8px_32px_rgba(60,40,10,0.14)]">
+        <div className="flex justify-around items-center h-16 px-2">
           {mobileLinks.map(({ href, label, Icon }) => (
             <Link
               key={href}
