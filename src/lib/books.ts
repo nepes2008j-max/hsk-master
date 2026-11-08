@@ -7,7 +7,7 @@ import { bookLessons as szLessonMeta, bookWords as szWords } from "@/data/book-w
 // Third book: the companion practice volume (vocabulary lessons only).
 const szLessons: BookLesson[] = szLessonMeta.map((l) => ({
   id: l.n, title: l.title, titleEn: l.en,
-  grammar: (szGrammar[l.n] ?? []).map((g) => ({ pattern: g.pattern, explanation: g.explanation, explanationRu: g.explanationRu, examples: g.examples })),
+  grammar: (szGrammar[l.n] ?? []).map((g) => ({ pattern: g.pattern, explanation: g.explanation, explanationRu: g.explanationRu || undefined, examples: g.examples })),
   words: szWords.filter((w) => w.lesson === l.n).map(({ hanzi, pinyin, english }) => ({ hanzi, pinyin, english })),
 }));
 

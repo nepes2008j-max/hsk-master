@@ -33,7 +33,7 @@ for (const w of mine) {
     const g = await ask(`Write ONE short, natural Chinese example sentence (simple HSK 1-3 grammar, 6-16 characters, everyday / classroom / daily-life context) that contains the word "${w.hanzi}" exactly, used with its meaning: ${meaning}. Also give an accurate English translation and an accurate Russian translation.
 Reply ONLY JSON {"zh":"...","en":"...","ru":"..."}`);
     if (!g || typeof g.zh !== "string" || !g.zh.includes(w.hanzi) || g.zh.length > 26 || !/[。？！]$/.test(g.zh) || !/^[一-鿿，。？！、]+$/.test(g.zh) || !g.en || !/[а-яё]/i.test(g.ru ?? "")) continue;
-    const chk = await ask(`Check an example sentence for a Chinese learner. Word: ${w.hanzi} (${meaning}).
+    const chk = process.env.NOCHECK ? { ok: true } : await ask(`Check an example sentence for a Chinese learner. Word: ${w.hanzi} (${meaning}).
 Chinese: ${g.zh}
 English: ${g.en}
 Russian: ${g.ru}
