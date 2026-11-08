@@ -6,6 +6,7 @@ import { topics } from "@/data/dictionary";
 import { allWords, DECK_FILTERS, type DWord } from "@/lib/all-words";
 import StrokeChar from "@/components/StrokeChar";
 import { loadCedict, searchCedict } from "@/lib/cedict";
+import { translate } from "@/lib/mt";
 import { speak } from "@/lib/tts";
 import { IconSearch, IconVolume, IconChevron, IconX } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
@@ -72,6 +73,15 @@ export default function DictionaryPage() {
   const meaningOf = (w: DWord) => tr(w.hanzi)?.meaning ?? (lang === "ru" ? w.ru : undefined) ?? w.english;
 
   const sheetWord = openWord ? [...filtered, ...cedictHits].find((w) => `${w.hanzi}|${w.pinyin}` === openWord) ?? null : null;
+  // free machine translation when no human Russian/Turkmen exists for the opened word
+  const [auto, setAuto] = useState<string | null>(null);
+  useEffect(() => {
+    setAuto(null);
+    if (!sheetWord || lang === "en" || tr(sheetWord.hanzi)?.meaning || (lang === "ru" && sheetWord.ru)) return;
+    let dead = false;
+    translate(sheetWord.english.split("; ")[0], "en", lang === "ru" ? "ru" : "tk").then((r) => { if (!dead) setAuto(r); });
+    return () => { dead = true; };
+  }, [sheetWord, lang]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!openWord) return;
     const k = (e: KeyboardEvent) => { if (e.key === "Escape") setOpenWord(null); };
@@ -274,8 +284,8 @@ export default function DictionaryPage() {
               <div>
                 <div className="text-[56px] leading-none font-extrabold text-ink">{sheetWord.hanzi}</div>
                 <div className="mt-2 text-[20px] font-semibold text-primary">{sheetWord.pinyin}</div>
-                <div className="mt-1 text-[17px] text-ink">{meaningOf(sheetWord)}</div>
-                {meaningOf(sheetWord) !== sheetWord.english && <div className="text-[13px] text-ink-secondary">{sheetWord.english}</div>}
+                <div className="mt-1 text-[17px] text-ink">{auto ?? meaningOf(sheetWord)}{auto && <span className="ml-1.5 text-[11px] font-medium text-ink-tertiary">(auto)</span>}</div>
+                {(auto ?? meaningOf(sheetWord)) !== sheetWord.english && <div className="text-[13px] text-ink-secondary">{sheetWord.english}</div>}
               </div>
               <button onClick={() => setOpenWord(null)} aria-label="Close" className="p-2 -mr-2 text-ink-tertiary hover:text-ink"><IconX className="w-4 h-4" /></button>
             </div>

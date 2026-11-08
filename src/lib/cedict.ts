@@ -48,3 +48,11 @@ export function searchCedict(all: Entry[], query: string, skip: Set<string>, lim
   }
   return scored.sort((a, b) => a[0] - b[0]).slice(0, limit).map(([, e]) => ({ hanzi: e.hanzi, pinyin: e.pinyin, english: e.def, decks: ["CC-CEDICT"] }));
 }
+
+// Exact-word lookup (built once, on first use): every reading/sense of a word, e.g. 了 -> le / liǎo.
+let byWord: Map<string, Entry[]> | null = null;
+export function lookupCedict(all: Entry[], word: string): Entry[] {
+  if (!byWord) { byWord = new Map(); for (const e of all) { const a = byWord.get(e.hanzi); if (a) a.push(e); else byWord.set(e.hanzi, [e]); } }
+  return byWord.get(word) ?? [];
+}
+export type CedictEntry = Entry;

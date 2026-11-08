@@ -6,8 +6,10 @@ export interface BookWord {
 
 export interface BookGrammar {
   pattern: string;
+  patternRu?: string;
   explanation: string;
-  examples: { zh: string; en: string }[];
+  explanationRu?: string;
+  examples: { zh: string; en: string; ru?: string }[];
 }
 
 export interface DialogueLine {
@@ -23,6 +25,7 @@ export interface BookLesson {
   id: number;
   title: string;
   titleEn: string;
+  titleRu?: string;
   words: BookWord[];
   grammar: BookGrammar[];
   dialogue?: DialogueLine[];

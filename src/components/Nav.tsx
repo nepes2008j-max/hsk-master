@@ -37,15 +37,15 @@ export default function Nav() {
 
   const allLinks = [
     { href: "/dashboard", label: t.home, Icon: IconHome },
-    { href: "/learn/lessons", label: t.lessons, Icon: IconBookOpen },
+    { href: "/books", label: t.lessons, Icon: IconBookOpen },
     { href: "/learn/vocabulary", label: t.vocab, Icon: IconBook },
+    { href: "/reading", label: t.reading, Icon: IconBookOpen },
     { href: "/learn/grammar", label: t.grammar, Icon: IconPencil },
     { href: "/learn/characters", label: t.hanzi, Icon: IconBrush },
     { href: "/dictionary", label: t.dict, Icon: IconGlobe },
     { href: "/cards", label: t.cards, Icon: IconCards },
     { href: "/test", label: t.test, Icon: IconClipboard },
     { href: "/games", label: t.games, Icon: IconGamepad },
-    { href: "/books", label: t.books, Icon: IconBookOpen },
     { href: "/academic", label: t.academic, Icon: IconBeaker },
   ] as const;
 
@@ -55,7 +55,7 @@ export default function Nav() {
   const mobileLinks = [
     { href: "/dashboard", label: t.home, Icon: IconHome },
     { href: "/dictionary", label: t.dict, Icon: IconSearch },
-    { href: "/learn/lessons", label: t.lessons, Icon: IconBookOpen },
+    { href: "/books", label: t.lessons, Icon: IconBookOpen },
     { href: "/cards", label: t.cards, Icon: IconCards },
   ] as const;
   const moreLinks = allLinks.filter((l) => !mobileLinks.some((m) => m.href === l.href));

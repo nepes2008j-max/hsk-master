@@ -7,7 +7,9 @@ import { getProgress, type ProgressData } from "@/lib/storage";
 import { IconSearch, IconBook, IconPencil, IconBrush, IconCards, IconClipboard, IconFire, IconStar, IconGlobe, IconGamepad, IconBookOpen, IconBeaker } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 import { Ring } from "@/components/Ring";
-import { lessonList } from "@/lib/book";
+import { books } from "@/lib/books";
+import { load as loadStats } from "@/lib/exstats";
+import { levelOf } from "@/lib/exercises";
 
 export default function DashboardPage() {
   const [progress, setProgress] = useState<ProgressData | null>(null);
@@ -18,11 +20,20 @@ export default function DashboardPage() {
   }, []);
 
   const isGamified = progress?.mode === "gamified";
-  const nextLesson = progress ? (() => { const l = lessonList(new Set(progress.wordsLearned)); return l.find((x) => x.total > 0 && x.done < x.total && x.done > 0) ?? l.find((x) => x.total > 0 && x.done < x.total) ?? null; })() : null;
+  const [exStats, setExStats] = useState<ReturnType<typeof loadStats>>({ words: {}, lessons: {} });
+  useEffect(() => { setExStats(loadStats()); }, []);
+  // lesson to continue: a started-but-unfinished one first, else the first untouched one (xzzg book first)
+  const nextLesson = (() => {
+    const all = [books[1], books[0], books[2]].flatMap((b) => b.lessons.filter((l) => l.words.length > 2).map((l) => ({ b, l, lv: levelOf(l.words, exStats, exStats.lessons[`${b.id}-${l.id}`]) })));
+    const pick = all.find((x) => x.lv === "attempted" || x.lv === "familiar") ?? all.find((x) => x.lv === "new");
+    if (!pick) return null;
+    const cov = pick.l.words.filter((w) => (exStats.words[w.hanzi]?.c ?? 0) >= 2).length;
+    return { n: pick.l.id, title: pick.l.title, en: pick.l.titleEn, book: pick.b.title, pct: Math.round((cov / pick.l.words.length) * 100), total: pick.l.words.length };
+  })();
 
   // Big tiles: the four things you do most. Everything else is a scrolling row of pills.
   const quick = [
-    { href: "/learn/lessons", title: t.lessons, desc: "25 · 339", Icon: IconBookOpen, accent: "bg-primary-light text-primary" },
+    { href: "/books", title: t.lessons, desc: `${books.length} ${t.lp.books.toLowerCase()}`, Icon: IconBookOpen, accent: "bg-primary-light text-primary" },
     { href: "/cards", title: t.cards, desc: t.dashboard.cardsDesc, Icon: IconCards, accent: "bg-accent-light text-accent" },
     { href: "/dictionary", title: t.dictPage.title, desc: "124 000+", Icon: IconGlobe, accent: "bg-blue-light text-blue" },
     { href: "/learn/grammar", title: t.dashboard.grammarLabel, desc: t.dashboard.grammarDesc, Icon: IconPencil, accent: "bg-warning-light text-warning" },
@@ -32,7 +43,6 @@ export default function DashboardPage() {
     { href: "/learn/characters", title: t.dashboard.characters, Icon: IconBrush },
     { href: "/test", title: t.test, Icon: IconClipboard },
     { href: "/games", title: t.games, Icon: IconGamepad },
-    { href: "/books", title: t.books, Icon: IconBook },
     { href: "/academic", title: t.academic, Icon: IconBeaker },
   ] as const;
 
@@ -68,11 +78,11 @@ export default function DashboardPage() {
         )}
 
         {nextLesson && (
-          <Link href="/learn/lessons" className="flex items-center gap-3 rounded-2xl border border-border bg-bg-raised px-3.5 py-3 active:scale-[0.99] transition-transform">
-            <Ring pct={(nextLesson.done / nextLesson.total) * 100} label={`${Math.round((nextLesson.done / nextLesson.total) * 100)}%`} />
+          <Link href="/books" className="flex items-center gap-3 rounded-2xl border border-border bg-bg-raised px-3.5 py-3 active:scale-[0.99] transition-transform">
+            <Ring pct={nextLesson.pct} label={`${nextLesson.pct}%`} />
             <div className="min-w-0 flex-1">
               <div className="text-[14px] font-semibold text-ink truncate">{t.lessons} {nextLesson.n} · {nextLesson.title}</div>
-              <div className="text-[12px] text-ink-tertiary truncate">{nextLesson.en} · {nextLesson.total}</div>
+              <div className="text-[12px] text-ink-tertiary truncate">{nextLesson.book} · {nextLesson.en}</div>
             </div>
           </Link>
         )}

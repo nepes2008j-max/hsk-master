@@ -9,6 +9,10 @@ import { saveUserCard } from "@/lib/storage";
 import { IconSearch, IconVolume, IconCheck, IconX, IconCards } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 import { useTranslation } from "@/hooks/useTranslation";
+import { loadCedict, searchCedict } from "@/lib/cedict";
+import { translate } from "@/lib/mt";
+
+const noTone = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[\s'’0-9]/g, "").toLowerCase();
 
 export default function VocabularyPage() {
   const { t, lang } = useLang();
@@ -16,7 +20,7 @@ export default function VocabularyPage() {
   const [search, setSearch] = useState("");
   const [selectedWord, setSelectedWord] = useState<DWord | null>(null);
   const [showPinyin, setShowPinyin] = useState(true);
-  const [deck, setDeck] = useState<"all" | (typeof DECK_FILTERS)[number]>("all");
+  const [deck, setDeck] = useState<"all" | "CEDICT" | (typeof DECK_FILTERS)[number]>("all");
   const [addedCard, setAddedCard] = useState(false);
   const { progress, markWordLearned } = useProgress();
 
@@ -31,21 +35,40 @@ export default function VocabularyPage() {
 
   const wordList = useMemo(() => {
     if (deck === "all") return allWords;
+    if (deck === "CEDICT") return [];
     const l = allWords.filter((w) => w.decks.includes(deck));
     return deck === "Book" ? l.sort((a, b) => (a.lesson ?? 0) - (b.lesson ?? 0)) : l; // Book deck: lesson by lesson
   }, [deck]);
   const meaningOf = (w: DWord) => tr(w.hanzi)?.meaning ?? (lang === "ru" ? w.ru : undefined) ?? w.english;
 
+  // Pinyin works without tones, spaces or tone numbers: "nihao", "ni hao", "ni3hao3", "nǐ hǎo" all find 你好.
   const filtered = useMemo(() => {
     if (!search) return wordList;
-    const q = search.toLowerCase();
-    return wordList.filter(
-      (w) =>
-        w.hanzi.includes(search) ||
-        w.pinyin.toLowerCase().includes(q) ||
-        w.english.toLowerCase().includes(q)
-    );
-  }, [search, wordList]);
+    const q = search.toLowerCase(), qp = noTone(search);
+    return wordList.filter((w) => w.hanzi.includes(search) || (qp.length > 0 && noTone(w.pinyin).includes(qp)) || w.english.toLowerCase().includes(q) || (lang === "ru" && !!w.ru && w.ru.toLowerCase().includes(q)));
+  }, [search, wordList, lang]);
+
+  // "All 124,000 words" mode: CC-CEDICT search (loaded on first use)
+  const [cedictHits, setCedictHits] = useState<DWord[]>([]);
+  const [cedictState, setCedictState] = useState<"idle" | "loading" | "error">("idle");
+  useEffect(() => {
+    if (deck !== "CEDICT" || !search.trim()) { setCedictHits([]); return; }
+    let dead = false;
+    setCedictState("loading");
+    loadCedict().then((all) => { if (!dead) { setCedictHits(searchCedict(all, search, new Set(), 150)); setCedictState("idle"); } }).catch(() => { if (!dead) setCedictState("error"); });
+    return () => { dead = true; };
+  }, [deck, search]);
+  const shown = deck === "CEDICT" ? cedictHits : filtered;
+
+  // machine translation for the word card when there is no human translation (ru / tk)
+  const [auto, setAuto] = useState<string | null>(null);
+  useEffect(() => {
+    setAuto(null);
+    if (!selectedWord || lang === "en" || tr(selectedWord.hanzi)?.meaning || (lang === "ru" && selectedWord.ru)) return;
+    let dead = false;
+    translate(selectedWord.english.split("; ")[0], "en", lang === "ru" ? "ru" : "tk").then((r) => { if (!dead) setAuto(r); });
+    return () => { dead = true; };
+  }, [selectedWord, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <AppShell>
@@ -58,7 +81,7 @@ export default function VocabularyPage() {
         </div>
 
         <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
-          {(["all", ...DECK_FILTERS] as const).map((d) => (
+          {(["all", ...DECK_FILTERS, "CEDICT"] as const).map((d) => (
             <button
               key={d}
               onClick={() => setDeck(d)}
@@ -66,7 +89,7 @@ export default function VocabularyPage() {
                 deck === d ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary hover:text-ink"
               }`}
             >
-              {d === "all" ? "All" : d === "HSK 1" ? t.hsk1 : d === "HSK 2" ? t.hsk2 : d}
+              {d === "all" ? "All" : d === "HSK 1" ? t.hsk1 : d === "HSK 2" ? t.hsk2 : d === "CEDICT" ? "124k" : d}
             </button>
           ))}
         </div>
@@ -95,9 +118,12 @@ export default function VocabularyPage() {
         </div>
 
         <div className="space-y-0.5">
-          {filtered.map((word, idx) => {
+          {deck === "CEDICT" && !search.trim() && <div className="rounded-2xl border border-border bg-bg-raised p-5 text-[14px] text-ink-secondary">{t.dictPage.searchAll}</div>}
+          {deck === "CEDICT" && cedictState === "loading" && cedictHits.length === 0 && <div className="px-3 py-3 text-[13px] text-ink-secondary">{t.dictPage.loadingMore}</div>}
+          {deck === "CEDICT" && cedictState === "error" && <div className="px-3 py-3 text-[13px] text-ink-secondary">{t.dictPage.offlineMore}</div>}
+          {shown.map((word, idx) => {
             const learned = learnedSet.has(word.hanzi);
-            const lessonHead = deck === "Book" && !search && word.lesson !== filtered[idx - 1]?.lesson ? bookLessons.find((l) => l.n === word.lesson) : undefined;
+            const lessonHead = deck === "Book" && !search && word.lesson !== shown[idx - 1]?.lesson ? bookLessons.find((l) => l.n === word.lesson) : undefined;
             return (
               <div key={word.hanzi}>
               {lessonHead && (
@@ -135,6 +161,10 @@ export default function VocabularyPage() {
           })}
         </div>
 
+        {search.trim() && deck !== "CEDICT" && (
+          <button onClick={() => setDeck("CEDICT")} className="w-full rounded-2xl border border-border bg-bg-raised px-4 py-3 text-left text-[14px] font-semibold text-primary active:scale-[0.99] transition-transform">{t.dictPage.searchAll.split(" — ")[0]} →</button>
+        )}
+
         {selectedWord && (
           <div
             role="dialog"
@@ -170,7 +200,8 @@ export default function VocabularyPage() {
               </div>
 
               <div>
-                <div className="text-lg text-ink">{meaningOf(selectedWord)}</div>
+                <div className="text-lg text-ink">{tr(selectedWord.hanzi)?.meaning || (lang === "ru" && selectedWord.ru) ? meaningOf(selectedWord) : (auto ?? meaningOf(selectedWord))}{auto && !(tr(selectedWord.hanzi)?.meaning || (lang === "ru" && selectedWord.ru)) && <span className="ml-1.5 text-[11px] font-medium text-ink-tertiary">(auto)</span>}</div>
+                {meaningOf(selectedWord) !== selectedWord.english && <div className="text-[13px] text-ink-secondary">{selectedWord.english}</div>}
                 <div className="text-[13px] text-ink-tertiary mt-0.5 capitalize">{selectedWord.topic}</div>
               </div>
 

@@ -2,11 +2,17 @@
 
 import { useState, useMemo, useCallback } from "react";
 import AppShell from "@/components/AppShell";
-import { lessons as hyjcLessons, bookTitle as hyjcTitle, bookTitleEn as hyjcTitleEn, type BookLesson, type BookWord, type BookGrammar } from "@/data/book-hyjc";
-import { xzzgLessons, xzzgTitle, xzzgTitleEn } from "@/data/book-xzzg";
+import { type BookLesson } from "@/data/book-hyjc";
+import { books } from "@/lib/books";
 import { speak } from "@/lib/tts";
 import { useLang } from "@/lib/i18n";
 import { IconVolume, IconChevron } from "@/components/Icons";
+import LessonPlayer from "@/components/LessonPlayer";
+import { load as loadStats } from "@/lib/exstats";
+import { levelOf, type BWord, type Level, type Mode } from "@/lib/exercises";
+import { allWords } from "@/lib/all-words";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useEffect } from "react";
 
 type View = "lessons" | "detail" | "quiz";
 type Tab = "vocab" | "dialogue" | "grammar" | "test";
@@ -191,10 +197,8 @@ function GrammarQuiz({ lesson, allLessons, t }: { lesson: BookLesson; allLessons
   );
 }
 
-const books = [
-  { id: "hyjc", title: hyjcTitle, titleEn: hyjcTitleEn, lessons: hyjcLessons },
-  { id: "xzzg", title: xzzgTitle, titleEn: xzzgTitleEn, lessons: xzzgLessons },
-] as const;
+const wordMap = new Map(allWords.map((w) => [w.hanzi, w]));
+const LV_STYLE: Record<Level, string> = { new: "bg-bg-sunken text-ink-tertiary", attempted: "bg-warning-light text-warning-text", familiar: "bg-accent-light text-accent-text", proficient: "bg-blue-light text-blue", mastered: "bg-[#dcfce7] text-[#166534]" };
 
 export default function BooksPage() {
   const { lang, t } = useLang();
@@ -205,9 +209,23 @@ export default function BooksPage() {
   const [tab, setTab] = useState<Tab>("vocab");
   const [quizType, setQuizType] = useState<QuizType | null>(null);
   const [expandedLines, setExpandedLines] = useState<number[]>([]);
+  const tr = useTranslation();
+  const [player, setPlayer] = useState<Mode | null>(null);
+  const [stats, setStats] = useState<ReturnType<typeof loadStats>>({ words: {}, lessons: {} });
+  useEffect(() => { setStats(loadStats()); }, [player, view, bookId]);
 
   const book = books.find((b) => b.id === bookId)!;
   const lesson = book.lessons.find((l) => l.id === lessonId)!;
+  const lp = t.lp;
+  const lvLabel: Record<Level, string> = { new: lp.lvNew, attempted: lp.lvAttempted, familiar: lp.lvFamiliar, proficient: lp.lvProficient, mastered: lp.lvMastered };
+  const meaningOf = (w: BWord) => tr(w.hanzi)?.meaning ?? (lang === "ru" ? wordMap.get(w.hanzi)?.ru : undefined) ?? w.english;
+  const levelFor = (bk: string, l: BookLesson) => levelOf(l.words, stats, stats.lessons[`${bk}-${l.id}`]);
+  const sentencesFor = (l: BookLesson) => [
+    ...l.grammar.flatMap((g) => g.examples.map((e) => ({ zh: e.zh, en: e.en }))),
+    ...(l.dialogue ?? []).map((d) => ({ zh: d.line, en: d.en })),
+    ...l.words.flatMap((w) => { const e = wordMap.get(w.hanzi)?.example; return e ? [{ zh: e.hanzi, en: e.english }] : []; }),
+  ].filter((x) => /[\u4e00-\u9fff]/.test(x.zh));
+  const poolFor = book.lessons.flatMap((l) => l.words);
 
   const openLesson = (id: number) => {
     setLessonId(id);
@@ -240,12 +258,12 @@ export default function BooksPage() {
           </div>
 
           {/* Book selector */}
-          <div className="flex gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {books.map((b) => (
               <button
                 key={b.id}
                 onClick={() => switchBook(b.id)}
-                className={`flex-1 rounded-xl border-2 p-3 text-left transition-colors ${
+                className={`rounded-xl border-2 p-3 text-left transition-colors ${
                   bookId === b.id ? "border-primary bg-primary-light" : "border-border bg-bg-raised hover:border-primary"
                 }`}
               >
@@ -267,8 +285,9 @@ export default function BooksPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-[15px] font-semibold text-ink group-hover:text-primary transition-colors">{l.title}</div>
-                  <div className="text-[13px] text-ink-tertiary">{l.titleEn} · {l.words.length} {bt.words} · {l.grammar.length} {bt.patterns}</div>
+                  <div className="text-[13px] text-ink-tertiary">{lang === "ru" && l.titleRu ? l.titleRu : l.titleEn} · {l.words.length} {bt.words}{l.grammar.length ? ` · ${l.grammar.length} ${bt.patterns}` : ""}</div>
                 </div>
+                <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ${LV_STYLE[levelFor(book.id, l)]}`}>{lvLabel[levelFor(book.id, l)]}</span>
                 <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary shrink-0" />
               </button>
             ))}
@@ -291,7 +310,13 @@ export default function BooksPage() {
           <h1 className="text-2xl font-bold text-ink">
             {bt.lesson} {lesson.id}: {lesson.title}
           </h1>
-          <div className="text-[14px] text-ink-secondary">{lesson.titleEn}</div>
+          <div className="text-[14px] text-ink-secondary">{lang === "ru" && lesson.titleRu ? lesson.titleRu : lesson.titleEn}</div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <button onClick={() => setPlayer("learn")} className="rounded-2xl bg-primary px-5 py-3 text-[14px] font-extrabold text-white shadow-sm active:scale-[0.98] transition-transform">{lp.start}</button>
+            <button onClick={() => setPlayer("test")} className="rounded-2xl border-2 border-primary bg-bg-raised px-4 py-2.5 text-[14px] font-bold text-primary active:scale-[0.98] transition-transform">{lp.lessonTest}</button>
+            {lesson.words.some((w) => stats.words[w.hanzi]?.w) && <button onClick={() => setPlayer("weak")} className="rounded-2xl bg-bg-sunken px-4 py-2.5 text-[14px] font-semibold text-ink-secondary active:scale-[0.98] transition-transform">{lp.practiceWeak}</button>}
+            <span className={`ml-auto rounded-full px-3 py-1 text-[12px] font-bold ${LV_STYLE[levelFor(book.id, lesson)]}`}>{lp.mastery}: {lvLabel[levelFor(book.id, lesson)]}</span>
+          </div>
         </div>
 
         {/* Tabs */}
@@ -374,8 +399,8 @@ export default function BooksPage() {
           <div className="space-y-4">
             {lesson.grammar.map((g, i) => (
               <div key={i} className="rounded-xl border border-border bg-bg-raised p-5 space-y-3">
-                <div className="text-[16px] font-bold text-ink">{g.pattern}</div>
-                <div className="text-[14px] text-ink-secondary">{g.explanation}</div>
+                <div className="text-[16px] font-bold text-ink">{lang === "ru" && g.patternRu ? g.patternRu : g.pattern}</div>
+                <div className="text-[14px] text-ink-secondary">{lang === "ru" && g.explanationRu ? g.explanationRu : g.explanation}</div>
                 <div className="space-y-2 pt-1">
                   {g.examples.map((ex, j) => (
                     <div key={j} className="flex items-start gap-2">
@@ -384,7 +409,7 @@ export default function BooksPage() {
                       </button>
                       <div>
                         <div className="text-[15px] text-ink">{ex.zh}</div>
-                        <div className="text-[13px] text-ink-tertiary">{ex.en}</div>
+                        <div className="text-[13px] text-ink-tertiary">{lang === "ru" && ex.ru ? ex.ru : ex.en}</div>
                       </div>
                     </div>
                   ))}
@@ -433,6 +458,18 @@ export default function BooksPage() {
           <GrammarQuiz lesson={lesson} allLessons={book.lessons as BookLesson[]} t={bt} />
         )}
       </div>
+      {player && (
+        <LessonPlayer
+          key={player}
+          lessonKey={`${book.id}-${lesson.id}`}
+          title={`${bt.lesson} ${lesson.id} · ${lesson.title}`}
+          lesson={{ words: lesson.words, sentences: sentencesFor(lesson) }}
+          pool={poolFor}
+          mode={player}
+          meaningOf={meaningOf}
+          onClose={() => setPlayer(null)}
+        />
+      )}
     </AppShell>
   );
 }
