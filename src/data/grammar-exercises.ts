@@ -12,6 +12,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"妈妈___菜。","answer":"做","distractors":["的","了","在"],"difficulty":2},
     {"type":"translate","english":"He drinks juice.","answer":"他喝果汁。","accept":["他喝果汁"],"difficulty":3},
     {"type":"reorder","english":"They eat apples.","words":["苹果","他们","吃"],"answer":["他们","吃","苹果"],"difficulty":2},
+    {"type":"mcq","prompt":"Which sentence follows correct SVO order?","options":["他吃苹果。","苹果他吃。","吃苹果他。","他苹果吃。"],"answer":0,"difficulty":3},
   ],
   // 2: Linking nouns with 是
   2: [
@@ -39,6 +40,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"The movie is very interesting.","answer":"这部电影很有趣。","accept":["这部电影很有趣。"],"difficulty":3},
     {"type":"mcq","prompt":"Which sentence is correct? 'The book is very big.'","options":["这本书很大。","这本书很。大","这本书是大。","这本书很。"],"answer":0,"difficulty":3},
     {"type":"fill","sentence":"这个苹果___。","answer":"很甜","distractors":["甜很","很甜的","甜的"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence is correct?","options":["他很聪明。","他聪明很。","他很很聪明。","聪明他很。"],"answer":0,"difficulty":3},
   ],
   // 4: Possession with 的
   4: [
@@ -51,6 +53,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"她___衣服很好看。","answer":"的","distractors":["是","在","了"],"difficulty":1},
     {"type":"translate","english":"He has a dog.","answer":"他有一只狗。","accept":["他有一只狗。"],"difficulty":3},
     {"type":"fill","sentence":"我___一个妹妹。","answer":"有","distractors":["是","在","吃"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly uses 有 to show possession?","options":["她有汽车。","她汽车有。","汽车她有。","有汽车她。"],"answer":0,"difficulty":3},
   ],
   // 5: Questions with 吗
   5: [
@@ -63,6 +66,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"Does she like cats?","answer":"她喜欢猫吗？","accept":["她喜欢猫吗"],"difficulty":2},
     {"type":"translate","english":"There is a cat in the room.","answer":"房间里有一只猫。","accept":["房间里有一只猫。"],"difficulty":3},
     {"type":"reorder","english":"There is a cup on the table.","words":["有","杯子","桌子上"],"answer":["桌子上","有","杯子"],"difficulty":2},
+    {"type":"mcq","prompt":"Which sentence correctly uses '有' to express existence?","options":["公园里有花。","公园里花有。","公园里有花在。","公园里花在有。"],"answer":0,"difficulty":3},
   ],
   // 6: Demonstratives 这/那
   6: [
@@ -85,6 +89,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"The book is on the table.","answer":"书在桌子上。","accept":["书在桌子上"],"difficulty":2},
     {"type":"reorder","english":"He is at the store.","words":["在","他","商店"],"answer":["他","在","商店"],"difficulty":1},
     {"type":"translate","english":"The boy and the girl are friends.","answer":"男孩和女孩是朋友。","accept":["男孩和女孩是朋友。"],"difficulty":3},
+    {"type":"fill","sentence":"苹果___香蕉在桌子上。","answer":"和","distractors":["在","是","有"],"difficulty":3},
   ],
   // 8: Existence with 有
   8: [
@@ -122,6 +127,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"There is no pen on the desk.","answer":"桌子上没有笔。","accept":["桌子上没有笔"],"difficulty":3},
     {"type":"mcq","prompt":"Which sentence correctly says 'She doesn't have a cat.'?","options":["她有猫没。","她没有猫。","她不有猫。","她有没猫。"],"answer":1,"difficulty":3},
     {"type":"mcq","prompt":"Which sentence correctly says 'He doesn't have water.'?","options":["他没有水。","他不有水。","他有没水。","他没有没水。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly says 'He doesn't have a book.'?","options":["他没有书。","他不有书。","他没有书的。","他不书。"],"answer":0,"difficulty":3},
   ],
   // 11: Questions with 什么
   11: [
@@ -145,6 +151,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"Who is your teacher?","answer":"谁是你的老师？","accept":["谁是你的老师","你的老师是谁？","你的老师是谁"],"difficulty":2},
     {"type":"fill","sentence":"这本书是___的？","answer":"谁","distractors":["什么","哪","几"],"difficulty":1},
     {"type":"translate","english":"He is not very tired.","answer":"他不太累。","accept":["他不太累。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly uses '不太' to mean 'not very'?","options":["她不太喜欢这个电影。","她不不太喜欢这个电影。","她太不喜欢这个电影。","她不太喜欢太这个电影。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly uses '不太' to mean 'not very'?","options":["他不太高兴。","他不高兴太。","他太不高兴。","他高兴不太。"],"answer":0,"difficulty":3},
   ],
   // 13: Questions with 哪
   13: [
@@ -169,6 +177,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"这个___钱？","answer":"多少","distractors":["几","什么","哪"],"difficulty":1},
     {"type":"translate","english":"How many books do you have?","answer":"你有几本书？","accept":["你有几本书"],"difficulty":2},
     {"type":"translate","english":"Is he your brother?","answer":"他是你的哥哥吗？","accept":["他是你的哥哥吗？"],"difficulty":3},
+    {"type":"mcq","prompt":"Is this your pen?","options":["这是你的笔吗？","这是你的笔不？","这是你的笔呀？","这是你的笔呢？"],"answer":0,"difficulty":3},
+    {"type":"translate","english":"Do you speak Chinese?","answer":"你说中文吗？","accept":["你说中文吗？"],"difficulty":3},
   ],
   // 15: Affirmative-negative questions
   15: [
@@ -191,6 +201,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"明天去看电影，___？","answer":"好吗","distractors":["吗","呢","了"],"difficulty":1},
     {"type":"translate","english":"Let's study Chinese, okay?","answer":"我们学中文，好吗？","accept":["我们学中文，好吗"],"difficulty":2},
     {"type":"translate","english":"Who is she?","answer":"她是谁？","accept":["她是谁？"],"difficulty":3},
+    {"type":"reorder","english":"Who is this?","words":["是","谁","这"],"answer":["这","是","谁"],"difficulty":2},
   ],
   // 17: Questions with 呢
   17: [
@@ -202,6 +213,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"他去了，你___？","answer":"呢","distractors":["吗","吧","了"],"difficulty":1},
     {"type":"translate","english":"I like tea. And you?","answer":"我喜欢茶。你呢？","accept":["我喜欢茶，你呢？","我喜欢茶。你呢"],"difficulty":2},
     {"type":"translate","english":"Where is the school?","answer":"学校在哪里？","accept":["学校在哪里？"],"difficulty":3},
+    {"type":"mcq","prompt":"Where is the teacher?","options":["老师在哪儿？","老师哪里？","老师哪儿？","老师哪里在？"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"Where is the library?","options":["图书馆在哪儿？","图书馆在哪儿的？","图书馆哪儿在？","图书馆哪儿的在？"],"answer":0,"difficulty":3},
   ],
   // 18: Also with 也
   18: [
@@ -228,6 +241,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"We all eat Chinese food.","answer":"我们都吃中国菜。","accept":["我们都吃中国菜"],"difficulty":2},
     {"type":"translate","english":"How do you go to school?","answer":"你怎么去学校？","accept":["你怎么去学校？"],"difficulty":3},
     {"type":"mcq","prompt":"怎么去公园？","options":["我怎么去公园？","我怎么买公园？","我怎么看公园？","我怎么吃公园？"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"How do you say 'How do you make tea?' in Chinese?","options":["你茶怎么喝？","怎么茶你喝？","你怎么喝茶？","茶怎么你喝？"],"answer":2,"difficulty":3},
   ],
   // 20: Adverbs 太...了
   20: [
@@ -254,6 +268,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"This is really delicious!","answer":"这个真好吃！","accept":["这个真好吃","真好吃！","真好吃"],"difficulty":2},
     {"type":"translate","english":"Which book is yours?","answer":"哪本书是你的？","accept":["哪本书是你的？"],"difficulty":3},
     {"type":"mcq","prompt":"Which one is your pen?","options":["哪个是你的书？","哪个是你的笔？","哪个是你的？","哪个是你的桌子？"],"answer":1,"difficulty":3},
+    {"type":"mcq","prompt":"Which one is your bag? (The bag is small)","options":["哪个是你的小包？","哪个是你的包小？","小哪个是你的包？","包哪个是你的小？"],"answer":0,"difficulty":3},
   ],
   // 22: A little with 一点儿
   22: [
@@ -291,6 +306,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我___没吃饭。","answer":"还","distractors":["也","都","就"],"difficulty":2},
     {"type":"translate","english":"She is still sleeping.","answer":"她还在睡觉。","accept":["她还在睡觉"],"difficulty":2},
     {"type":"translate","english":"How is the cake?","answer":"蛋糕怎么样？","accept":["蛋糕怎么样？"],"difficulty":3},
+    {"type":"mcq","prompt":"How is the movie?","options":["电影怎么样？","电影怎么？","电影怎么了？","电影怎么样了？"],"answer":0,"difficulty":3},
   ],
   // 25: Want to with 想
   25: [
@@ -302,6 +318,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我___喝咖啡。","answer":"想","distractors":["要","会","能"],"difficulty":1},
     {"type":"translate","english":"I want to go to China.","answer":"我想去中国。","accept":["我想去中国"],"difficulty":2},
     {"type":"translate","english":"How tall is he?","answer":"他多高？","accept":["他多高？"],"difficulty":3},
+    {"type":"reorder","english":"How tall is he?","words":["高","他","多"],"answer":["他","多","高"],"difficulty":2},
   ],
   // 26: Need/must with 要
   26: [
@@ -337,6 +354,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"他生病了，___去上班。","answer":"不能","distractors":["不会","不可以","不要"],"difficulty":2},
     {"type":"translate","english":"I can't hear clearly.","answer":"我听不清楚。","accept":["我听不清楚","我不能听清楚。","我不能听清楚"],"difficulty":3},
     {"type":"translate","english":"They all speak Chinese.","answer":"他们都讲中文。","accept":["他们都讲中文。"],"difficulty":3},
+    {"type":"reorder","english":"They all eat rice.","words":["都","饭","吃","他们"],"answer":["他们","都","吃","饭"],"difficulty":2},
+    {"type":"mcq","prompt":"All the students _______ to school every day.","options":["都去","去都","都去都","都"],"answer":0,"difficulty":3},
   ],
   // 29: May/permission with 可以
   29: [
@@ -374,6 +393,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我___看电影。","answer":"喜欢","distractors":["想","要","会"],"difficulty":1},
     {"type":"translate","english":"Do you like playing basketball?","answer":"你喜欢打篮球吗？","accept":["你喜欢打篮球吗"],"difficulty":2},
     {"type":"mcq","prompt":"Tom wants to try the cake again. What should he say?","options":["他再吃蛋糕。","他吃再蛋糕。","他再蛋糕吃。","他吃蛋糕再。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"What should you say if you want to watch a movie again tomorrow?","options":["我明天看电影。","我明天再看电影。","我明天看再电影。","我明天看电影再。"],"answer":1,"difficulty":3},
   ],
   // 32: Go/come to do with 去/来
   32: [
@@ -385,6 +405,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"reorder","english":"Come to my house to eat.","words":["吃饭","我家","来","到"],"answer":["来","到","我家","吃饭"],"difficulty":2},
     {"type":"translate","english":"She went to buy things.","answer":"她去买东西了。","accept":["她去买东西了","她去买东西。","她去买东西"],"difficulty":2},
     {"type":"translate","english":"He is still eating.","answer":"他还在吃饭。","accept":["他还在吃饭。"],"difficulty":3},
+    {"type":"mcq","prompt":"What is the correct way to say 'She is still studying'?","options":["她还学习。","她学习还。","她还学习了。","她学习了还。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"She is still studying. What is the correct sentence?","options":["她学习还。","她还学习。","她还学习了。","她学习了还。"],"answer":1,"difficulty":3},
   ],
   // 33: Return with 回
   33: [
@@ -410,6 +432,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"The book is on the table.","answer":"书在桌子上。","accept":["书在桌子上。"],"difficulty":3},
     {"type":"fill","sentence":"我的钥匙___包里。","answer":"在","distractors":["吃","喝","看"],"difficulty":3},
     {"type":"mcq","prompt":"他___在教室里。","options":["喝","吃","在","看"],"answer":2,"difficulty":3},
+    {"type":"fill","sentence":"她___公园。","answer":"在","distractors":["吃","看","买"],"difficulty":3},
   ],
   // 35: Experience with 过
   35: [
@@ -472,6 +495,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"mcq","prompt":"啊 at the end of a sentence expresses:","options":["surprise or emphasis","a question","a suggestion","past tense"],"answer":0,"difficulty":1},
     {"type":"translate","english":"So beautiful!","answer":"好漂亮啊！","accept":["好漂亮啊","真漂亮啊！","真漂亮啊"],"difficulty":2},
     {"type":"mcq","prompt":"Which sentence is correct? The girl is good to her brother.","options":["姐姐对弟弟好。","姐姐对弟弟不好。","姐姐对妈妈好。","姐姐对爸爸不好。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence is correct? The boy is good to his sister.","options":["男孩对姐姐好。","男孩对姐姐了。","男孩对姐姐好了。","男孩对姐姐好啊。"],"answer":0,"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence is correct? The teacher is kind to the students.","options":["老师对学生们好。","老师对学生们说。","老师对学生们吃。","老师对学生们看。"],"answer":0,"difficulty":3},
   ],
   // 40: Telling time
   40: [
@@ -483,6 +508,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"reorder","english":"It's two fifteen.","words":["分","两","一刻","点"],"answer":["两","点","一刻"],"difficulty":2},
     {"type":"translate","english":"What time is it now?","answer":"现在几点？","accept":["现在几点","现在几点了？","现在几点了"],"difficulty":1},
     {"type":"translate","english":"Try the shoes briefly.","answer":"试一下鞋子。","accept":["试一下鞋子"],"difficulty":3},
+    {"type":"fill","sentence":"我___一下书。","answer":"看","distractors":["吃","喝","玩"],"difficulty":3},
   ],
   // 41: Dates and days
   41: [
@@ -509,6 +535,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"reorder","english":"I slept for two hours.","words":["小时","了","两个","睡","我"],"answer":["我","睡","了","两个","小时"],"difficulty":2},
     {"type":"translate","english":"He studied for five hours.","answer":"他学了五个小时。","accept":["他学了五个小时","他学习了五个小时。","他学习了五个小时"],"difficulty":2},
     {"type":"mcq","prompt":"Which sentence is correct? They go to the park together.","options":["他们去公园一起。","他们一起去公园。","他们一起公园去。","他们去一起公园。"],"answer":1,"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence means 'We go to school together'?","options":["我们一起去学校。","我们学校一起去。","我们去一起学校。","我们去学校一起。"],"answer":0,"difficulty":3},
   ],
   // 43: Time words (before/after)
   43: [
@@ -519,6 +546,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"吃饭___去散步。","answer":"以后","distractors":["以前","的时候","正在"],"difficulty":1},
     {"type":"mcq","prompt":"以前 means:","options":["before","after","during","always"],"answer":0,"difficulty":1},
     {"type":"translate","english":"He came before me.","answer":"他在我以前来了。","accept":["他在我以前来了","他比我先来了。","他比我先来了"],"difficulty":3},
+    {"type":"translate","english":"She bought a new dress.","answer":"她买了一件新裙子。","accept":["她买了一件新裙子。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly uses 了 to show a completed action?","options":["我吃饭了。","我吃饭。","我吃。","我饭吃。"],"answer":0,"difficulty":3},
   ],
   // 44: When with 的时候
   44: [
@@ -529,6 +558,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我吃饭___看电视。","answer":"的时候","distractors":["以后","以前","了"],"difficulty":1},
     {"type":"reorder","english":"When I was young.","words":["的时候","小","我"],"answer":["我","小","的时候"],"difficulty":2},
     {"type":"translate","english":"When it rains, I stay home.","answer":"下雨的时候，我在家。","accept":["下雨的时候，我在家","下雨的时候我在家。","下雨的时候我在家"],"difficulty":2},
+    {"type":"translate","english":"It's getting dark now.","answer":"天黑了。","accept":["天黑了"],"difficulty":3},
   ],
   // 45: Measure words (个, 本, 只, etc.)
   45: [
@@ -540,6 +570,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我买了三___苹果。","answer":"个","distractors":["本","只","杯"],"difficulty":1},
     {"type":"mcq","prompt":"Which measure word is for books?","options":["本","个","只","杯"],"answer":0,"difficulty":1},
     {"type":"translate","english":"He is cleaning the room right now.","answer":"他正在打扫房间。","accept":["他正在打扫房间。"],"difficulty":3},
+    {"type":"mcq","prompt":"Which sentence correctly shows that she is eating dinner right now?","options":["她吃晚饭。","她正在吃晚饭。","她吃了晚饭。","她要吃晚饭。"],"answer":1,"difficulty":3},
   ],
   // 46: Ordinal numbers with 第
   46: [
@@ -564,6 +595,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"There are about ten people.","answer":"有十几个人。","accept":["有十几个人","大概有十个人。","大概有十个人"],"difficulty":2},
     {"type":"translate","english":"When it is cold, I wear a coat.","answer":"天冷的时候，我穿外套。","accept":["天冷的时候，我穿外套。"],"difficulty":3},
     {"type":"reorder","english":"He plays basketball when it is sunny.","words":["他","打","篮球","的时候","天","晴"],"answer":["天","晴","的时候","他","打","篮球"],"difficulty":2},
+    {"type":"mcq","prompt":"When it is sunny, I go to the park.","options":["天晴的时候，我打篮球。","天晴的时候，我去看公园。","天晴的时候，我去公园。","天晴的时候，我玩公园。"],"answer":2,"difficulty":3},
   ],
   // 48: Money and prices
   48: [
@@ -576,6 +608,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"This is too expensive.","answer":"这个太贵了。","accept":["这个太贵了","太贵了。","太贵了"],"difficulty":2},
     {"type":"translate","english":"He drinks everything.","answer":"他什么都喝。","accept":["他什么都喝。"],"difficulty":3},
     {"type":"fill","sentence":"我___都不怕。","answer":"什么","distractors":["都","也","不"],"difficulty":3},
+    {"type":"mcq","prompt":"She eats everything.","options":["她什么也吃。","她什么都吃。","她什么吃也。","她吃什么都。"],"answer":1,"difficulty":3},
   ],
   // 49: 二 vs 两
   49: [
@@ -589,6 +622,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"translate","english":"He will come tomorrow.","answer":"他明天来。","accept":["他明天来。"],"difficulty":3},
     {"type":"reorder","english":"They eat noodles today.","words":["今天","他们","吃","面"],"answer":["他们","今天","吃","面"],"difficulty":2},
     {"type":"mcq","prompt":"Which sentence is correct? He drinks water today. / He today drinks water.","options":["他今天喝水。","他喝水今天。","他今天喝。","他喝今天水。"],"answer":0,"difficulty":3},
+    {"type":"translate","english":"I go to school tomorrow.","answer":"我明天去学校。","accept":["我明天去学校"],"difficulty":3},
   ],
   // 50: Asking about actions with 怎么
   50: [
@@ -612,6 +646,7 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"reorder","english":"How was the movie?","words":["怎么样","电影"],"answer":["电影","怎么样"],"difficulty":1},
     {"type":"translate","english":"How is the weather today?","answer":"今天天气怎么样？","accept":["今天天气怎么样","今天的天气怎么样？","今天的天气怎么样"],"difficulty":2},
     {"type":"translate","english":"Before eating, I wash my hands.","answer":"吃饭以前，我洗手。","accept":["吃饭以前，我洗手"],"difficulty":3},
+    {"type":"fill","sentence":"___，我不会说中文。","answer":"来中国以前","distractors":["来中国以后","来中国现在","来中国明天"],"difficulty":3},
   ],
   // 52: Asking reason with 为什么
   52: [
@@ -647,6 +682,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
     {"type":"fill","sentence":"我___学校去。","answer":"到","distractors":["从","在","去"],"difficulty":1},
     {"type":"reorder","english":"From home to school.","words":["学校","到","从","家"],"answer":["从","家","到","学校"],"difficulty":2},
     {"type":"translate","english":"I walk to the store.","answer":"我走到商店。","accept":["我走到商店","我到商店去。","我到商店去"],"difficulty":2},
+    {"type":"translate","english":"I have two books.","answer":"我有两本书。","difficulty":3},
+    {"type":"mcq","prompt":"Which sentence is correct?","options":["我有五个书。","我有五个个书。","我有五个苹果。","我有五个个苹果。"],"answer":2,"difficulty":3},
   ],
   // 55: Preposition 给 (to/for someone)
   55: [
@@ -681,6 +718,8 @@ export const grammarExercises: Record<number, Exercise[]> = {
   
     {"type":"fill","sentence":"___下雨了，___我没去。","answer":"因为","distractors":["虽然","如果","但是"],"difficulty":1},
     {"type":"translate","english":"Because I'm sick, I didn't go to school.","answer":"因为我生病了，所以我没去学校。","accept":["因为我生病了，所以没去学校。","因为我生病了，所以没去学校","因为我病了，所以没去上学。","因为我病了，所以没去上学"],"difficulty":2},
+    {"type":"mcq","prompt":"Which sentence correctly uses the ordinal number for 'third'?","options":["这是第三个人。","这是第三个人的。","这是第三个人的书。","这是第三个人书。"],"answer":0,"difficulty":3},
+    {"type":"reorder","english":"This is the third time I visit China.","words":["是","中国","我","第三","次","这","来"],"answer":["这","是","我","第三","次","来","中国"],"difficulty":2},
   ],
   // 58: Although with 虽然...但是
   58: [
