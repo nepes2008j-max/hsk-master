@@ -5,6 +5,7 @@ import { createRequire } from "node:module";
 const { pinyin } = createRequire(import.meta.url)("pinyin-pro");
 const seg = new Intl.Segmenter("zh", { granularity: "word" });
 const stories = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+const NAMES = new Set(["小明", "小红", "马克", "艾米丽", "北京", "天安门", "长城", "故宫", "中国"]); // proper nouns get a capital letter
 const out = stories.map((s) => ({
   ...s,
   sentences: s.sentences.map((x) => {
@@ -14,7 +15,7 @@ const out = stories.map((s) => ({
     let i = 0;
     const tokens = words.map((w) => {
       if (!/[一-鿿]/.test(w)) return { w, p: "" };
-      const n = [...w].length; const p = py.slice(i, i + n).join(""); i += n; return { w, p };
+      const n = [...w].length; let p = py.slice(i, i + n).join(""); i += n; if (NAMES.has(w)) p = p[0].toUpperCase() + p.slice(1); return { w, p };
     });
     return { ...x, tokens };
   }),

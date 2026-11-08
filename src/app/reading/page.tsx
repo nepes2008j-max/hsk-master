@@ -8,6 +8,7 @@ import { stories, type Story } from "@/data/stories";
 import { allWords } from "@/lib/all-words";
 import { loadCedict, lookupCedict, type CedictEntry } from "@/lib/cedict";
 import { translate } from "@/lib/mt";
+import { saveUserCard } from "@/lib/storage";
 import { speak } from "@/lib/tts";
 import { useLang } from "@/lib/i18n";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -41,6 +42,7 @@ export default function ReadingPage() {
   const [cedict, setCedict] = useState<CedictEntry[] | null>(null);
   const [auto, setAuto] = useState<string | null>(null);
   const [sentTr, setSentTr] = useState<Record<number, string>>({});
+  const [addedCard, setAddedCard] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -75,6 +77,7 @@ export default function ReadingPage() {
     return () => { dead = true; };
   }, [word, lang, localized, gloss]);
 
+  useEffect(() => { setAddedCard(false); }, [word]);
   const wordPy = word ? (app?.pinyin ?? (word.p || pinyinOf(word))) : "";
 
   const translateSentence = async (i: number, zh: string) => {
@@ -140,6 +143,14 @@ export default function ReadingPage() {
                 <button onClick={() => setWord(null)} aria-label={rd.hide} className="p-2 -mr-2 text-ink-tertiary hover:text-ink"><IconX className="w-4 h-4" /></button>
               </div>
               <button onClick={() => speak(word.w)} className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl bg-bg-sunken py-3 text-[14px] font-semibold text-ink"><IconVolume className="w-4 h-4" /> {rd.listen}</button>
+              <button
+                onClick={async () => {
+                  if (!word) return;
+                  await saveUserCard({ id: `read-${word.w}`, front: word.w, back: `${wordPy} — ${localized ?? auto ?? app?.english ?? entries[0]?.def ?? ""}`, pinyin: wordPy, deck: "Reading", created: Date.now() });
+                  setAddedCard(true);
+                }}
+                className="mt-2 w-full rounded-xl border border-border bg-bg-raised py-3 text-[14px] font-semibold text-primary active:scale-[0.98] transition-transform"
+              >{addedCard ? rd.added : rd.addCard}</button>
               <div className="mt-4 space-y-3">
                 {(localized || auto) && <div className="text-[18px] text-ink">{localized ?? auto}{!localized && <span className="ml-1.5 text-[11px] font-medium text-ink-tertiary">({rd.auto})</span>}</div>}
                 {app && <div className={localized || auto ? "text-[14px] text-ink-secondary" : "text-[18px] text-ink"}>{app.english}</div>}
