@@ -49,8 +49,8 @@
 * { box-sizing: border-box; }
 
 body {
-  /* warm red -> orange glow at the top that fades into cream */
-  background: linear-gradient(180deg, rgba(239,68,68,0.26) 0%, rgba(251,146,60,0.20) 200px, rgba(253,186,116,0.08) 420px, rgba(251,247,238,0) 640px) no-repeat, var(--bg);
+  /* vivid orange-red glow at the top (like the reference app) fading into a light page */
+  background: linear-gradient(180deg, #ff5a26 0%, rgba(255,106,50,0.92) 70px, rgba(255,138,76,0.55) 190px, rgba(255,175,120,0.20) 330px, rgba(251,247,238,0) 520px) no-repeat, var(--bg);
   background-attachment: scroll;
   color: var(--text);
   -webkit-font-smoothing: antialiased;

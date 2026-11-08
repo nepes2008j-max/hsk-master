@@ -435,7 +435,7 @@ export default function BooksPage() {
                 <div className="text-[13px] text-ink-tertiary">{lesson.words.length} {bt.words}</div>
               </div>
             </button>
-            <button
+            {lesson.grammar.length > 0 && <button
               onClick={() => setQuizType("grammar")}
               className="w-full flex items-center gap-4 rounded-xl border border-border bg-bg-raised p-5 hover:border-primary transition-colors text-left group"
             >
@@ -446,7 +446,7 @@ export default function BooksPage() {
                 <div className="text-[15px] font-semibold text-ink group-hover:text-primary transition-colors">{bt.grammarQuiz}</div>
                 <div className="text-[13px] text-ink-tertiary">{lesson.grammar.length} {bt.patterns}</div>
               </div>
-            </button>
+            </button>}
           </div>
         )}
 

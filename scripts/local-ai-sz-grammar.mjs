@@ -25,7 +25,7 @@ One entry per language point listed (split them correctly). Examples: simple nat
     const bad = pts.find((p) => !p.pattern || !p.name_en || !p.explanation_en || !/[а-яё]/i.test(p.explanation_ru ?? "") || !Array.isArray(p.examples) || p.examples.length < 3 ||
       p.examples.some((e) => typeof e.zh !== "string" || !cjk.test(e.zh) || !/[。？！]$/.test(e.zh) || !e.en || !/[а-яё]/i.test(e.ru ?? "")));
     if (bad) { console.log(`  retry ${n}: invalid ${JSON.stringify(bad).slice(0, 90)}`); continue; }
-    const chk = await ask(`You are a strict Chinese-teaching editor. Lesson ${n}, language points: ${raw}
+    const chk = process.env.NOCHECK ? { bad: [] } : await ask(`You are a strict Chinese-teaching editor. Lesson ${n}, language points: ${raw}
 ${pts.map((p, i) => `${i + 1}. ${p.pattern} (${p.name_en}): ${p.explanation_en}\n` + p.examples.map((e) => `   ${e.zh} | ${e.en} | ${e.ru}`).join("\n")).join("\n")}
 List the numbers of points whose explanation is wrong/misleading, or that have an ungrammatical Chinese example, or an inaccurate English/Russian translation. Reply ONLY JSON {"bad":[numbers],"notes":"short"}`, 0);
     if (!chk || (Array.isArray(chk.bad) && chk.bad.length)) { console.log(`  reject ${n}: ${JSON.stringify(chk?.bad)} ${chk?.notes ?? ""}`); continue; }
