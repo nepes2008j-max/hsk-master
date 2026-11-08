@@ -5,7 +5,7 @@ import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import ProgressBar from "@/components/ProgressBar";
 import { getProgress, type ProgressData } from "@/lib/storage";
-import { IconBook, IconPencil, IconBrush, IconCards, IconClipboard, IconFire, IconStar, IconGlobe, IconGamepad, IconBookOpen, IconBeaker } from "@/components/Icons";
+import { IconSearch, IconBook, IconPencil, IconBrush, IconCards, IconClipboard, IconFire, IconStar, IconGlobe, IconGamepad, IconBookOpen, IconBeaker } from "@/components/Icons";
 import { useLang } from "@/lib/i18n";
 
 export default function DashboardPage() {
@@ -36,6 +36,20 @@ export default function DashboardPage() {
         <h1 className="text-xl font-bold text-ink tracking-tight">
           {t.dashboard.title} <span className="text-ink-secondary font-normal text-[15px]">{t.dashboard.subtitle}</span>
         </h1>
+
+        <Link href="/dictionary" className="md:hidden flex items-center gap-2.5 h-12 rounded-2xl border border-border bg-bg-raised px-3.5 text-[15px] text-ink-tertiary shadow-sm">
+          <IconSearch className="w-[18px] h-[18px]" />
+          {t.vocabPage.search}
+        </Link>
+
+        {progress && (
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#dc2626] to-[#b91c1c] p-5 text-white">
+            <span aria-hidden className="pointer-events-none absolute -right-2 -bottom-8 text-[150px] font-extrabold leading-none opacity-[0.13]">学</span>
+            <div className="text-[12px] font-semibold opacity-85">{t.dashboard.vocabulary}</div>
+            <div className="mt-1 mb-3 text-3xl font-extrabold tracking-tight tabular-nums">{progress.wordsLearned.length} <span className="text-lg font-semibold opacity-90">{t.vocabPage.learned}</span></div>
+            <Link href="/cards" className="inline-block rounded-xl bg-white px-4 py-2.5 text-[14px] font-bold text-[#b91c1c] active:scale-[0.97] transition-transform">{t.cards} →</Link>
+          </div>
+        )}
 
         {progress && isGamified && (
           <div className="flex gap-4 p-4 rounded-xl bg-bg-raised border border-border">

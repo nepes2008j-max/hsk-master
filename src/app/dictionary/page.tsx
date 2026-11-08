@@ -152,14 +152,33 @@ export default function DictionaryPage() {
   return (
     <AppShell>
       <div className="space-y-5">
-        <div className="space-y-3">
+        <div className="space-y-3 sticky top-0 z-10 bg-bg -mx-4 px-4 pt-2 pb-2 md:static md:mx-0 md:px-0 md:pt-0 md:pb-0">
           <h1 className="text-2xl font-bold text-ink tracking-tight">
             {t.dictPage.title}
             <span className="text-[14px] font-normal text-ink-tertiary ml-2">
               {filtered.length} {t.dictPage.words}
             </span>
           </h1>
-          <p className="text-[13px] text-ink-secondary">{t.dictPage.searchAll}</p>
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-tertiary" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t.dictPage.searchPlaceholder}
+                className="w-full rounded-xl border border-border bg-bg-raised pl-9 pr-3 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
+              />
+            </div>
+            <button
+              onClick={() => setShowPinyin(!showPinyin)}
+              className={`rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors ${
+                showPinyin ? "bg-primary-light text-primary-text" : "bg-bg-sunken text-ink-tertiary"
+              }`}
+            >
+              拼音
+            </button>
+          </div>
           <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
             {(["all", ...DECK_FILTERS] as const).map((l) => (
               <button
@@ -175,27 +194,7 @@ export default function DictionaryPage() {
           </div>
         </div>
 
-        {/* Search */}
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-tertiary" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t.dictPage.searchPlaceholder}
-              className="w-full rounded-xl border border-border bg-bg-raised pl-9 pr-3 py-2.5 text-[14px] text-ink placeholder:text-ink-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-colors"
-            />
-          </div>
-          <button
-            onClick={() => setShowPinyin(!showPinyin)}
-            className={`rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors ${
-              showPinyin ? "bg-primary-light text-primary-text" : "bg-bg-sunken text-ink-tertiary"
-            }`}
-          >
-            拼音
-          </button>
-        </div>
+        <p className="text-[13px] text-ink-secondary -mt-2">{t.dictPage.searchAll}</p>
 
         {/* Topics */}
         {!search && deckFilter === "all" && (

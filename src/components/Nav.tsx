@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IconChevron, IconHome, IconBook, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconPencil, IconGamepad, IconBookOpen, IconBeaker } from "./Icons";
+import { IconChevron, IconHome, IconBook, IconBrush, IconCards, IconClipboard, IconCog, IconGlobe, IconPencil, IconGamepad, IconBookOpen, IconBeaker, IconSearch, IconX } from "./Icons";
 import { useLang, type Lang } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 
@@ -18,6 +18,8 @@ export default function Nav() {
   // Desktop sidebar can be hidden; it slides back in when the mouse touches the left edge.
   const [collapsed, setCollapsed] = useState(false);
   const [peek, setPeek] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  useEffect(() => { setMoreOpen(false); }, [pathname]);
   useEffect(() => {
     try { setCollapsed(localStorage.getItem("hsk-nav-collapsed") === "1"); } catch { /* noop */ }
   }, []);
@@ -46,15 +48,18 @@ export default function Nav() {
     { href: "/academic", label: t.academic, Icon: IconBeaker },
   ] as const;
 
+  const isActive = (href: string) => pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+
+  // Phone tabs (Home, Search, Learn, Cards) + "More" sheet with everything else.
   const mobileLinks = [
     { href: "/dashboard", label: t.home, Icon: IconHome },
+    { href: "/dictionary", label: t.dict, Icon: IconSearch },
     { href: "/learn/vocabulary", label: t.vocab, Icon: IconBook },
     { href: "/cards", label: t.cards, Icon: IconCards },
-    { href: "/test", label: t.test, Icon: IconClipboard },
-    { href: "/games", label: t.games, Icon: IconGamepad },
   ] as const;
+  const moreLinks = allLinks.filter((l) => !mobileLinks.some((m) => m.href === l.href));
+  const moreActive = moreLinks.some((l) => isActive(l.href)) || pathname === "/settings";
 
-  const isActive = (href: string) => pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 
   return (
     <>
@@ -169,8 +174,44 @@ export default function Nav() {
               <span className="text-[10px] font-medium leading-tight">{label}</span>
             </Link>
           ))}
+          <button
+            onClick={() => setMoreOpen(true)}
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] py-1.5 rounded-lg transition-colors ${moreActive ? "text-primary" : "text-ink-tertiary active:text-ink"}`}
+          >
+            <span className="flex gap-[3px] items-center h-[22px]"><i className="w-1 h-1 rounded-full bg-current" /><i className="w-1 h-1 rounded-full bg-current" /><i className="w-1 h-1 rounded-full bg-current" /></span>
+            <span className="text-[10px] font-medium leading-tight">{t.more}</span>
+          </button>
         </div>
       </nav>
+
+      {/* Phone "More" sheet */}
+      <div
+        className={`md:hidden fixed inset-0 z-[60] bg-black/40 transition-opacity ${moreOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setMoreOpen(false)}
+      />
+      <div
+        className={`md:hidden fixed left-0 right-0 bottom-0 z-[61] rounded-t-3xl bg-bg px-5 pt-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-2xl transition-transform duration-300 ${moreOpen ? "translate-y-0" : "translate-y-full"}`}
+        role="dialog"
+        aria-label={t.more}
+      >
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border-strong" />
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-[15px] font-bold text-ink">{t.more}</div>
+          <button onClick={() => setMoreOpen(false)} aria-label="Close" className="p-2 -mr-2 text-ink-tertiary"><IconX className="w-4 h-4" /></button>
+        </div>
+        <div className="grid grid-cols-3 gap-2.5">
+          {[...moreLinks, { href: "/settings", label: t.settings, Icon: IconCog }].map(({ href, label, Icon }) => (
+            <Link key={href} href={href} className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-bg-raised py-4 px-2 text-center active:scale-[0.97] transition-transform">
+              <Icon className="w-6 h-6 text-primary" />
+              <span className="text-[12px] font-semibold text-ink leading-tight">{label}</span>
+            </Link>
+          ))}
+          <button onClick={nextLang} className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-bg-raised py-4 px-2 text-center active:scale-[0.97] transition-transform">
+            <span className="w-6 h-6 flex items-center justify-center text-[11px] font-bold rounded border-2 border-primary text-primary">{langFlag[lang]}</span>
+            <span className="text-[12px] font-semibold text-ink leading-tight">{t.langName}</span>
+          </button>
+        </div>
+      </div>
     </>
   );
 }
