@@ -38,6 +38,7 @@ export default function DictionaryPage() {
   const filtered = useMemo(() => {
     let words = allWords;
     if (deckFilter !== "all") words = words.filter((w) => w.decks.includes(deckFilter));
+    if (deckFilter === "Book") words = [...words].sort((a, b) => (a.lesson ?? 0) - (b.lesson ?? 0)); // lesson by lesson
     if (activeTopic) words = words.filter((w) => w.topic === activeTopic);
     if (search) {
       const q = search.toLowerCase();
@@ -94,6 +95,9 @@ export default function DictionaryPage() {
                       <span className="text-[10px] font-bold text-primary bg-primary-light rounded px-1.5 py-0.5 shrink-0">
                         HSK{word.hsk}
                       </span>
+                    )}
+                    {deckFilter === "Book" && word.lesson && (
+                      <span className="text-[10px] font-bold text-ink-secondary bg-bg-sunken rounded px-1.5 py-0.5 shrink-0">L{word.lesson}</span>
                     )}
                     <button
                       onClick={(e) => { e.stopPropagation(); speak(word.hanzi); }}
@@ -155,6 +159,7 @@ export default function DictionaryPage() {
               {filtered.length} {t.dictPage.words}
             </span>
           </h1>
+          <p className="text-[13px] text-ink-secondary">{t.dictPage.searchAll}</p>
           <div className="flex gap-1.5 overflow-x-auto scrollbar-none">
             {(["all", ...DECK_FILTERS] as const).map((l) => (
               <button

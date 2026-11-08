@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect } from "react";
 import AppShell from "@/components/AppShell";
-import { allWords, DECK_FILTERS, type DWord } from "@/lib/all-words";
+import { allWords, DECK_FILTERS, bookLessons, type DWord } from "@/lib/all-words";
 import { speak } from "@/lib/tts";
 import { useProgress } from "@/hooks/useProgress";
 import { saveUserCard } from "@/lib/storage";
@@ -29,7 +29,11 @@ export default function VocabularyPage() {
 
   const learnedSet = useMemo(() => new Set(progress?.wordsLearned), [progress?.wordsLearned]);
 
-  const wordList = useMemo(() => (deck === "all" ? allWords : allWords.filter((w) => w.decks.includes(deck))), [deck]);
+  const wordList = useMemo(() => {
+    if (deck === "all") return allWords;
+    const l = allWords.filter((w) => w.decks.includes(deck));
+    return deck === "Book" ? l.sort((a, b) => (a.lesson ?? 0) - (b.lesson ?? 0)) : l; // Book deck: lesson by lesson
+  }, [deck]);
   const meaningOf = (w: DWord) => tr(w.hanzi)?.meaning ?? (lang === "ru" ? w.ru : undefined) ?? w.english;
 
   const filtered = useMemo(() => {
@@ -91,13 +95,22 @@ export default function VocabularyPage() {
         </div>
 
         <div className="space-y-0.5">
-          {filtered.map((word) => {
+          {filtered.map((word, idx) => {
             const learned = learnedSet.has(word.hanzi);
+            const lessonHead = deck === "Book" && !search && word.lesson !== filtered[idx - 1]?.lesson ? bookLessons.find((l) => l.n === word.lesson) : undefined;
             return (
-              <button
-                key={word.hanzi}
+              <div key={word.hanzi}>
+              {lessonHead && (
+                <div className="pt-4 pb-1.5 px-1 text-[12px] font-semibold uppercase tracking-wide text-ink-tertiary">
+                  {`Lesson ${lessonHead.n}`} · <span className="normal-case">{lessonHead.title} — {lessonHead.en}</span>
+                </div>
+              )}
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelectedWord(word); setAddedCard(false); } }}
                 onClick={() => { setSelectedWord(word); setAddedCard(false); }}
-                className={`w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-bg-raised active:bg-bg-sunken group ${
+                className={`w-full flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-left cursor-pointer transition-colors hover:bg-bg-raised active:bg-bg-sunken group ${
                   learned ? "border-l-2 border-primary" : ""
                 }`}
               >
@@ -116,7 +129,8 @@ export default function VocabularyPage() {
                 >
                   <IconVolume className="w-4 h-4" />
                 </button>
-              </button>
+              </div>
+              </div>
             );
           })}
         </div>

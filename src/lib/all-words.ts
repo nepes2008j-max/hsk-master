@@ -2,7 +2,7 @@ import { dictionary } from "@/data/dictionary";
 import { vocabulary } from "@/data/vocabulary";
 import { vocabulary2 } from "@/data/vocabulary2";
 import { allAcademicWords, chemLabCategories } from "@/data/academic-vocab";
-import { bookWords } from "@/data/book-words";
+import { bookWords, bookLessons } from "@/data/book-words";
 import { examplesExtra } from "@/data/examples-extra";
 import { wordsRuExtra } from "@/data/words-ru-extra";
 
@@ -13,6 +13,7 @@ export interface DWord {
   ru?: string;
   topic?: string;
   hsk?: number;
+  lesson?: number; // lesson of the "Book" deck
   decks: string[];
   example?: { hanzi: string; pinyin: string; english: string; ru?: string };
 }
@@ -33,11 +34,12 @@ vocabulary.forEach((w) => add(w, "HSK 1"));
 vocabulary2.forEach((w) => add(w, "HSK 2"));
 allAcademicWords.filter((w) => !w.id.startsWith("cl")).forEach((w) => add(w, "STEM"));
 chemLabCategories.forEach((c) => c.words.forEach((w) => add(w, "Special")));
-bookWords.forEach((w) => add(w, "Book"));
+bookWords.forEach((w) => { add(w, "Book"); map.get(w.hanzi)!.lesson ??= w.lesson; });
 for (const e of map.values()) {
   e.example ??= examplesExtra[e.hanzi];
   e.ru ??= wordsRuExtra[e.hanzi];
   e.topic ??= e.decks.includes("Special") ? "special" : e.decks.includes("STEM") ? "stem" : "hsk";
 }
 export const allWords: DWord[] = [...map.values()];
+export { bookLessons };
 export const DECK_FILTERS = ["HSK 1", "HSK 2", "STEM", "Special", "Book"] as const;
