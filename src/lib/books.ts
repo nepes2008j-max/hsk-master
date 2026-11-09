@@ -1,6 +1,7 @@
 import { lessons as hyjcLessons, bookTitle as hyjcTitle, bookTitleEn as hyjcTitleEn, type BookLesson } from "@/data/book-hyjc";
 import { xzzgLessons, xzzgTitle, xzzgTitleEn } from "@/data/book-xzzg";
 import { bookGrammarRu } from "@/data/book-grammar-ru";
+import { xzzgExtraWords } from "@/data/xzzg-extra-words";
 import { szGrammar } from "@/data/sz-grammar";
 import { bookLessons as szLessonMeta, bookWords as szWords } from "@/data/book-words";
 
@@ -20,7 +21,7 @@ const withRu = (bookId: string, lessons: BookLesson[]): BookLesson[] => lessons.
 
 export const books: { id: string; title: string; titleEn: string; lessons: BookLesson[] }[] = [
   { id: "hyjc", title: hyjcTitle, titleEn: hyjcTitleEn, lessons: withRu("hyjc", hyjcLessons) },
-  { id: "xzzg", title: xzzgTitle, titleEn: xzzgTitleEn, lessons: withRu("xzzg", xzzgLessons) },
+  { id: "xzzg", title: xzzgTitle, titleEn: xzzgTitleEn, lessons: withRu("xzzg", xzzgLessons.map((l) => ({ ...l, words: [...l.words, ...(xzzgExtraWords[l.id] ?? [])] }))) },
   { id: "sz1", title: "学在中国 · 实践教程1", titleEn: "Learning in China — Practice 1", lessons: szLessons },
 ];
 
