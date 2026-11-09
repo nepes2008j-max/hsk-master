@@ -4,6 +4,7 @@ import { vocabulary2 } from "@/data/vocabulary2";
 import { allAcademicWords, chemLabCategories } from "@/data/academic-vocab";
 import { bookWords, bookLessons } from "@/data/book-words";
 import { examplesExtra } from "@/data/examples-extra";
+import { ru as ruTr } from "@/data/translations-ru";
 import { wordsRuExtra } from "@/data/words-ru-extra";
 
 export interface DWord {
@@ -37,7 +38,7 @@ chemLabCategories.forEach((c) => c.words.forEach((w) => add(w, "Special")));
 bookWords.forEach((w) => { add(w, "Book"); map.get(w.hanzi)!.lesson ??= w.lesson; });
 for (const e of map.values()) {
   e.example ??= examplesExtra[e.hanzi];
-  e.ru ??= wordsRuExtra[e.hanzi];
+  e.ru ??= ruTr[e.hanzi]?.meaning ?? wordsRuExtra[e.hanzi];
   e.topic ??= e.decks.includes("Special") ? "special" : e.decks.includes("STEM") ? "stem" : "hsk";
 }
 export const allWords: DWord[] = [...map.values()];

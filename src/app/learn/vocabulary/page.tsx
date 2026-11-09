@@ -45,7 +45,7 @@ export default function VocabularyPage() {
   const filtered = useMemo(() => {
     if (!search) return wordList;
     const q = search.toLowerCase(), qp = noTone(search);
-    return wordList.filter((w) => w.hanzi.includes(search) || (qp.length > 0 && noTone(w.pinyin).includes(qp)) || w.english.toLowerCase().includes(q) || (lang === "ru" && !!w.ru && w.ru.toLowerCase().includes(q)));
+    return wordList.filter((w) => w.hanzi.includes(search) || (qp.length > 0 && noTone(w.pinyin).includes(qp)) || w.english.toLowerCase().includes(q) || (!!w.ru && w.ru.toLowerCase().includes(q)));
   }, [search, wordList, lang]);
 
   // "All 124,000 words" mode: CC-CEDICT search (loaded on first use)

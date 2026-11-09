@@ -48,7 +48,8 @@ export default function DictionaryPage() {
           w.hanzi.includes(search) ||
           w.pinyin.toLowerCase().includes(q) ||
           noTone(w.pinyin).includes(noTone(search)) ||
-          w.english.toLowerCase().includes(q)
+          w.english.toLowerCase().includes(q) ||
+          (!!w.ru && w.ru.toLowerCase().includes(q)) // Russian words work in any UI language
       );
     }
     return words;
