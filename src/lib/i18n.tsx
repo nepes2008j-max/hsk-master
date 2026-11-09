@@ -35,7 +35,7 @@ const t = {
       grammarDesc: "93 grammar points",
       charsDesc: "Stroke order practice",
       dictDesc: "430+ words by topic",
-      cardsDesc: "SRS review & custom decks",
+      cardsDesc: "SRS review & custom decks", keepGoing: "Keep going!", hello: "Hello", ofWords: "of", wordsWord: "words", writing: "Writing",
       testDesc: "HSK 1–2 practice exam",
     },
     vocabPage: {
@@ -386,7 +386,7 @@ const t = {
       grammarDesc: "93 грамматических правила",
       charsDesc: "Практика написания",
       dictDesc: "430+ слов по темам",
-      cardsDesc: "Интервальное повторение",
+      cardsDesc: "Интервальное повторение", keepGoing: "Так держать!", hello: "Привет", ofWords: "из", wordsWord: "слов", writing: "Письмо",
       testDesc: "Пробный экзамен HSK 1–2",
     },
     vocabPage: {
@@ -737,7 +737,7 @@ const t = {
       grammarDesc: "93 grammatiki düzgün",
       charsDesc: "Ýazyş tertibi türgenligi",
       dictDesc: "430+ söz mowzuk boýunça",
-      cardsDesc: "Gaýtalama we öz kartlaryňyz",
+      cardsDesc: "Gaýtalama we öz kartlaryňyz", keepGoing: "Dowam et!", hello: "Salam", ofWords: "/", wordsWord: "söz", writing: "Ýazuw",
       testDesc: "HSK 1–2 synag ekzameni",
     },
     vocabPage: {

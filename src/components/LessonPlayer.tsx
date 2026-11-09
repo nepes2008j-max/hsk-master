@@ -202,9 +202,9 @@ export default function LessonPlayer({ lessonKey, title, lesson, pool, mode, mea
         <h2 className="text-[20px] font-extrabold text-ink mb-4">{prompt}</h2>
 
         {(ex.t === "meaning" || ex.t === "pinyin") && (
-          <div className="mb-4 flex items-center gap-3 rounded-2xl border border-border bg-bg-raised p-4">
-            <button onClick={() => say(ex.word.hanzi)} aria-label="Play" className="w-11 h-11 rounded-full bg-primary-light text-primary flex items-center justify-center shrink-0"><IconVolume className="w-5 h-5" /></button>
-            <div><div className="text-[34px] font-extrabold leading-tight text-ink">{ex.word.hanzi}</div>{ex.t === "meaning" && <div className="text-[13px] text-ink-tertiary">{ex.word.pinyin}</div>}</div>
+          <div className="mb-4 flex flex-col items-center gap-1 rounded-[22px] border border-border bg-bg-raised px-4 py-6 text-center shadow-sm">
+            <div className="text-[56px] font-bold leading-tight text-ink">{ex.word.hanzi}</div>{ex.t === "meaning" && <div className="text-[16px] text-ink-tertiary">{ex.word.pinyin}</div>}
+            <button onClick={() => say(ex.word.hanzi)} aria-label="Play" className="mt-1 w-11 h-11 rounded-full bg-primary-light text-primary flex items-center justify-center shrink-0"><IconVolume className="w-5 h-5" /></button>
           </div>
         )}
         {ex.t === "word" && <div className="mb-4 rounded-2xl border border-border bg-bg-raised p-4 text-[20px] font-bold text-ink">{L(ex.word.english)}</div>}

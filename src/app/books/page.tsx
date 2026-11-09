@@ -254,7 +254,7 @@ export default function BooksPage() {
       <AppShell>
         <div className="space-y-5">
           <div>
-            <h1 className="text-2xl font-bold text-ink">{bt.title}</h1>
+            <h1 className="text-2xl font-bold text-white">{bt.title}</h1>
           </div>
 
           {/* Book selector */}
