@@ -1081,8 +1081,12 @@ export function LangProvider({ children }: { children: ReactNode }) {
       const saved = localStorage.getItem("hsk-lang") as Lang | null;
       if (saved && (saved === "en" || saved === "ru" || saved === "tk")) {
         setLangState(saved);
+        return;
       }
     } catch {}
+    // no choice saved yet: open straight on the app in the browser language (changeable in Settings / the language button)
+    const nav = (typeof navigator !== "undefined" ? navigator.language : "en").toLowerCase();
+    setLangState(nav.startsWith("ru") ? "ru" : nav.startsWith("tk") ? "tk" : "en");
   }, []);
 
   const setLang = (l: Lang) => {
@@ -1095,30 +1099,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
     if (lang) try { document.documentElement.lang = lang; } catch {}
   }, [lang]);
 
-  if (lang === null) {
-    return (
-      <div className="min-h-screen bg-bg flex items-center justify-center px-4">
-        <div className="w-full max-w-sm space-y-6 text-center">
-          <div className="space-y-1">
-            <div className="text-2xl font-bold text-primary">HSK Master</div>
-            <div className="text-[14px] text-ink-tertiary">汉语水平考试</div>
-          </div>
-
-          <div className="space-y-2">
-            {(["en", "ru", "tk"] as const).map((l) => (
-              <button
-                key={l}
-                onClick={() => setLang(l)}
-                className="w-full rounded-xl border border-border bg-bg-raised px-4 py-3.5 text-[15px] font-medium text-ink hover:border-primary hover:text-primary transition-colors"
-              >
-                {t[l].langName}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (lang === null) return <div className="min-h-screen bg-bg" />; // brief blank while the saved/detected language loads (the opening animation covers it)
 
   return (
     <LangContext.Provider value={{ lang, setLang, t: t[lang] }}>
