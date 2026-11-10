@@ -115,3 +115,16 @@ input::placeholder, textarea::placeholder {
 
 @keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
 .sheet-up { animation: sheet-up .28s cubic-bezier(.2,.8,.2,1); }
+
+/* Opening animation: black screen + logo, then black rectangles vanish in a staircase (see components/Splash.tsx) */
+.splash { position: fixed; inset: 0; z-index: 9999; pointer-events: none; animation: splash-failsafe 0s 4s forwards; }
+.splash-solid { position: absolute; inset: 0; background: #0b0b0c; }
+.splash-grid { position: absolute; inset: 0; display: grid; }
+.splash-grid i { background: #0b0b0c; animation: splash-cell .2s steps(2, end) forwards; margin: -0.5px; }
+.splash-logo { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; animation: splash-logo-out .25s ease forwards; }
+.splash-logo span { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 18px; background: #e8401c; color: #fff; font-size: 34px; font-weight: 800; }
+.splash-logo b { color: #fff; font-size: 17px; letter-spacing: .04em; }
+@keyframes splash-cell { to { opacity: 0; } }
+@keyframes splash-logo-out { to { opacity: 0; transform: scale(.96); } }
+@keyframes splash-failsafe { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .splash { display: none; } }
