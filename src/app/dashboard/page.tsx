@@ -64,6 +64,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        <Link href="/dictionary" className="flex items-center gap-2.5 h-12 rounded-2xl border border-border bg-bg-raised px-3.5 text-[15px] text-ink-tertiary shadow-md shadow-black/10">
+          <IconSearch className="w-[18px] h-[18px]" />
+          {t.vocabPage.search}
+        </Link>
+
         <div className="text-white">
           <div className="text-[13px] opacity-85">{t.dashboard.hello}</div>
           <div className="text-[27px] font-extrabold leading-tight tracking-tight">{t.dashboard.keepGoing}</div>
@@ -101,11 +106,6 @@ export default function DashboardPage() {
             </Link>
           ))}
         </div>
-
-        <Link href="/dictionary" className="flex items-center gap-2.5 h-12 rounded-2xl border border-border bg-bg-raised px-3.5 text-[15px] text-ink-tertiary shadow-sm">
-          <IconSearch className="w-[18px] h-[18px]" />
-          {t.vocabPage.search}
-        </Link>
 
         <div className="-mx-4 px-4 flex gap-2 overflow-x-auto scrollbar-none pb-1">
           {more.map(({ href, title, Icon }) => (
