@@ -316,8 +316,8 @@ export const stories: Story[] = [
    {
     "q": "Who has a dog in the story?",
     "options": [
-     "Xiaoming",
-     "Xiaohong",
+     "Xiao Ming",
+     "Xiao Hong",
      "Mark and Emily",
      "Emily's sister"
     ],
@@ -1293,8 +1293,8 @@ export const stories: Story[] = [
    {
     "q": "Who says 'Hello, Mark!'?",
     "options": [
-     "Xiaoming",
-     "Xiaohong",
+     "Xiao Ming",
+     "Xiao Hong",
      "Mark",
      "Teacher"
     ],
@@ -1650,7 +1650,7 @@ export const stories: Story[] = [
    {
     "q": "Who wants to buy apples after Xiaoming?",
     "options": [
-     "Xiaohong",
+     "Xiao Hong",
      "Mark",
      "Emily",
      "The clerk"
@@ -2099,10 +2099,10 @@ export const stories: Story[] = [
    {
     "q": "Who gives Xiaohong a book for her birthday?",
     "options": [
-     "Xiaoming",
+     "Xiao Ming",
      "Mark",
      "Emily",
-     "Xiaohong"
+     "Xiao Hong"
     ],
     "answer": 1
    },
@@ -2616,10 +2616,10 @@ export const stories: Story[] = [
    {
     "q": "Who offers to drive Xiaoming to the hospital?",
     "options": [
-     "Xiaohong.",
+     "Xiao Hong.",
      "Mark.",
      "Emily.",
-     "Xiaoming."
+     "Xiao Ming."
     ],
     "answer": 1
    }
@@ -5192,7 +5192,7 @@ export const stories: Story[] = [
      "Mark offered to help him find a job",
      "Mark said that working hard will lead to a job",
      "Emily found a job as a translator",
-     "Xiaohong said finding a job is hard"
+     "Xiao Hong said finding a job is hard"
     ],
     "answer": 1
    },
@@ -6355,10 +6355,10 @@ export const stories: Story[] = [
    {
     "q": "Why was Xiaohong worried?",
     "options": [
-     "Because Xiaoming was going to Beijing.",
-     "Because Xiaoming was going to Shanghai.",
-     "Because Xiaoming was going to Hangzhou.",
-     "Because Xiaoming was going to Guangzhou."
+     "Because Xiao Ming was going to Beijing.",
+     "Because Xiao Ming was going to Shanghai.",
+     "Because Xiao Ming was going to Hangzhou.",
+     "Because Xiao Ming was going to Guangzhou."
     ],
     "answer": 0
    },
@@ -11927,6 +11927,1331 @@ export const stories: Story[] = [
      "It was delicious",
      "It was too salty",
      "It was cold"
+    ],
+    "answer": 1
+   }
+  ]
+ },
+ {
+  "id": "3-27",
+  "level": 3,
+  "title": {
+   "zh": "搬家",
+   "en": "Moving house",
+   "ru": "Переезд"
+  },
+  "sentences": [
+   {
+    "zh": "小明和小红正在搬家。",
+    "en": "Xiao Ming and Xiao Hong are moving house.",
+    "ru": "Сяо Мин и Сяо Хун переезжают.",
+    "tokens": [
+     {
+      "w": "小明",
+      "p": "Xiǎomíng"
+     },
+     {
+      "w": "和",
+      "p": "hé"
+     },
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "正在",
+      "p": "zhèngzài"
+     },
+     {
+      "w": "搬家",
+      "p": "bānjiā"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "他们把旧家具搬进新家。",
+    "en": "They are moving the old furniture into the new house.",
+    "ru": "Они переносят старую мебель в новый дом.",
+    "tokens": [
+     {
+      "w": "他们",
+      "p": "tāmen"
+     },
+     {
+      "w": "把",
+      "p": "bǎ"
+     },
+     {
+      "w": "旧",
+      "p": "jiù"
+     },
+     {
+      "w": "家具",
+      "p": "jiājù"
+     },
+     {
+      "w": "搬",
+      "p": "bān"
+     },
+     {
+      "w": "进",
+      "p": "jìn"
+     },
+     {
+      "w": "新家",
+      "p": "xīnjiā"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "马克和艾米丽帮忙搬箱子。",
+    "en": "Mark and Emily help move the boxes.",
+    "ru": "Марк и Эмили помогают переносить коробки.",
+    "tokens": [
+     {
+      "w": "马克",
+      "p": "Mǎkè"
+     },
+     {
+      "w": "和",
+      "p": "hé"
+     },
+     {
+      "w": "艾",
+      "p": "ài"
+     },
+     {
+      "w": "米",
+      "p": "mǐ"
+     },
+     {
+      "w": "丽",
+      "p": "lì"
+     },
+     {
+      "w": "帮忙",
+      "p": "bāngmáng"
+     },
+     {
+      "w": "搬",
+      "p": "bān"
+     },
+     {
+      "w": "箱子",
+      "p": "xiāngzǐ"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小红说：箱子太重了。",
+    "en": "Xiao Hong says: The boxes are too heavy.",
+    "ru": "Сяо Хун говорит: Коробки слишком тяжёлые.",
+    "tokens": [
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "箱子",
+      "p": "：xiāng"
+     },
+     {
+      "w": "太重",
+      "p": "zǐtài"
+     },
+     {
+      "w": "了",
+      "p": "zhòng"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "马克说：我来帮你。",
+    "en": "Mark says: I'll help you.",
+    "ru": "Марк говорит: Я помогу тебе.",
+    "tokens": [
+     {
+      "w": "马克",
+      "p": "Mǎkè"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "我来",
+      "p": "：wǒ"
+     },
+     {
+      "w": "帮",
+      "p": "lái"
+     },
+     {
+      "w": "你",
+      "p": "bāng"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "艾米丽一边搬一边笑。",
+    "en": "Emily laughs while moving.",
+    "ru": "Эмили смеялась, пока носила коробки.",
+    "tokens": [
+     {
+      "w": "艾",
+      "p": "ài"
+     },
+     {
+      "w": "米",
+      "p": "mǐ"
+     },
+     {
+      "w": "丽",
+      "p": "lì"
+     },
+     {
+      "w": "一边",
+      "p": "yìbiān"
+     },
+     {
+      "w": "搬",
+      "p": "bān"
+     },
+     {
+      "w": "一边",
+      "p": "yìbiān"
+     },
+     {
+      "w": "笑",
+      "p": "xiào"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "虽然很累，但他们很开心。",
+    "en": "Although it's tiring, they are happy.",
+    "ru": "Хотя они устали, им было весело.",
+    "tokens": [
+     {
+      "w": "虽然",
+      "p": "suīrán"
+     },
+     {
+      "w": "很",
+      "p": "hěn"
+     },
+     {
+      "w": "累",
+      "p": "lèi"
+     },
+     {
+      "w": "，",
+      "p": ""
+     },
+     {
+      "w": "但",
+      "p": "，"
+     },
+     {
+      "w": "他们",
+      "p": "dàntā"
+     },
+     {
+      "w": "很",
+      "p": "men"
+     },
+     {
+      "w": "开心",
+      "p": "hěnkāi"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小明说：新家真漂亮！",
+    "en": "Xiao Ming says: The new house is so beautiful!",
+    "ru": "Сяо Мин говорит: Новый дом такой красивый!",
+    "tokens": [
+     {
+      "w": "小明",
+      "p": "Xiǎomíng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "新家",
+      "p": "：xīn"
+     },
+     {
+      "w": "真",
+      "p": "jiā"
+     },
+     {
+      "w": "漂亮",
+      "p": "zhēnpiào"
+     },
+     {
+      "w": "！",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小红说：是的，我们喜欢这里。",
+    "en": "Xiao Hong says: Yes, we like it here.",
+    "ru": "Сяо Хун говорит: Да, нам здесь нравится.",
+    "tokens": [
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "是",
+      "p": "："
+     },
+     {
+      "w": "的",
+      "p": "shì"
+     },
+     {
+      "w": "，",
+      "p": ""
+     },
+     {
+      "w": "我们",
+      "p": "de，"
+     },
+     {
+      "w": "喜欢",
+      "p": "wǒmen"
+     },
+     {
+      "w": "这里",
+      "p": "xǐhuan"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小明说：谢谢大家帮忙。",
+    "en": "Xiao Ming says: Thank you all for helping.",
+    "ru": "Сяо Мин говорит: Спасибо всем за помощь.",
+    "tokens": [
+     {
+      "w": "小明",
+      "p": "Xiǎomíng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "谢谢",
+      "p": "：xiè"
+     },
+     {
+      "w": "大家",
+      "p": "xièdà"
+     },
+     {
+      "w": "帮忙",
+      "p": "jiābāng"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "大家开心地笑了。",
+    "en": "Everyone smiled happily.",
+    "ru": "Все весело улыбнулись.",
+    "tokens": [
+     {
+      "w": "大家",
+      "p": "dàjiā"
+     },
+     {
+      "w": "开心",
+      "p": "kāixīn"
+     },
+     {
+      "w": "地",
+      "p": "dì"
+     },
+     {
+      "w": "笑了",
+      "p": "xiàole"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "新家让我们感到温暖。",
+    "en": "The new house makes us feel warm.",
+    "ru": "В новом доме нам тепло и уютно.",
+    "tokens": [
+     {
+      "w": "新家",
+      "p": "xīnjiā"
+     },
+     {
+      "w": "让",
+      "p": "ràng"
+     },
+     {
+      "w": "我们",
+      "p": "wǒmen"
+     },
+     {
+      "w": "感到",
+      "p": "gǎndào"
+     },
+     {
+      "w": "温暖",
+      "p": "wēnnuǎn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "q": "How do the people feel about the new house?",
+    "options": [
+     "They feel tired and unhappy.",
+     "They feel happy and warm.",
+     "They feel confused and lost.",
+     "They feel excited but stressed."
+    ],
+    "answer": 1
+   }
+  ]
+ },
+ {
+  "id": "1-28",
+  "level": 1,
+  "title": {
+   "zh": "喝咖啡",
+   "en": "Having coffee",
+   "ru": "Пить кофе"
+  },
+  "sentences": [
+   {
+    "zh": "小明在咖啡店。",
+    "en": "Xiao Ming is in the coffee shop.",
+    "ru": "Сяо Мин в кофейне.",
+    "tokens": [
+     {
+      "w": "小明",
+      "p": "Xiǎomíng"
+     },
+     {
+      "w": "在",
+      "p": "zài"
+     },
+     {
+      "w": "咖啡店",
+      "p": "kāfēidiàn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "他有咖啡。",
+    "en": "He has coffee.",
+    "ru": "У него есть кофе.",
+    "tokens": [
+     {
+      "w": "他有",
+      "p": "tāyǒu"
+     },
+     {
+      "w": "咖啡",
+      "p": "kāfēi"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小红来了。",
+    "en": "Xiao Hong comes.",
+    "ru": "Пришла Сяо Хун.",
+    "tokens": [
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "来",
+      "p": "lái"
+     },
+     {
+      "w": "了",
+      "p": "le"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小红有茶。",
+    "en": "Xiao Hong has tea.",
+    "ru": "У Сяо Хун есть чай.",
+    "tokens": [
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "有",
+      "p": "yǒu"
+     },
+     {
+      "w": "茶",
+      "p": "chá"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "马克和艾米丽也来了。",
+    "en": "Mark and Emily also come.",
+    "ru": "Пришли Марк и Эмили.",
+    "tokens": [
+     {
+      "w": "马克",
+      "p": "Mǎkè"
+     },
+     {
+      "w": "和",
+      "p": "hé"
+     },
+     {
+      "w": "艾",
+      "p": "ài"
+     },
+     {
+      "w": "米",
+      "p": "mǐ"
+     },
+     {
+      "w": "丽",
+      "p": "lì"
+     },
+     {
+      "w": "也来",
+      "p": "yělái"
+     },
+     {
+      "w": "了",
+      "p": "le"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "他们有好咖啡。",
+    "en": "They have good coffee.",
+    "ru": "У них есть хороший кофе.",
+    "tokens": [
+     {
+      "w": "他们",
+      "p": "tāmen"
+     },
+     {
+      "w": "有",
+      "p": "yǒu"
+     },
+     {
+      "w": "好",
+      "p": "hǎo"
+     },
+     {
+      "w": "咖啡",
+      "p": "kāfēi"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小明说：好咖啡！",
+    "en": "Xiao Ming says: Good coffee!",
+    "ru": "Сяо Мин говорит: Хороший кофе!",
+    "tokens": [
+     {
+      "w": "小明",
+      "p": "Xiǎomíng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "好",
+      "p": "："
+     },
+     {
+      "w": "咖啡",
+      "p": "hǎokā"
+     },
+     {
+      "w": "！",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小红说：茶很好。",
+    "en": "Xiao Hong says: Tea is good.",
+    "ru": "Сяо Хун говорит: Чай хорош.",
+    "tokens": [
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "茶",
+      "p": "："
+     },
+     {
+      "w": "很好",
+      "p": "cháhěn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "马克说：咖啡很香。",
+    "en": "Mark says: Coffee is fragrant.",
+    "ru": "Марк говорит: Кофе ароматный.",
+    "tokens": [
+     {
+      "w": "马克",
+      "p": "Mǎkè"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "咖啡",
+      "p": "：kā"
+     },
+     {
+      "w": "很香",
+      "p": "fēihěn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "大家开心。",
+    "en": "Everyone is happy.",
+    "ru": "Все рады.",
+    "tokens": [
+     {
+      "w": "大家",
+      "p": "dàjiā"
+     },
+     {
+      "w": "开心",
+      "p": "kāixīn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "q": "What does Xiao Ming have in the coffee shop?",
+    "options": [
+     "Tea",
+     "Coffee",
+     "Water",
+     "Juice"
+    ],
+    "answer": 1
+   },
+   {
+    "q": "Who has tea in the coffee shop?",
+    "options": [
+     "Xiao Ming",
+     "Mark",
+     "Xiao Hong",
+     "Emily"
+    ],
+    "answer": 2
+   },
+   {
+    "q": "What does Mark say about the coffee?",
+    "options": [
+     "It is good",
+     "It is fragrant",
+     "It is expensive",
+     "It is cold"
+    ],
+    "answer": 1
+   }
+  ]
+ },
+ {
+  "id": "2-29",
+  "level": 2,
+  "title": {
+   "zh": "看电影",
+   "en": "Watching a movie",
+   "ru": "Посмотреть фильм"
+  },
+  "sentences": [
+   {
+    "zh": "小明和小红想看电影。",
+    "en": "Xiao Ming and Xiao Hong want to watch a movie.",
+    "ru": "Сяо Мин и Сяо Хун хотят посмотреть фильм.",
+    "tokens": [
+     {
+      "w": "小明",
+      "p": "Xiǎomíng"
+     },
+     {
+      "w": "和",
+      "p": "hé"
+     },
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "想看",
+      "p": "xiǎngkàn"
+     },
+     {
+      "w": "电影",
+      "p": "diànyǐng"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "马克和艾米丽也想看电影。",
+    "en": "Mark and Emily also want to watch a movie.",
+    "ru": "Марк и Эмили тоже хотят посмотреть фильм.",
+    "tokens": [
+     {
+      "w": "马克",
+      "p": "Mǎkè"
+     },
+     {
+      "w": "和",
+      "p": "hé"
+     },
+     {
+      "w": "艾",
+      "p": "ài"
+     },
+     {
+      "w": "米",
+      "p": "mǐ"
+     },
+     {
+      "w": "丽",
+      "p": "lì"
+     },
+     {
+      "w": "也",
+      "p": "yě"
+     },
+     {
+      "w": "想看",
+      "p": "xiǎngkàn"
+     },
+     {
+      "w": "电影",
+      "p": "diànyǐng"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "他们决定去看电影。",
+    "en": "They decided to go see a movie.",
+    "ru": "Они решили пойти посмотреть фильм.",
+    "tokens": [
+     {
+      "w": "他们",
+      "p": "tāmen"
+     },
+     {
+      "w": "决定",
+      "p": "juédìng"
+     },
+     {
+      "w": "去",
+      "p": "qù"
+     },
+     {
+      "w": "看",
+      "p": "kàn"
+     },
+     {
+      "w": "电影",
+      "p": "diànyǐng"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小明说：电影很好看！",
+    "en": "Xiao Ming said: The movie is very good!",
+    "ru": "Сяо Мин сказал: Фильм очень хороший!",
+    "tokens": [
+     {
+      "w": "小明",
+      "p": "Xiǎomíng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "电影",
+      "p": "：diàn"
+     },
+     {
+      "w": "很好",
+      "p": "yǐnghěn"
+     },
+     {
+      "w": "看",
+      "p": "hǎo"
+     },
+     {
+      "w": "！",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小红说：我看过很多电影。",
+    "en": "Xiao Hong said: I have seen many movies.",
+    "ru": "Сяо Хун сказала: Я видела много фильмов.",
+    "tokens": [
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "我看",
+      "p": "：wǒ"
+     },
+     {
+      "w": "过",
+      "p": "kàn"
+     },
+     {
+      "w": "很多",
+      "p": "guòhěn"
+     },
+     {
+      "w": "电影",
+      "p": "duōdiàn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "马克说：我还没有看过这部电影。",
+    "en": "Mark said: I haven't seen this movie yet.",
+    "ru": "Марк сказал: Я еще не видел этот фильм.",
+    "tokens": [
+     {
+      "w": "马克",
+      "p": "Mǎkè"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "我还",
+      "p": "：wǒ"
+     },
+     {
+      "w": "没有",
+      "p": "háiméi"
+     },
+     {
+      "w": "看",
+      "p": "yǒu"
+     },
+     {
+      "w": "过",
+      "p": "kàn"
+     },
+     {
+      "w": "这",
+      "p": "guò"
+     },
+     {
+      "w": "部",
+      "p": "zhè"
+     },
+     {
+      "w": "电影",
+      "p": "bùdiàn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "艾米丽说：这部电影很有趣。",
+    "en": "Emily said: This movie is interesting.",
+    "ru": "Эмили сказала: Этот фильм интересный.",
+    "tokens": [
+     {
+      "w": "艾",
+      "p": "ài"
+     },
+     {
+      "w": "米",
+      "p": "mǐ"
+     },
+     {
+      "w": "丽",
+      "p": "lì"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "这",
+      "p": "："
+     },
+     {
+      "w": "部",
+      "p": "zhè"
+     },
+     {
+      "w": "电影",
+      "p": "bùdiàn"
+     },
+     {
+      "w": "很",
+      "p": "yǐng"
+     },
+     {
+      "w": "有趣",
+      "p": "hěnyǒu"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "他们看电影很开心。",
+    "en": "They enjoyed watching the movie very much.",
+    "ru": "Им было очень весело смотреть фильм.",
+    "tokens": [
+     {
+      "w": "他们",
+      "p": "tāmen"
+     },
+     {
+      "w": "看",
+      "p": "kàn"
+     },
+     {
+      "w": "电影",
+      "p": "diànyǐng"
+     },
+     {
+      "w": "很",
+      "p": "hěn"
+     },
+     {
+      "w": "开心",
+      "p": "kāixīn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "电影结束时，他们笑了。",
+    "en": "They laughed when the movie ended.",
+    "ru": "Они засмеялись, когда фильм закончился.",
+    "tokens": [
+     {
+      "w": "电影",
+      "p": "diànyǐng"
+     },
+     {
+      "w": "结束",
+      "p": "jiéshù"
+     },
+     {
+      "w": "时",
+      "p": "shí"
+     },
+     {
+      "w": "，",
+      "p": ""
+     },
+     {
+      "w": "他们",
+      "p": "，tā"
+     },
+     {
+      "w": "笑了",
+      "p": "menxiào"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小明说：我们下次还来看电影。",
+    "en": "Xiao Ming said: We will watch a movie again next time.",
+    "ru": "Сяо Мин сказал: Мы посмотрим фильм еще раз в следующий раз.",
+    "tokens": [
+     {
+      "w": "小明",
+      "p": "Xiǎomíng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "我们",
+      "p": "：wǒ"
+     },
+     {
+      "w": "下次",
+      "p": "menxià"
+     },
+     {
+      "w": "还",
+      "p": "cì"
+     },
+     {
+      "w": "来看",
+      "p": "háilái"
+     },
+     {
+      "w": "电影",
+      "p": "kàndiàn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "小红说：我喜欢和朋友一起看电影。",
+    "en": "Xiao Hong said: I like watching movies with friends.",
+    "ru": "Сяо Хун сказала: Мне нравится смотреть фильмы с друзьями.",
+    "tokens": [
+     {
+      "w": "小",
+      "p": "xiǎo"
+     },
+     {
+      "w": "红",
+      "p": "hóng"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "我",
+      "p": "："
+     },
+     {
+      "w": "喜欢",
+      "p": "wǒxǐ"
+     },
+     {
+      "w": "和",
+      "p": "huan"
+     },
+     {
+      "w": "朋友",
+      "p": "hépéng"
+     },
+     {
+      "w": "一起",
+      "p": "yǒuyì"
+     },
+     {
+      "w": "看",
+      "p": "qǐ"
+     },
+     {
+      "w": "电影",
+      "p": "kàndiàn"
+     },
+     {
+      "w": "。",
+      "p": ""
+     }
+    ]
+   },
+   {
+    "zh": "马克和艾米丽说：好主意！",
+    "en": "Mark and Emily said: Good idea!",
+    "ru": "Марк и Эмили сказали: Хорошая идея!",
+    "tokens": [
+     {
+      "w": "马克",
+      "p": "Mǎkè"
+     },
+     {
+      "w": "和",
+      "p": "hé"
+     },
+     {
+      "w": "艾",
+      "p": "ài"
+     },
+     {
+      "w": "米",
+      "p": "mǐ"
+     },
+     {
+      "w": "丽",
+      "p": "lì"
+     },
+     {
+      "w": "说",
+      "p": "shuō"
+     },
+     {
+      "w": "：",
+      "p": ""
+     },
+     {
+      "w": "好主意",
+      "p": "：hǎozhǔ"
+     },
+     {
+      "w": "！",
+      "p": ""
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "q": "What did Xiao Ming say about the movie?",
+    "options": [
+     "The movie is very good!",
+     "I have seen many movies.",
+     "I haven't seen this movie yet.",
+     "This movie is interesting."
+    ],
+    "answer": 0
+   },
+   {
+    "q": "What did Xiao Hong say about her movie-watching experience?",
+    "options": [
+     "The movie is very good!",
+     "I have seen many movies.",
+     "I haven't seen this movie yet.",
+     "This movie is interesting."
     ],
     "answer": 1
    }
