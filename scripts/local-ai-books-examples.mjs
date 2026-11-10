@@ -11,8 +11,9 @@ const { dictionary } = await import("../src/data/dictionary.ts");
 const { examplesExtra } = await import("../src/data/examples-extra.ts");
 const hy = await import("../src/data/book-hyjc.ts"), xz = await import("../src/data/book-xzzg.ts"), bw = await import("../src/data/book-words.ts");
 const have = new Set([...vocabulary, ...vocabulary2, ...dictionary].filter((w) => w.example).map((w) => w.hanzi).concat(Object.keys(examplesExtra)));
+const { xzzgExtraWords } = await import("../src/data/xzzg-extra-words.ts");
 const seen = new Set();
-const targets = [...hy.lessons.flatMap((l) => l.words), ...xz.xzzgLessons.flatMap((l) => l.words), ...bw.bookWords]
+const targets = [...hy.lessons.flatMap((l) => l.words), ...xz.xzzgLessons.flatMap((l) => l.words), ...bw.bookWords, ...Object.values(xzzgExtraWords).flat()]
   .filter((w) => !have.has(w.hanzi) && !seen.has(w.hanzi) && seen.add(w.hanzi))
   .slice(0, limitArg ? +limitArg : undefined);
 const [SI, SN] = (process.env.SHARD ?? "0/1").split("/").map(Number); // SHARD=i/n splits the work over n workers
