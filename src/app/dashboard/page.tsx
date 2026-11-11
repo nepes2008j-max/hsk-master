@@ -51,13 +51,13 @@ export default function DashboardPage() {
     <AppShell>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="text-[19px] font-extrabold tracking-tight text-white">HSK Master</div>
+          <div className="text-[19px] font-extrabold tracking-tight on-glow">HSK Master</div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 rounded-full bg-white/25 px-3 py-1.5 text-[13px] font-bold text-white tabular-nums backdrop-blur">
+            <div className="flex items-center gap-1.5 rounded-full bg-white/25 px-3 py-1.5 text-[13px] font-bold on-glow tabular-nums backdrop-blur">
               <IconFire className="w-4 h-4" />{progress?.streak ?? 0}
             </div>
             {isGamified && (
-              <div className="flex items-center gap-1.5 rounded-full bg-white/25 px-3 py-1.5 text-[13px] font-bold text-white tabular-nums backdrop-blur">
+              <div className="flex items-center gap-1.5 rounded-full bg-white/25 px-3 py-1.5 text-[13px] font-bold on-glow tabular-nums backdrop-blur">
                 <IconStar className="w-4 h-4" />{progress?.xp ?? 0}
               </div>
             )}
@@ -69,7 +69,7 @@ export default function DashboardPage() {
           {t.vocabPage.search}
         </Link>
 
-        <div className="text-white">
+        <div className="on-glow">
           <div className="text-[13px] opacity-85">{t.dashboard.hello}</div>
           <div className="text-[27px] font-extrabold leading-tight tracking-tight">{t.dashboard.keepGoing}</div>
         </div>

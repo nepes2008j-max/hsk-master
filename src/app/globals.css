@@ -58,13 +58,24 @@
 * { box-sizing: border-box; }
 
 body {
-  /* vivid orange-red glow at the top (like the reference app) fading into a light page */
-  background: linear-gradient(180deg, #ff5a26 0%, rgba(255,106,50,0.92) 70px, rgba(255,138,76,0.55) 190px, rgba(255,175,120,0.20) 330px, rgba(251,247,238,0) 520px) no-repeat, var(--bg);
-  background-attachment: scroll;
+  background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Vivid orange-red glow at the top (like the reference app). A fixed layer behind the page; components/Glow.tsx
+   fades it out over the first ~360px of scroll (opacity/transform only) and brings it back at the top. */
+.glow { position: fixed; top: 0; left: 0; right: 0; height: 520px; z-index: -1; pointer-events: none; will-change: opacity, transform;
+  background: linear-gradient(180deg, #ff5a26 0%, rgba(255,106,50,0.92) 70px, rgba(255,138,76,0.55) 190px, rgba(255,175,120,0.20) 330px, rgba(251,247,238,0) 520px); }
+/* Text that sits directly on the glow: white at the top of the page, ink once the glow starts to fade. */
+.on-glow { color: #fff; transition: color .25s ease; }
+html[data-scrolled] .on-glow { color: var(--text); }
+/* Sticky glass header (dictionary): clear while it rests on the glow, frosted once content scrolls under it. */
+@layer components {
+  .glass-head { transition: background-color .25s ease; }
+  html[data-scrolled] .glass-head { background-color: color-mix(in srgb, var(--bg) 55%, transparent); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
 }
 
 ::selection {
@@ -125,17 +136,19 @@ input::placeholder, textarea::placeholder {
 @keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
 .sheet-up { animation: sheet-up .28s cubic-bezier(.2,.8,.2,1); }
 
-/* Opening animation: black screen + logo, then black rectangles vanish in a staircase (see components/Splash.tsx) */
-.splash { position: fixed; inset: 0; z-index: 9999; pointer-events: none; animation: splash-failsafe 0s 4s forwards; }
-.splash-solid { position: absolute; inset: 0; background: #0b0b0c; }
+/* Opening animation (components/Splash.tsx): black screen + logo, then the black blocks collapse into thin bars
+   in a diagonal wave. Blocks rest slightly over-scaled so their rounded corners overlap into one solid black
+   sheet; only transform/opacity animate. The whole layer hides itself at 2s. */
+.splash { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; animation: splash-done 0s 2s forwards; }
 .splash-grid { position: absolute; inset: 0; display: grid; }
-.splash-grid i { background: #0b0b0c; animation: splash-cell .26s ease-in forwards; margin: -0.5px; }
-.splash-logo { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; animation: splash-logo-out .25s ease forwards; }
+.splash-grid i { background: #0b0b0c; border-radius: 10px; transform: scale(1.16); backface-visibility: hidden; animation: splash-cell .5s cubic-bezier(.6,0,.2,1) forwards; }
+.splash-logo { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; animation: splash-logo-in .3s cubic-bezier(.2,.8,.2,1) backwards, splash-logo-out .32s cubic-bezier(.4,0,1,1) .62s forwards; }
 .splash-logo span { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 18px; background: #e8401c; color: #fff; font-size: 34px; font-weight: 800; }
 .splash-logo b { color: #fff; font-size: 17px; letter-spacing: .04em; }
-@keyframes splash-cell { 55% { transform: scale(.8, .7); border-radius: 12px; opacity: 1; } to { transform: scale(.6, .4); border-radius: 12px; opacity: 0; } }
-@keyframes splash-logo-out { to { opacity: 0; transform: scale(.96); } }
-@keyframes splash-failsafe { to { visibility: hidden; } }
+@keyframes splash-cell { 60% { opacity: 1; } to { transform: scale(.5, 0); opacity: 0; } }
+@keyframes splash-logo-in { from { opacity: 0; transform: translateY(8px) scale(.96); } }
+@keyframes splash-logo-out { to { opacity: 0; transform: scale(.92); } }
+@keyframes splash-done { to { visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { .splash { display: none; } }
 
 /* Page-to-page motion (from the reference video): the glow and tab bar stay put, the content

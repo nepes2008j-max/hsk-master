@@ -176,7 +176,7 @@ export default function ReadingPage() {
   return (
     <AppShell viewKey="library">
       <div className="space-y-5">
-        <h1 className="text-2xl font-bold tracking-tight text-white">{rd.title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight on-glow">{rd.title}</h1>
 
         <button onClick={() => setAdding(true)} className="w-full flex items-center gap-3 rounded-2xl border-2 border-dashed border-border-strong bg-bg-raised px-4 py-4 text-left active:scale-[0.99] transition-transform">
           <div className="w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center text-2xl font-light">+</div>

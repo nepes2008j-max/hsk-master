@@ -163,10 +163,10 @@ export default function DictionaryPage() {
   return (
     <AppShell>
       <div className="space-y-5">
-        <div className="space-y-3 sticky top-0 z-10 bg-bg/55 backdrop-blur-xl rounded-b-2xl -mx-4 px-4 pt-2 pb-2 md:static md:bg-transparent md:backdrop-blur-none md:mx-0 md:px-0 md:pt-0 md:pb-0">
-          <h1 className="text-2xl font-bold text-ink tracking-tight">
+        <div className="space-y-3 sticky top-0 z-10 glass-head rounded-b-2xl -mx-4 px-4 pt-2 pb-2 md:static md:bg-transparent md:backdrop-blur-none md:mx-0 md:px-0 md:pt-0 md:pb-0">
+          <h1 className="text-2xl font-bold on-glow tracking-tight">
             {t.dictPage.title}
-            <span className="text-[14px] font-normal text-ink-tertiary ml-2">
+            <span className="text-[14px] font-normal opacity-75 ml-2">
               {filtered.length} {t.dictPage.words}
             </span>
           </h1>

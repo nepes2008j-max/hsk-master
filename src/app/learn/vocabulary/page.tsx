@@ -74,7 +74,7 @@ export default function VocabularyPage() {
     <AppShell>
       <div className="space-y-5">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white tracking-tight">{t.vocabPage.title}</h1>
+          <h1 className="text-2xl font-bold on-glow tracking-tight">{t.vocabPage.title}</h1>
           <span className="text-[13px] text-ink-tertiary">
             {progress?.wordsLearned.length ?? 0}/{wordList.length} {t.vocabPage.learned}
           </span>

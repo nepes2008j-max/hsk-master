@@ -635,7 +635,7 @@ export default function CardsPage() {
   return (
     <AppShell>
       <div className="space-y-5">
-        <h1 className="text-2xl font-bold text-white tracking-tight">{t.cardsPage.title}</h1>
+        <h1 className="text-2xl font-bold on-glow tracking-tight">{t.cardsPage.title}</h1>
 
         <div className="flex gap-1 p-1 rounded-xl bg-bg-sunken">
           {tabs.map((t) => (

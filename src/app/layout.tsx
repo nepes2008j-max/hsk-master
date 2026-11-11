@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { LangWrapper } from "@/components/LangWrapper";
 import Splash from "@/components/Splash";
+import Glow from "@/components/Glow";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -32,7 +33,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable}`}>
-      <body className="min-h-[100dvh] font-[family-name:var(--font-inter)]"><Splash /><LangWrapper>{children}</LangWrapper></body>
+      <body className="min-h-[100dvh] font-[family-name:var(--font-inter)]"><Splash /><Glow /><LangWrapper>{children}</LangWrapper></body>
     </html>
   );
 }

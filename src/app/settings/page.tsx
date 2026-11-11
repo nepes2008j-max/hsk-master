@@ -54,7 +54,7 @@ export default function SettingsPage() {
   return (
     <AppShell>
       <div className="space-y-5">
-        <h1 className="text-2xl font-bold text-ink tracking-tight">{t.settingsPage.title}</h1>
+        <h1 className="text-2xl font-bold on-glow tracking-tight">{t.settingsPage.title}</h1>
 
         <div className="rounded-xl border border-border bg-bg-raised p-5 space-y-4">
           <div className="text-[13px] font-semibold text-ink-secondary uppercase tracking-wide">

@@ -61,6 +61,30 @@ export default function Nav() {
   const moreLinks = allLinks.filter((l) => !mobileLinks.some((m) => m.href === l.href));
   const moreActive = moreLinks.some((l) => isActive(l.href)) || pathname === "/settings";
 
+  // Phone bar: hide on scroll down (after 80px, >12px), show on scroll up; hidden while a lesson is played.
+  const [scrollHidden, setScrollHidden] = useState(false);
+  const [lessonOpen, setLessonOpen] = useState(false);
+  useEffect(() => {
+    let raf = 0;
+    let ref = window.scrollY; // scrollY at the last direction change
+    const update = () => {
+      raf = 0;
+      const y = window.scrollY;
+      if (y < 80 || y < ref - 2) { setScrollHidden(false); ref = y; }
+      else if (y > ref + 12) setScrollHidden(true);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    const onLesson = (e: Event) => setLessonOpen((e as CustomEvent<boolean>).detail);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("hsk-lesson-focus", onLesson);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("hsk-lesson-focus", onLesson);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+  const barHidden = lessonOpen || (scrollHidden && !moreOpen);
+
 
   return (
     <>
@@ -161,7 +185,12 @@ export default function Nav() {
       </nav>
 
       {/* Mobile bottom bar — 5 key items only */}
-      <nav className="md:hidden fixed left-3 right-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 mx-auto max-w-md rounded-[24px] border border-white/10 bg-[rgba(24,24,27,0.84)] backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_32px_rgba(0,0,0,0.30)]">
+      <nav
+        inert={barHidden}
+        className={`md:hidden fixed left-3 right-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 mx-auto max-w-md rounded-[24px] border border-white/10 bg-[rgba(24,24,27,0.84)] backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_32px_rgba(0,0,0,0.30)] transition-[transform,opacity] duration-[250ms] ease-out motion-reduce:transition-none ${
+          barHidden ? "translate-y-[calc(100%+2rem)] opacity-0 pointer-events-none" : ""
+        }`}
+      >
         <div className="flex justify-around items-center h-16 px-2">
           {mobileLinks.map(({ href, label, Icon }) => (
             <Link

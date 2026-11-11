@@ -116,6 +116,12 @@ export default function LessonPlayer({ lessonKey, title, lesson, pool, mode, mea
     return () => window.removeEventListener("keydown", k);
   });
 
+  // Tell the bottom tab bar (Nav) to hide while the lesson is on screen.
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("hsk-lesson-focus", { detail: true }));
+    return () => { window.dispatchEvent(new CustomEvent("hsk-lesson-focus", { detail: false })); };
+  }, []);
+
   const pct = Math.min(100, Math.round(((finished ? total : Math.min(i, total)) / Math.max(total, 1)) * 100));
   const acc = total ? Math.round((firstTry / total) * 100) : 0;
   const uniqWrong = [...new Map(wrongWords.map((w) => [w.hanzi, w])).values()];
