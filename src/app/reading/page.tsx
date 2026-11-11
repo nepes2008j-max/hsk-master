@@ -92,12 +92,12 @@ export default function ReadingPage() {
   if (open) {
     const sents = open.sents;
     return (
-      <AppShell>
+      <AppShell viewKey="reader">
         <div className="space-y-4">
           <div>
-            <button onClick={() => { setOpen(null); setWord(null); }} className="flex items-center gap-1 text-[13px] font-semibold text-ink-secondary"><IconChevron direction="left" className="w-4 h-4" /> {rd.back}</button>
-            <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-ink">{open.story ? open.story.title.zh : open.title}</h1>
-            {open.story && <div className="text-[14px] text-ink-secondary">{open.title}</div>}
+            <button onClick={() => { setOpen(null); setWord(null); }} aria-label={rd.back} title={rd.back} className="btn-back"><IconChevron direction="left" className="w-4 h-4" /></button>
+            <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-ink">{open.story ? open.story.title.zh : open.title}</h1>
+            {open.story && <div className="text-[14px] text-ink/75">{open.title}</div>}
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <button onClick={() => setShowPy(!showPy)} aria-pressed={showPy} className={`rounded-full px-3.5 py-2 text-[13px] font-semibold ${showPy ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary"}`}>{rd.pinyin}</button>
@@ -174,7 +174,7 @@ export default function ReadingPage() {
   // ---------- library ----------
   const byLevel = [1, 2, 3].map((lv) => ({ lv, list: stories.filter((s) => s.level === lv) })).filter((g) => g.list.length);
   return (
-    <AppShell>
+    <AppShell viewKey="library">
       <div className="space-y-5">
         <h1 className="text-2xl font-bold tracking-tight text-white">{rd.title}</h1>
 

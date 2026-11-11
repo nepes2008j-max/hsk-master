@@ -161,14 +161,15 @@ export default function Nav() {
       </nav>
 
       {/* Mobile bottom bar — 5 key items only */}
-      <nav className="md:hidden fixed left-3 right-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 mx-auto max-w-md rounded-[26px] border border-white/70 bg-[rgba(255,253,248,0.55)] backdrop-blur-2xl backdrop-saturate-150 shadow-[0_8px_32px_rgba(60,40,10,0.14)]">
+      <nav className="md:hidden fixed left-3 right-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 mx-auto max-w-md rounded-[24px] border border-white/10 bg-[rgba(24,24,27,0.84)] backdrop-blur-2xl backdrop-saturate-150 shadow-[0_10px_32px_rgba(0,0,0,0.30)]">
         <div className="flex justify-around items-center h-16 px-2">
           {mobileLinks.map(({ href, label, Icon }) => (
             <Link
               key={href}
               href={href}
-              className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] py-1.5 rounded-lg transition-colors ${
-                isActive(href) ? "text-primary" : "text-ink-tertiary active:text-ink"
+              aria-current={isActive(href) ? "page" : undefined}
+              className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] py-1.5 rounded-lg transition active:scale-90 ${
+                isActive(href) ? "text-[var(--sun-bright)]" : "text-white/60 active:text-white"
               }`}
             >
               <Icon className="w-[22px] h-[22px]" />
@@ -177,7 +178,7 @@ export default function Nav() {
           ))}
           <button
             onClick={() => setMoreOpen(true)}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] py-1.5 rounded-lg transition-colors ${moreActive ? "text-primary" : "text-ink-tertiary active:text-ink"}`}
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] py-1.5 rounded-lg transition active:scale-90 ${moreActive ? "text-[var(--sun-bright)]" : "text-white/60 active:text-white"}`}
           >
             <span className="flex gap-[3px] items-center h-[22px]"><i className="w-1 h-1 rounded-full bg-current" /><i className="w-1 h-1 rounded-full bg-current" /><i className="w-1 h-1 rounded-full bg-current" /></span>
             <span className="text-[10px] font-medium leading-tight">{t.more}</span>

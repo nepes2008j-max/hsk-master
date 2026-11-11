@@ -251,7 +251,7 @@ export default function BooksPage() {
   // Lesson list
   if (view === "lessons") {
     return (
-      <AppShell>
+      <AppShell viewKey="lessons">
         <div className="space-y-5">
           <div>
             <h1 className="text-2xl font-bold text-white">{bt.title}</h1>
@@ -299,18 +299,17 @@ export default function BooksPage() {
 
   // Lesson detail
   return (
-    <AppShell>
+    <AppShell viewKey="lesson">
       <div className="space-y-5">
         {/* Header */}
         <div>
-          <button onClick={backToLessons} className="flex items-center gap-1 text-[13px] text-ink-tertiary hover:text-primary transition-colors mb-2">
-            <IconChevron direction="left" className="w-3.5 h-3.5" />
-            {bt.backToLessons}
+          <button onClick={backToLessons} aria-label={bt.backToLessons} title={bt.backToLessons} className="btn-back mb-3">
+            <IconChevron direction="left" className="w-4 h-4" />
           </button>
           <h1 className="text-2xl font-bold text-ink">
             {bt.lesson} {lesson.id}: {lesson.title}
           </h1>
-          <div className="text-[14px] text-ink-secondary">{lang === "ru" && lesson.titleRu ? lesson.titleRu : lesson.titleEn}</div>
+          <div className="text-[14px] text-ink/75">{lang === "ru" && lesson.titleRu ? lesson.titleRu : lesson.titleEn}</div>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <button onClick={() => setPlayer("learn")} className="rounded-2xl bg-primary px-5 py-3 text-[14px] font-extrabold text-white shadow-sm active:scale-[0.98] transition-transform">{lp.start}</button>
             <button onClick={() => setPlayer("test")} className="rounded-2xl border-2 border-primary bg-bg-raised px-4 py-2.5 text-[14px] font-bold text-primary active:scale-[0.98] transition-transform">{lp.lessonTest}</button>
