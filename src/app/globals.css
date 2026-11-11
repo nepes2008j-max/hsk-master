@@ -72,6 +72,10 @@ body {
 /* Text that sits directly on the glow: white at the top of the page, ink once the glow starts to fade. */
 .on-glow { color: #fff; transition: color .25s ease; }
 html[data-scrolled] .on-glow { color: var(--text); }
+/* Sticky search pill (home): white on the glow, turns black once the page scrolls, like the reference video. */
+.search-pill { position: sticky; top: calc(env(safe-area-inset-top) + 8px); z-index: 20; transition: background-color .25s ease, color .25s ease, border-color .25s ease; }
+html[data-scrolled] .search-pill { background-color: var(--night); color: #fff; border-color: transparent; }
+@media (prefers-reduced-motion: reduce) { .search-pill { transition: none; } }
 /* Sticky glass header (dictionary): clear while it rests on the glow, frosted once content scrolls under it. */
 @layer components {
   .glass-head { transition: background-color .25s ease; }
@@ -139,10 +143,10 @@ input::placeholder, textarea::placeholder {
 /* Opening animation (components/Splash.tsx): black screen + logo, then the black blocks collapse into thin bars
    in a diagonal wave. Blocks rest slightly over-scaled so their rounded corners overlap into one solid black
    sheet; only transform/opacity animate. The whole layer hides itself at 2s. */
-.splash { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; animation: splash-done 0s 2s forwards; }
+.splash { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; animation: splash-done 0s 1.4s forwards; }
 .splash-grid { position: absolute; inset: 0; display: grid; }
-.splash-grid i { background: #0b0b0c; border-radius: 10px; transform: scale(1.16); backface-visibility: hidden; animation: splash-cell .5s cubic-bezier(.6,0,.2,1) forwards; }
-.splash-logo { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; animation: splash-logo-in .3s cubic-bezier(.2,.8,.2,1) backwards, splash-logo-out .32s cubic-bezier(.4,0,1,1) .62s forwards; }
+.splash-grid i { background: #0b0b0c; border-radius: 10px; transform: scale(1.16); backface-visibility: hidden; animation: splash-cell .34s cubic-bezier(.6,0,.2,1) forwards; }
+.splash-logo { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; animation: splash-logo-in .22s cubic-bezier(.2,.8,.2,1) backwards, splash-logo-out .22s cubic-bezier(.4,0,1,1) .4s forwards; }
 .splash-logo span { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 18px; background: #e8401c; color: #fff; font-size: 34px; font-weight: 800; }
 .splash-logo b { color: #fff; font-size: 17px; letter-spacing: .04em; }
 @keyframes splash-cell { 60% { opacity: 1; } to { transform: scale(.5, 0); opacity: 0; } }

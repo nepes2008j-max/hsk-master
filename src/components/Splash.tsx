@@ -3,8 +3,8 @@
 // Pure CSS (see .splash* in globals.css): server-rendered, so the screen is black from the very first paint,
 // animates only transform/opacity, and hides itself when done. No client JS.
 const COLS = 5, ROWS = 14;
-const HOLD = 800; // ms the logo is shown before the first block goes
-const WAVE = 560; // ms for the wave front to travel corner to corner
+const HOLD = 500; // ms the logo is shown before the first block goes
+const WAVE = 380; // ms for the wave front to travel corner to corner
 
 const cells = Array.from({ length: COLS * ROWS }, (_, i) => {
   const c = i % COLS, r = Math.floor(i / COLS);

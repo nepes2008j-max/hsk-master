@@ -64,7 +64,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <Link href="/dictionary" className="flex items-center gap-2.5 h-12 rounded-2xl border border-border bg-bg-raised px-3.5 text-[15px] text-ink-tertiary shadow-md shadow-black/10">
+        <Link href="/dictionary" className="search-pill flex items-center gap-2.5 h-12 rounded-2xl border border-border bg-bg-raised px-3.5 text-[15px] text-ink-tertiary shadow-md shadow-black/10">
           <IconSearch className="w-[18px] h-[18px]" />
           {t.vocabPage.search}
         </Link>
