@@ -1,4 +1,5 @@
 "use client";
+import { allWords } from "@/lib/all-words";
 
 import AppShell from "@/components/AppShell";
 import { useProgress } from "@/hooks/useProgress";
@@ -173,7 +174,7 @@ export default function SettingsPage() {
                 <span className="text-[11px] uppercase tracking-wide">{t.settingsPage.wordsLearned}</span>
               </div>
               <div className="text-xl font-bold text-ink tabular-nums">
-                {progress.wordsLearned.length}<span className="text-ink-tertiary font-normal text-[13px]">/497</span>
+                {progress.wordsLearned.length}<span className="text-ink-tertiary font-normal text-[13px]">/{allWords.length}</span>
               </div>
             </div>
             <div className="rounded-xl bg-bg-sunken p-3.5 space-y-1">

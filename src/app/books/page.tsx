@@ -213,6 +213,13 @@ export default function BooksPage() {
   const [player, setPlayer] = useState<Mode | null>(null);
   const [stats, setStats] = useState<ReturnType<typeof loadStats>>({ words: {}, lessons: {} });
   useEffect(() => { setStats(loadStats()); }, [player, view, bookId]);
+  // Deep link from Home: /books?play=<bookId>-<lessonId> opens that lesson's player (query stripped so refresh/back don't reopen it).
+  useEffect(() => {
+    const m = /^(\w+)-(\d+)$/.exec(new URLSearchParams(location.search).get("play") ?? "");
+    if (!m || !books.find((b) => b.id === m[1])?.lessons.some((l) => l.id === +m[2])) return;
+    history.replaceState(history.state, "", location.pathname);
+    setBookId(m[1]); setLessonId(+m[2]); setView("detail"); setPlayer("learn");
+  }, []);
 
   const book = books.find((b) => b.id === bookId)!;
   const lesson = book.lessons.find((l) => l.id === lessonId)!;

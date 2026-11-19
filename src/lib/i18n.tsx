@@ -36,7 +36,7 @@ const t = {
       grammarDesc: "93 grammar points",
       charsDesc: "Stroke order practice",
       dictDesc: "430+ words by topic",
-      cardsDesc: "SRS review & custom decks", keepGoing: "Keep going!", hello: "Hello", ofWords: "of", wordsWord: "words", writing: "Writing",
+      cardsDesc: "SRS review & custom decks", keepGoing: "Keep going!", nextLesson: "Up next", hello: "Hello", ofWords: "of", wordsWord: "words", writing: "Writing",
       testDesc: "HSK 1–2 practice exam",
     },
     vocabPage: {
@@ -388,7 +388,7 @@ const t = {
       grammarDesc: "93 грамматических правила",
       charsDesc: "Практика написания",
       dictDesc: "430+ слов по темам",
-      cardsDesc: "Интервальное повторение", keepGoing: "Так держать!", hello: "Привет", ofWords: "из", wordsWord: "слов", writing: "Письмо",
+      cardsDesc: "Интервальное повторение", keepGoing: "Так держать!", nextLesson: "Следующий урок", hello: "Привет", ofWords: "из", wordsWord: "слов", writing: "Письмо",
       testDesc: "Пробный экзамен HSK 1–2",
     },
     vocabPage: {
@@ -740,7 +740,7 @@ const t = {
       grammarDesc: "93 grammatiki düzgün",
       charsDesc: "Ýazyş tertibi türgenligi",
       dictDesc: "430+ söz mowzuk boýunça",
-      cardsDesc: "Gaýtalama we öz kartlaryňyz", keepGoing: "Dowam et!", hello: "Salam", ofWords: "/", wordsWord: "söz", writing: "Ýazuw",
+      cardsDesc: "Gaýtalama we öz kartlaryňyz", keepGoing: "Dowam et!", nextLesson: "Indiki sapak", hello: "Salam", ofWords: "/", wordsWord: "söz", writing: "Ýazuw",
       testDesc: "HSK 1–2 synag ekzameni",
     },
     vocabPage: {
