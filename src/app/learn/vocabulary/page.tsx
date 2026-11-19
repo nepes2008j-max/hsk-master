@@ -75,7 +75,7 @@ export default function VocabularyPage() {
       <div className="space-y-5">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold on-glow tracking-tight">{t.vocabPage.title}</h1>
-          <span className="text-[13px] text-ink-tertiary">
+          <span className="text-[13px] text-ink-secondary">
             {progress?.wordsLearned.length ?? 0}/{wordList.length} {t.vocabPage.learned}
           </span>
         </div>
@@ -142,7 +142,7 @@ export default function VocabularyPage() {
               >
                 <div className="flex flex-col min-w-[3rem]">
                   <span className="text-[17px] font-semibold text-ink leading-tight">{word.hanzi}</span>
-                  {showPinyin && <span className="text-[11px] text-ink-tertiary leading-tight">{word.pinyin}</span>}
+                  {showPinyin && <span className="text-[14px] text-ink-secondary leading-tight">{word.pinyin}</span>}
                 </div>
                 <span className="text-[13px] text-ink-secondary flex-1 leading-snug">{meaningOf(word)}</span>
                 <button

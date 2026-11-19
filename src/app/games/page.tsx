@@ -156,7 +156,7 @@ function PinyinWriter({ t: tr }: { t: ReturnType<typeof useLang>["t"]["gamesPage
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && check()}
             placeholder={tr.typeAnswer}
-            className="flex-1 px-4 py-3 rounded-lg border border-border bg-bg text-ink text-center text-lg focus:outline-none focus:border-primary"
+            className="flex-1 min-w-0 px-4 py-3 rounded-lg border border-border bg-bg text-ink text-center text-lg focus:outline-none focus:border-primary"
             autoFocus
           />
           <button onClick={check} className="bg-primary text-white px-5 py-3 rounded-lg font-semibold hover:bg-primary-hover transition-colors">

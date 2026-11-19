@@ -70,7 +70,9 @@ export default function Nav() {
     const update = () => {
       raf = 0;
       const y = window.scrollY;
-      if (y < 80 || y < ref - 2) { setScrollHidden(false); ref = y; }
+      const short = document.documentElement.scrollHeight - window.innerHeight < 300;
+      const nearEnd = document.documentElement.scrollHeight - window.innerHeight - y < 24;
+      if (short || nearEnd || y < 80 || y < ref - 2) { setScrollHidden(false); ref = y; }
       else if (y > ref + 12) setScrollHidden(true);
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
@@ -202,7 +204,7 @@ export default function Nav() {
               }`}
             >
               <Icon className="w-[22px] h-[22px]" />
-              <span className="text-[10px] font-medium leading-tight">{label}</span>
+              <span className="text-[11px] font-medium leading-tight">{label}</span>
             </Link>
           ))}
           <button
@@ -210,7 +212,7 @@ export default function Nav() {
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[56px] py-1.5 rounded-lg transition active:scale-90 ${moreActive ? "text-[var(--sun-bright)]" : "text-white/60 active:text-white"}`}
           >
             <span className="flex gap-[3px] items-center h-[22px]"><i className="w-1 h-1 rounded-full bg-current" /><i className="w-1 h-1 rounded-full bg-current" /><i className="w-1 h-1 rounded-full bg-current" /></span>
-            <span className="text-[10px] font-medium leading-tight">{t.more}</span>
+            <span className="text-[11px] font-medium leading-tight">{t.more}</span>
           </button>
         </div>
       </nav>
@@ -224,11 +226,13 @@ export default function Nav() {
         className={`md:hidden fixed left-0 right-0 bottom-0 z-[61] rounded-t-3xl bg-bg px-5 pt-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-2xl transition-transform duration-300 ${moreOpen ? "translate-y-0" : "translate-y-full"}`}
         role="dialog"
         aria-label={t.more}
+        inert={!moreOpen}
+        aria-hidden={!moreOpen}
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border-strong" />
         <div className="flex items-center justify-between mb-3">
           <div className="text-[15px] font-bold text-ink">{t.more}</div>
-          <button onClick={() => setMoreOpen(false)} aria-label="Close" className="p-2 -mr-2 text-ink-tertiary"><IconX className="w-4 h-4" /></button>
+          <button onClick={() => setMoreOpen(false)} aria-label="Close" className="p-3.5 -m-1.5 text-ink-tertiary"><IconX className="w-4 h-4" /></button>
         </div>
         <div className="grid grid-cols-3 gap-2.5">
           {[...moreLinks, { href: "/settings", label: t.settings, Icon: IconCog }].map(({ href, label, Icon }) => (

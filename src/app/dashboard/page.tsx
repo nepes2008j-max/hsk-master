@@ -70,7 +70,7 @@ export default function DashboardPage() {
         </Link>
 
         <div className="on-glow">
-          <div className="text-[13px] opacity-85">{t.dashboard.hello}</div>
+          <div className="text-[13px] opacity-90">{t.dashboard.hello}</div>
           <div className="text-[27px] font-extrabold leading-tight tracking-tight">{t.dashboard.keepGoing}</div>
         </div>
 

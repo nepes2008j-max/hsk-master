@@ -53,7 +53,7 @@ export default function AcademicPage() {
       <div className="space-y-5">
         <div>
           <h1 className="text-2xl font-bold text-ink tracking-tight">{t.academicPage.title}</h1>
-          <p className="text-[13px] text-ink-tertiary mt-1">{t.academicPage.desc}</p>
+          <p className="text-[13px] text-ink-secondary mt-1">{t.academicPage.desc}</p>
         </div>
 
         <div className="flex gap-1 p-1 rounded-xl bg-bg-sunken">

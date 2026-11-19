@@ -104,7 +104,7 @@ export default function ReadingPage() {
             <button onClick={() => setShowTr(!showTr)} aria-pressed={showTr} className={`rounded-full px-3.5 py-2 text-[13px] font-semibold ${showTr ? "bg-primary text-white" : "bg-bg-sunken text-ink-secondary"}`}>{rd.translation}</button>
             <button onClick={() => speak(sents.map((s) => s.zh).join(""))} className="ml-auto flex items-center gap-1.5 rounded-full bg-bg-sunken px-3.5 py-2 text-[13px] font-semibold text-ink-secondary"><IconVolume className="w-4 h-4" /> {rd.listen}</button>
           </div>
-          <p className="text-[12px] text-ink-tertiary">{rd.tapWord}</p>
+          <p className="text-[12px] text-ink-secondary">{rd.tapWord}</p>
 
           <div className="space-y-3">
             {sents.map((s, i) => {
@@ -115,10 +115,10 @@ export default function ReadingPage() {
                   <div className="flex items-start gap-2">
                     <div className={`flex-1 flex flex-wrap items-end gap-x-0.5 gap-y-1.5 leading-[2.4] ${showPy ? "" : "[&_rt]:hidden"}`}>
                       {toks.map((tk, k) => (CJK.test(tk.w)
-                        ? <button key={k} onClick={() => setWord(tk)} className="rounded-md px-0.5 text-center hover:bg-primary-light active:bg-primary-light transition-colors"><ruby className="text-[26px] font-semibold text-ink">{tk.w}<rt className="text-[11px] font-medium text-primary">{pinyinOf(tk)}</rt></ruby></button>
+                        ? <button key={k} onClick={() => setWord(tk)} className="rounded-md px-0.5 text-center hover:bg-primary-light active:bg-primary-light transition-colors"><ruby lang="zh-Hans" className="text-[26px] font-semibold text-ink">{tk.w}<rt className="text-[13px] font-medium text-primary">{pinyinOf(tk)}</rt></ruby></button>
                         : <span key={k} className="text-[26px] text-ink-secondary">{tk.w}</span>))}
                     </div>
-                    <button onClick={() => speak(s.zh)} aria-label={rd.listen} className="p-2 text-ink-tertiary hover:text-primary shrink-0"><IconVolume className="w-4 h-4" /></button>
+                    <button onClick={() => speak(s.zh)} aria-label={rd.listen} className="p-3.5 -m-1.5 text-ink-tertiary hover:text-primary shrink-0"><IconVolume className="w-4 h-4" /></button>
                   </div>
                   {showTr && (trans
                     ? <div className="mt-1 text-[14px] text-ink-secondary">{trans}{!s.en && <span className="ml-1 text-[11px] text-ink-tertiary">({rd.auto})</span>}</div>
@@ -140,7 +140,7 @@ export default function ReadingPage() {
                   <div className="text-[52px] leading-none font-extrabold text-ink">{word.w}</div>
                   <div className="mt-2 text-[20px] font-semibold text-primary">{wordPy}</div>
                 </div>
-                <button onClick={() => setWord(null)} aria-label={rd.hide} className="p-2 -mr-2 text-ink-tertiary hover:text-ink"><IconX className="w-4 h-4" /></button>
+                <button onClick={() => setWord(null)} aria-label={rd.hide} className="p-3.5 -m-1.5 text-ink-tertiary hover:text-ink"><IconX className="w-4 h-4" /></button>
               </div>
               <button onClick={() => speak(word.w)} className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl bg-bg-sunken py-3 text-[14px] font-semibold text-ink"><IconVolume className="w-4 h-4" /> {rd.listen}</button>
               <button
@@ -199,12 +199,12 @@ export default function ReadingPage() {
 
         {byLevel.map((g) => (
           <div key={g.lv}>
-            <h2 className="text-[12px] font-bold uppercase tracking-wide text-ink-tertiary mb-2">{rd.stories} · HSK {g.lv}</h2>
+            <h2 className="text-[12px] font-bold uppercase tracking-wide text-ink-secondary mb-2">{rd.stories} · HSK {g.lv}</h2>
             <div className="space-y-2">
               {g.list.map((s) => (
                 <button key={s.id} onClick={() => openStory(s)} className="w-full flex items-center gap-3 rounded-2xl border border-border bg-bg-raised px-4 py-3 text-left active:scale-[0.99] transition-transform">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#dc2626] to-[#f97316] text-white flex items-center justify-center text-lg font-extrabold shrink-0">{s.title.zh[0]}</div>
-                  <div className="min-w-0 flex-1"><div className="text-[15px] font-semibold text-ink truncate">{s.title.zh}</div><div className="text-[12px] text-ink-tertiary truncate">{lang === "ru" ? s.title.ru : s.title.en} · {s.sentences.length} {rd.sentences}</div></div>
+                  <div className="min-w-0 flex-1"><div lang="zh-Hans" className="text-[15px] font-semibold text-ink truncate">{s.title.zh}</div><div className="text-[12px] text-ink-tertiary truncate">{lang === "ru" ? s.title.ru : s.title.en} · {s.sentences.length} {rd.sentences}</div></div>
                   <IconChevron direction="right" className="w-4 h-4 text-ink-tertiary shrink-0" />
                 </button>
               ))}

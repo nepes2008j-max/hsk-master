@@ -137,7 +137,7 @@ export default function DictionaryPage() {
                   >
                     <div className="flex flex-col min-w-[3rem]">
                       <span className="text-[17px] font-semibold text-ink leading-tight">{word.hanzi}</span>
-                      {showPinyin && <span className="text-[11px] text-ink-secondary leading-tight">{word.pinyin}</span>}
+                      {showPinyin && <span className="text-[14px] text-ink-secondary leading-tight">{word.pinyin}</span>}
                     </div>
                     <span className="text-[13px] text-ink-secondary flex-1 leading-snug">{meaningOf(word)}</span>
                     {word.hsk && (
@@ -288,7 +288,7 @@ export default function DictionaryPage() {
                 <div className="mt-1 text-[17px] text-ink">{auto ?? meaningOf(sheetWord)}{auto && <span className="ml-1.5 text-[11px] font-medium text-ink-tertiary">(auto)</span>}</div>
                 {(auto ?? meaningOf(sheetWord)) !== sheetWord.english && <div className="text-[13px] text-ink-secondary">{sheetWord.english}</div>}
               </div>
-              <button onClick={() => setOpenWord(null)} aria-label="Close" className="p-2 -mr-2 text-ink-tertiary hover:text-ink"><IconX className="w-4 h-4" /></button>
+              <button onClick={() => setOpenWord(null)} aria-label="Close" className="p-3.5 -m-1.5 text-ink-tertiary hover:text-ink"><IconX className="w-4 h-4" /></button>
             </div>
             <div className="flex flex-wrap gap-1.5 mt-3">
               {sheetWord.decks.map((d) => (

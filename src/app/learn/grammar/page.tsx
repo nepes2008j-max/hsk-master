@@ -36,7 +36,7 @@ export default function GrammarPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-ink tracking-tight">{t.grammarPage.title}</h1>
           <div className="flex items-center gap-3">
-            <span className="text-[13px] text-ink-tertiary">
+            <span className="text-[13px] text-ink-secondary">
               {progress?.grammarCompleted.length ?? 0}/{grammarList.length} {t.testPage.completed}
             </span>
             <Link

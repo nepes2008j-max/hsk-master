@@ -337,13 +337,13 @@ export default function BooksPage() {
         {tab === "vocab" && (
           <div className="space-y-1.5">
             {lesson.words.map((w) => (
-              <div key={w.hanzi} className="flex items-center gap-3 rounded-xl border border-border bg-bg-raised px-4 py-3">
-                <button onClick={() => speak(w.hanzi)} className="text-primary hover:text-primary-hover transition-colors shrink-0">
+              <div key={w.hanzi} onClick={() => speak(w.hanzi)} className="flex items-center gap-3 cursor-pointer rounded-xl border border-border bg-bg-raised px-4 py-3">
+                <button aria-label="Play" className="text-primary hover:text-primary-hover transition-colors shrink-0 p-3.5 -m-3.5">
                   <IconVolume className="w-4 h-4" />
                 </button>
                 <div className="flex-1 min-w-0">
-                  <span className="text-[16px] font-semibold text-ink">{w.hanzi}</span>
-                  <span className="text-[14px] text-ink-tertiary ml-2">{w.pinyin}</span>
+                  <span lang="zh-Hans" className="text-[16px] font-semibold text-ink">{w.hanzi}</span>
+                  <span className="text-[14px] text-ink-secondary ml-2">{w.pinyin}</span>
                 </div>
                 <div className="text-[14px] text-ink-secondary text-right">{w.english}</div>
               </div>

@@ -115,7 +115,7 @@ export default function CharactersPage() {
       <div className="space-y-5">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-ink tracking-tight">{t.charsPage.title}</h1>
-          <span className="text-[13px] text-ink-tertiary">
+          <span className="text-[13px] text-ink-secondary">
             {progress?.charactersPracticed.length ?? 0}/{characters.length} {t.charsPage.practiced}
           </span>
         </div>

@@ -427,10 +427,10 @@ export default function TestPage() {
           <>
             {/* Official exam header */}
             <div className="text-center space-y-2 pt-2">
-              <div className="text-[13px] text-ink-tertiary tracking-[0.2em] uppercase">Mock Examination</div>
+              <div className="text-[13px] text-ink-secondary tracking-[0.2em] uppercase">Mock Examination</div>
               <h1 className="text-2xl font-bold text-ink">汉语水平考试</h1>
               <div className="text-lg font-semibold text-ink-secondary">HSK（{testLevel === 1 ? "一" : "二"}级）</div>
-              <div className="text-[13px] text-ink-tertiary">Hànyǔ Shuǐpíng Kǎoshì — Level {testLevel}</div>
+              <div className="text-[13px] text-ink-secondary">Hànyǔ Shuǐpíng Kǎoshì — Level {testLevel}</div>
             </div>
 
             <div className="flex gap-1.5 justify-center">

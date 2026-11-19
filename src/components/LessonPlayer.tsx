@@ -145,8 +145,8 @@ export default function LessonPlayer({ lessonKey, title, lesson, pool, mode, mea
               <div className="space-y-1.5">
                 {uniqWrong.slice(0, 8).map((w) => (
                   <div key={w.hanzi} className="flex items-center gap-2 text-[14px]">
-                    <button onClick={() => say(w.hanzi)} aria-label="Play" className="text-primary"><IconVolume className="w-4 h-4" /></button>
-                    <span className="font-bold text-ink">{w.hanzi}</span><span className="text-ink-tertiary">{w.pinyin}</span><span className="text-ink-secondary ml-auto">{meaningOf(w)}</span>
+                    <button onClick={() => say(w.hanzi)} aria-label="Play" className="text-primary p-3.5 -m-3.5"><IconVolume className="w-4 h-4" /></button>
+                    <span lang="zh-Hans" className="font-bold text-ink">{w.hanzi}</span><span className="text-ink-tertiary">{w.pinyin}</span><span className="text-ink-secondary ml-auto">{meaningOf(w)}</span>
                   </div>
                 ))}
               </div>
@@ -190,15 +190,15 @@ export default function LessonPlayer({ lessonKey, title, lesson, pool, mode, mea
     const hanziOpt = ex.t === "word" || ex.t === "listen" || ex.t === "blank";
     return (
       <button key={o + k} disabled={!!fb} onClick={() => { setSel(o); if (hanziOpt) say(o); }} className={`w-full rounded-2xl border-2 px-4 py-3.5 text-left transition-all ${hanziOpt ? "text-[22px] font-bold" : "text-[15px] font-medium"} ${cls}`}>
-        <span className="mr-3 inline-block w-5 text-[12px] font-bold opacity-50">{k + 1}</span>{optLabel(o)}
+        <span className="mr-3 inline-block w-5 text-[12px] font-bold opacity-50">{k + 1}</span>{hanziOpt ? <span lang="zh-Hans">{optLabel(o)}</span> : optLabel(o)}
       </button>
     );
   };
 
   return (
     <div className="fixed inset-0 z-[70] flex flex-col bg-bg">
-      <div className="mx-auto w-full max-w-md flex items-center gap-3 px-4 pt-4">
-        <button onClick={onClose} aria-label={lp.close} className="p-2 -ml-2 text-ink-tertiary hover:text-ink"><IconX className="w-5 h-5" /></button>
+      <div className="mx-auto w-full max-w-md flex items-center gap-3 px-4 pt-[calc(1rem+env(safe-area-inset-top))]">
+        <button onClick={onClose} aria-label={lp.close} className="p-3 -ml-3 text-ink-tertiary hover:text-ink"><IconX className="w-5 h-5" /></button>
         <div className="flex-1 h-3 rounded-full bg-bg-sunken overflow-hidden"><div className="h-full rounded-full bg-gradient-to-r from-[#dc2626] to-[#f97316] transition-all duration-300" style={{ width: `${pct}%` }} /></div>
         <div className="text-[12px] font-bold text-ink-tertiary tabular-nums">{Math.min(i + 1, queue.length)}/{queue.length}</div>
       </div>
@@ -209,7 +209,7 @@ export default function LessonPlayer({ lessonKey, title, lesson, pool, mode, mea
 
         {(ex.t === "meaning" || ex.t === "pinyin") && (
           <div className="mb-4 flex flex-col items-center gap-1 rounded-[22px] border border-border bg-bg-raised px-4 py-6 text-center shadow-sm">
-            <div className="text-[56px] font-bold leading-tight text-ink">{ex.word.hanzi}</div>{ex.t === "meaning" && <div className="text-[16px] text-ink-tertiary">{ex.word.pinyin}</div>}
+            <div lang="zh-Hans" className="text-[56px] font-bold leading-tight text-ink">{ex.word.hanzi}</div>{ex.t === "meaning" && <div className="text-[16px] text-ink-secondary">{ex.word.pinyin}</div>}
             <button onClick={() => say(ex.word.hanzi)} aria-label="Play" className="mt-1 w-11 h-11 rounded-full bg-primary-light text-primary flex items-center justify-center shrink-0"><IconVolume className="w-5 h-5" /></button>
           </div>
         )}
@@ -262,7 +262,7 @@ export default function LessonPlayer({ lessonKey, title, lesson, pool, mode, mea
             <div className="mb-4 flex items-center gap-3 rounded-2xl border border-border bg-bg-raised p-4">
               <button onClick={() => say(ex.word.hanzi)} aria-label="Play" className="w-11 h-11 rounded-full bg-primary-light text-primary flex items-center justify-center shrink-0"><IconVolume className="w-5 h-5" /></button>
               <div>
-                {ex.t === "typePinyin" && <div className="text-[34px] font-extrabold text-ink leading-tight">{ex.word.hanzi}</div>}
+                {ex.t === "typePinyin" && <div lang="zh-Hans" className="text-[34px] font-extrabold text-ink leading-tight">{ex.word.hanzi}</div>}
                 {ex.t === "typeHanzi" && <><div className="text-[18px] font-bold text-ink">{meaningOf(ex.word)}</div><div className="text-[13px] text-ink-tertiary">{ex.word.pinyin}</div></>}
               </div>
             </div>

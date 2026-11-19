@@ -12,6 +12,7 @@ export default function Glow() {
   useEffect(() => {
     const el = ref.current!, root = document.documentElement;
     let raf = 0, last = -1;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const paint = () => {
       raf = 0;
       const y = Math.min(Math.max(window.scrollY, 0), FADE);
@@ -19,7 +20,7 @@ export default function Glow() {
       if (y === last) return;
       last = y;
       el.style.opacity = String(1 - y / FADE);
-      el.style.transform = `translate3d(0,${-y * 0.3}px,0)`;
+      if (!reduce) el.style.transform = `translate3d(0,${-y * 0.3}px,0)`;
     };
     const onScroll = () => { raf ||= requestAnimationFrame(paint); };
     paint();

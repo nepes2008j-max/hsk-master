@@ -69,9 +69,8 @@ body {
    fades it out over the first ~360px of scroll (opacity/transform only) and brings it back at the top. */
 .glow { position: fixed; top: 0; left: 0; right: 0; height: 520px; z-index: -1; pointer-events: none; will-change: opacity, transform;
   background: linear-gradient(180deg, #ff5a26 0%, rgba(255,106,50,0.92) 70px, rgba(255,138,76,0.55) 190px, rgba(255,175,120,0.20) 330px, rgba(251,247,238,0) 520px); }
-/* Text that sits directly on the glow: white at the top of the page, ink once the glow starts to fade. */
-.on-glow { color: #fff; transition: color .25s ease; }
-html[data-scrolled] .on-glow { color: var(--text); }
+/* Text on the glow: always ink (white fails contrast on the orange). */
+.on-glow { color: var(--text); }
 /* Sticky search pill (home): white on the glow, turns black once the page scrolls, like the reference video. */
 .search-pill { position: sticky; top: calc(env(safe-area-inset-top) + 8px); z-index: 20; transition: background-color .25s ease, color .25s ease, border-color .25s ease; }
 html[data-scrolled] .search-pill { background-color: var(--night); color: #fff; border-color: transparent; }
@@ -161,8 +160,11 @@ input::placeholder, textarea::placeholder {
 .page-in { animation: page-in .42s cubic-bezier(.2,.8,.2,1); }
 
 /* Round black back button, top-left of a detail view */
-.btn-back { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; background: var(--night); color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.22); transition: transform .15s ease; }
+.btn-back { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; background: var(--night); color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.22); transition: transform .15s ease; }
 .btn-back:active { transform: scale(.92); }
 .btn-back:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) { .page-in { animation: none; } .btn-back { transition: none; } }
+
+/* One switch for the remaining motion (sheet slide, card flip/enter/swipe, transitions). */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
